@@ -8,6 +8,7 @@
 
 import Foundation
 import CoreFoundation
+import AppKit
 
 class Photo {
     var path: String
@@ -15,6 +16,7 @@ class Photo {
     var valid: Bool
     var height: NSNumber?
     var width: NSNumber?
+    var image: NSImage?
     
     func move(newpath: String) {
         // TODO: implement
@@ -62,6 +64,8 @@ class Photo {
                         data += "\(key): \(value)\n"
                     }
                 }
+                
+                image = NSImage(byReferencingURL: imageFileURL)
                 
                 NSLog(data)
                 

@@ -14,6 +14,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     @IBOutlet var name : NSTextField!
     @IBOutlet var outputField : NSTextField!
+    @IBOutlet var imageView: NSImageView!
 
     func applicationDidFinishLaunching(aNotification: NSNotification?) {
         // Insert code here to initialize your application
@@ -39,6 +40,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 self.outputField.stringValue = "Got \(self.name.stringValue)\n"
                 if let height = photo.height {
                     self.outputField.stringValue = self.outputField.stringValue + "Size \(photo.width!)x\(height)"
+                }
+                if let image = photo.image {
+                    imageView.image = image
                 }
             } else {
                 self.outputField.stringValue = "Failed to get \(self.name.stringValue)"

@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "SwiftHelloWorldMac/Photo.swift"
-            timestampString = "429205630.990556"
+            timestampString = "429206867.899214"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "38"
-            endingLineNumber = "38"
+            startingLineNumber = "40"
+            endingLineNumber = "40"
             landmarkName = "init(path:)"
             landmarkType = "5">
             <Locations>
@@ -56,11 +56,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "SwiftHelloWorldMac/Photo.swift"
-            timestampString = "429205630.990556"
+            timestampString = "429206867.899214"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "43"
-            endingLineNumber = "43"
+            startingLineNumber = "45"
+            endingLineNumber = "45"
             landmarkName = "init(path:)"
             landmarkType = "5">
             <Locations>
@@ -102,11 +102,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "SwiftHelloWorldMac/Photo.swift"
-            timestampString = "429205630.990556"
+            timestampString = "429206867.899214"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "44"
-            endingLineNumber = "44"
+            startingLineNumber = "46"
+            endingLineNumber = "46"
             landmarkName = "init(path:)"
             landmarkType = "5">
             <Locations>
@@ -162,11 +162,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "SwiftHelloWorldMac/Photo.swift"
-            timestampString = "429205630.990556"
+            timestampString = "429206867.899214"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "49"
-            endingLineNumber = "49"
+            startingLineNumber = "51"
+            endingLineNumber = "51"
             landmarkName = "init(path:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -178,11 +178,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "SwiftHelloWorldMac/Photo.swift"
-            timestampString = "429205630.990556"
+            timestampString = "429206867.899214"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "43"
-            endingLineNumber = "43"
+            startingLineNumber = "45"
+            endingLineNumber = "45"
             landmarkName = "init(path:)"
             landmarkType = "5">
             <Locations>
@@ -193,12 +193,12 @@
                   symbolName = "SwiftHelloWorldMac.Photo.init (SwiftHelloWorldMac.Photo.Type)(path : Swift.String) -&gt; SwiftHelloWorldMac.Photo"
                   moduleName = "SwiftHelloWorldMac"
                   urlString = "file:///Users/cameronlittle/Dropbox/Projects/SwiftHelloWorldMac/SwiftHelloWorldMac/Photo.swift"
-                  timestampString = "429205364.43583"
+                  timestampString = "429206868.211667"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "41"
-                  endingLineNumber = "41"
-                  offsetFromSymbolStart = "3296">
+                  startingLineNumber = "45"
+                  endingLineNumber = "45"
+                  offsetFromSymbolStart = "3362">
                </Location>
                <Location
                   shouldBeEnabled = "Yes"
@@ -207,12 +207,12 @@
                   symbolName = "SwiftHelloWorldMac.Photo.init (SwiftHelloWorldMac.Photo.Type)(path : Swift.String) -&gt; SwiftHelloWorldMac.Photo"
                   moduleName = "SwiftHelloWorldMac"
                   urlString = "file:///Users/cameronlittle/Dropbox/Projects/SwiftHelloWorldMac/SwiftHelloWorldMac/Photo.swift"
-                  timestampString = "429205364.436556"
+                  timestampString = "429206868.211949"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "41"
-                  endingLineNumber = "41"
-                  offsetFromSymbolStart = "3341">
+                  startingLineNumber = "45"
+                  endingLineNumber = "45"
+                  offsetFromSymbolStart = "3407">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -224,7 +224,23 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "SwiftHelloWorldMac/Photo.swift"
-            timestampString = "429205630.990556"
+            timestampString = "429206867.899214"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "50"
+            endingLineNumber = "50"
+            landmarkName = "init(path:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "SwiftHelloWorldMac/Photo.swift"
+            timestampString = "429206867.899214"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "48"
@@ -240,27 +256,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "SwiftHelloWorldMac/Photo.swift"
-            timestampString = "429205630.990556"
+            timestampString = "429206867.899214"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "46"
-            endingLineNumber = "46"
-            landmarkName = "init(path:)"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "SwiftHelloWorldMac/Photo.swift"
-            timestampString = "429205630.990556"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "54"
-            endingLineNumber = "54"
+            startingLineNumber = "56"
+            endingLineNumber = "56"
             landmarkName = "init(path:)"
             landmarkType = "5">
             <Locations>
@@ -291,6 +291,52 @@
                   startingLineNumber = "53"
                   endingLineNumber = "53"
                   offsetFromSymbolStart = "4412">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "SwiftHelloWorldMac/AppDelegate.swift"
+            timestampString = "429206867.899214"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "44"
+            endingLineNumber = "44"
+            landmarkName = "buttonPushed(_:)"
+            landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "SwiftHelloWorldMac.AppDelegate.buttonPushed (SwiftHelloWorldMac.AppDelegate)(Swift.AnyObject) -&gt; ()"
+                  moduleName = "SwiftHelloWorldMac"
+                  urlString = "file:///Users/cameronlittle/Dropbox/Projects/SwiftHelloWorldMac/SwiftHelloWorldMac/AppDelegate.swift"
+                  timestampString = "429206868.213417"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "44"
+                  endingLineNumber = "44"
+                  offsetFromSymbolStart = "12815">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "SwiftHelloWorldMac.AppDelegate.buttonPushed (SwiftHelloWorldMac.AppDelegate)(Swift.AnyObject) -&gt; ()"
+                  moduleName = "SwiftHelloWorldMac"
+                  urlString = "file:///Users/cameronlittle/Dropbox/Projects/SwiftHelloWorldMac/SwiftHelloWorldMac/AppDelegate.swift"
+                  timestampString = "429206868.213683"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "44"
+                  endingLineNumber = "44"
+                  offsetFromSymbolStart = "12863">
                </Location>
             </Locations>
          </BreakpointContent>

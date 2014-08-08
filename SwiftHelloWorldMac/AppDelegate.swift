@@ -32,7 +32,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             self.outputField.stringValue = "Come again?"
         }
         else {
-            self.outputField.stringValue = "Hello, \(self.name.stringValue)!"
+            let photo = Photo(path: self.name.stringValue)
+            self.outputField.stringValue = "Getting, \(self.name.stringValue)!"
+            
+            if photo.valid {
+                self.outputField.stringValue = "Got \(self.name.stringValue)\n"
+                if let height = photo.height {
+                    self.outputField.stringValue = self.outputField.stringValue + "Size \(photo.width!)x\(height)"
+                }
+            } else {
+                self.outputField.stringValue = "Failed to get \(self.name.stringValue)"
+            }
         }
     }
 }

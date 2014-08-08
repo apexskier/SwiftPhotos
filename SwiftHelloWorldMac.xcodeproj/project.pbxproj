@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C5C67373199474EB001888D4 /* Photo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5C67372199474EB001888D4 /* Photo.swift */; };
 		FE5DDB19193EC4F800D083E0 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE5DDB18193EC4F800D083E0 /* main.swift */; };
 		FE5DDB1B193EC4F800D083E0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE5DDB1A193EC4F800D083E0 /* AppDelegate.swift */; };
 		FE5DDB1D193EC4F800D083E0 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FE5DDB1C193EC4F800D083E0 /* Images.xcassets */; };
@@ -25,6 +26,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		C5C67372199474EB001888D4 /* Photo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Photo.swift; sourceTree = "<group>"; };
 		FE5DDB13193EC4F800D083E0 /* SwiftHelloWorldMac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftHelloWorldMac.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE5DDB17193EC4F800D083E0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FE5DDB18193EC4F800D083E0 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
@@ -78,6 +80,7 @@
 				FE5DDB1A193EC4F800D083E0 /* AppDelegate.swift */,
 				FE5DDB1C193EC4F800D083E0 /* Images.xcassets */,
 				FE5DDB1E193EC4F800D083E0 /* MainMenu.xib */,
+				C5C67372199474EB001888D4 /* Photo.swift */,
 				FE5DDB16193EC4F800D083E0 /* Supporting Files */,
 			);
 			path = SwiftHelloWorldMac;
@@ -208,6 +211,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C5C67373199474EB001888D4 /* Photo.swift in Sources */,
 				FE5DDB1B193EC4F800D083E0 /* AppDelegate.swift in Sources */,
 				FE5DDB19193EC4F800D083E0 /* main.swift in Sources */,
 			);
@@ -399,6 +403,7 @@
 				FE5DDB31193EC4F800D083E0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		FE5DDB32193EC4F800D083E0 /* Build configuration list for PBXNativeTarget "SwiftHelloWorldMacTests" */ = {
 			isa = XCConfigurationList;
@@ -407,6 +412,7 @@
 				FE5DDB34193EC4F800D083E0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

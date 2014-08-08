@@ -53,15 +53,17 @@ class Photo {
                 height = dictionary.objectForKey("PixelHeight") as NSNumber!
                 width = dictionary.objectForKey("PixelWidth") as NSNumber!
                 
-                var exifTree = dictionary.objectForKey("Exif") as NSDictionary!
+                var exifTree = dictionary.objectForKey("{Exif}") as [String: NSObject!]
                 
                 var data = "height: \(height)\nwidth: \(width)\n"
                 
                 if exifTree != nil {
-                    for key in exifTree.allKeys as [NSString] {
-                        var locKey = NSBundle(identifier: "com.apple.ImageIO.framework").localizedStringForKey(key, value: key, table: "CGImageSource")
-                        var value = exifTree.valueForKey(key) as NSString!
-                        data += "\(key): \(value)\n"
+                    for (key, value) in exifTree {
+                        NSLog(key)
+                        //data += "\(key): \(value)\n"
+                        if key == "DateTimeOriginal" {
+                            created = NSDate(string: value as NSString!)
+                        }
                     }
                 }
                 

@@ -38,8 +38,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             if photo.valid {
                 self.outputField.stringValue = "Got \(self.name.stringValue)\n"
                 if let height = photo.height {
-                    self.outputField.stringValue = self.outputField.stringValue + "Size \(photo.width!)x\(height)"
+                    self.outputField.stringValue = self.outputField.stringValue + "Size: \(photo.width!)x\(height)"
                 }
+                self.outputField.stringValue = self.outputField.stringValue + "\nDate: \(photo.created.description)"
                 if let image = photo.image {
                     imageView.image = image
                 }

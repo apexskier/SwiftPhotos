@@ -10,101 +10,78 @@ import Foundation
 import CoreFoundation
 import AppKit
 
+
 class Photo {
-    var path: String
-    var created: NSDate
-    var valid: Bool
+    // class var dateFormatter: NSDateFormatter = {
+    //     let df = NSDateFormatter()
+    //     df.dateFormat = "%Y:%m:%d %H:%i:%s"
+    //     return df
+    // }()
+    
+    var fileURL: NSURL = NSURL()
+    var created: NSDate = NSDate()
+    var valid: Bool = false
     var height: NSNumber?
     var width: NSNumber?
-    var image: NSImage?
     
     func move(newpath: String) {
         // TODO: implement
-        
-        path = newpath
     }
     
-    func getExif() {
-        // TODO: get exif infor from self
+    func updateExif() {
+        // TODO: get exif info from self
+    }
+    
+    func getImage() -> NSImage {
+        return NSImage(byReferencingURL: fileURL)
+    }
+    
+    func readData() {
+        let imageSource = CGImageSourceCreateWithURL(fileURL, nil).takeRetainedValue()
+        let options = [kCGImageSourceShouldCache: false] as NSDictionary
+        
+        var index: UInt = 0
+        let imageProperties = CGImageSourceCopyPropertiesAtIndex(imageSource, index, options).takeRetainedValue()
+        
+        if imageProperties != nil {
+            var dictionary = imageProperties.__conversion()
+            
+            height = dictionary.objectForKey("PixelHeight") as NSNumber!
+            width = dictionary.objectForKey("PixelWidth") as NSNumber!
+            
+            var exifTree = dictionary.objectForKey("{Exif}") as [String: NSObject!]
+            if exifTree != nil {
+                var dateFormatter = NSDateFormatter()
+                dateFormatter.dateFormat = "yyyy:MM:dd HH:mm:ss"
+                
+                if let exifDateTimeOriginal = exifTree["DateTimeOriginal"] {
+                    created = dateFormatter.dateFromString(exifDateTimeOriginal as String) as NSDate!
+                }
+                
+                for (key, value) in exifTree {
+                    println(key)
+                }
+            }
+            
+            valid = true
+        }
     }
     
     init(path: String) {
-        valid = false
         let filemanager = NSFileManager.defaultManager()
         if !filemanager.fileExistsAtPath(path) {
             // Handle this
-            NSLog("File doesn't exist: \(path)")
+            println("File doesn't exist: \(path)")
+            NSException(name: "Photo File not found", reason: "", userInfo: nil).raise()
         } else {
-            NSLog("File exists: \(path)")
-            
-            let imageFileURL = NSURL(fileURLWithPath: path) //   NSURL(string: path) as CFURLRef
-            let imageSource = CGImageSourceCreateWithURL(imageFileURL, nil).takeRetainedValue()
-            let options = [kCGImageSourceShouldCache: false] as NSDictionary
-            
-            var index: UInt = 0
-            let imageProperties = CGImageSourceCopyPropertiesAtIndex(imageSource, index, options).takeRetainedValue()
-            
-            if imageProperties != nil {
-                
-                var dictionary = imageProperties.__conversion()
-                
-                //var treeDict = NSDictionary(objectsAndKeys: imageProperties) //NSDictionary(objectsAndKeys: imageProperties as )
-                
-                height = dictionary.objectForKey("PixelHeight") as NSNumber!
-                width = dictionary.objectForKey("PixelWidth") as NSNumber!
-                
-                var exifTree = dictionary.objectForKey("{Exif}") as [String: NSObject!]
-                
-                var data = "height: \(height)\nwidth: \(width)\n"
-                
-                if exifTree != nil {
-                    for (key, value) in exifTree {
-                        NSLog(key)
-                        //data += "\(key): \(value)\n"
-                        if key == "DateTimeOriginal" {
-                            created = NSDate(string: value as NSString!)
-                        }
-                    }
-                }
-                
-                image = NSImage(byReferencingURL: imageFileURL)
-                
-                NSLog(data)
-                
-                valid = true
-            }
+            println("File exists: \(path)")
+            fileURL = NSURL(fileURLWithPath: path) //   NSURL(string: path) as CFURLRef
+            readData()
         }
-        
-        self.path = path
-        created = NSDate()
+    }
+    
+    init(url: NSURL) {
+        fileURL = url
+        readData()
     }
 }
-
-// /Users/cameronlittle/Downloads/test.jpg
-
-
-/*
-NSURL *imageFileURL = [NSURL fileURLWithPath:@"/Users/USERNAME/Documents/tasting_menu_004.jpg"];
-CGImageSourceRef imageSource = CGImageSourceCreateWithURL((CFURLRef)imageFileURL, NULL);
-NSDictionary *treeDict;
-NSMutableString *exifData;
-
-NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:
-                        [NSNumber numberWithBool:NO], (NSString *)kCGImageSourceShouldCache, nil];
-
-CFDictionaryRef imageProperties = CGImageSourceCopyPropertiesAtIndex(imageSource, 0, (CFDictionaryRef)options);
-CFRelease(imageSource);
-if (imageProperties) {
-    treeDict = [NSDictionary dictionaryWithDictionary:(NSDictionary*)(imageProperties)];
-    id exifTree = [treeDict objectForKey:@"{Exif}"];
-
-    exifData = [NSMutableString stringWithString:@""];
-
-    for (NSString *key in [[exifTree allKeys] sortedArrayUsingSelector:@selector(compare:)]) {
-        NSString* locKey = [[NSBundle bundleWithIdentifier:@"com.apple.ImageIO.framework"] localizedStringForKey:key value:key table: @"CGImageSource"];
-        id value = [exifTree  valueForKey:key];
-        [exifData appendFormat:@"key =%@ ; Value = %@ \n", locKey,value];
-
-    }
-    NSLog(@" exifData %@", exifData);
-*/

@@ -8,9 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		C592C364199B0BFA00E08731 /* PathArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = C592C363199B0BFA00E08731 /* PathArray.swift */; };
+		C5A1E87D1A215C6F00BA0A3C /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A1E87C1A215C6F00BA0A3C /* main.swift */; };
+		C5A1E87F1A215F2400BA0A3C /* PHash.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A1E87E1A215F2400BA0A3C /* PHash.swift */; };
 		C5A2E677199BE8F600EB5D37 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A2E676199BE8F600EB5D37 /* Settings.swift */; };
+		C5AC6DAB19AA65FA00D1C96E /* Library.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5AC6DAA19AA65FA00D1C96E /* Library.swift */; };
 		C5C67373199474EB001888D4 /* Photo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5C67372199474EB001888D4 /* Photo.swift */; };
-		FE5DDB19193EC4F800D083E0 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE5DDB18193EC4F800D083E0 /* main.swift */; };
 		FE5DDB1B193EC4F800D083E0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE5DDB1A193EC4F800D083E0 /* AppDelegate.swift */; };
 		FE5DDB1D193EC4F800D083E0 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FE5DDB1C193EC4F800D083E0 /* Images.xcassets */; };
 		FE5DDB20193EC4F800D083E0 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = FE5DDB1E193EC4F800D083E0 /* MainMenu.xib */; };
@@ -18,6 +20,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		C5A78CFE1A216EED005FF6B8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C5A78CF91A216EED005FF6B8 /* Surge.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = F8A1E1AA19917A79009735E2;
+			remoteInfo = Surge;
+		};
+		C5A78D001A216EED005FF6B8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C5A78CF91A216EED005FF6B8 /* Surge.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = F84A6AAE19A9A72F007B53E1;
+			remoteInfo = SurgeTests;
+		};
 		FE5DDB26193EC4F800D083E0 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = FE5DDB0B193EC4F800D083E0 /* Project object */;
@@ -29,11 +45,14 @@
 
 /* Begin PBXFileReference section */
 		C592C363199B0BFA00E08731 /* PathArray.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PathArray.swift; sourceTree = "<group>"; };
+		C5A1E87C1A215C6F00BA0A3C /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		C5A1E87E1A215F2400BA0A3C /* PHash.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PHash.swift; sourceTree = "<group>"; };
 		C5A2E676199BE8F600EB5D37 /* Settings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
+		C5A78CF91A216EED005FF6B8 /* Surge.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Surge.xcodeproj; path = ../Surge/Surge.xcodeproj; sourceTree = "<group>"; };
+		C5AC6DAA19AA65FA00D1C96E /* Library.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Library.swift; sourceTree = "<group>"; };
 		C5C67372199474EB001888D4 /* Photo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Photo.swift; sourceTree = "<group>"; };
 		FE5DDB13193EC4F800D083E0 /* SwiftHelloWorldMac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftHelloWorldMac.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE5DDB17193EC4F800D083E0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		FE5DDB18193EC4F800D083E0 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		FE5DDB1A193EC4F800D083E0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FE5DDB1C193EC4F800D083E0 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		FE5DDB1F193EC4F800D083E0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
@@ -60,12 +79,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		C5A78CFA1A216EED005FF6B8 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C5A78CFF1A216EED005FF6B8 /* Surge.framework */,
+				C5A78D011A216EED005FF6B8 /* SurgeTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		FE5DDB0A193EC4F800D083E0 = {
 			isa = PBXGroup;
 			children = (
 				FE5DDB15193EC4F800D083E0 /* SwiftHelloWorldMac */,
 				FE5DDB28193EC4F800D083E0 /* SwiftHelloWorldMacTests */,
 				FE5DDB14193EC4F800D083E0 /* Products */,
+				C5A78CF91A216EED005FF6B8 /* Surge.xcodeproj */,
 			);
 			sourceTree = "<group>";
 		};
@@ -82,9 +111,11 @@
 			isa = PBXGroup;
 			children = (
 				FE5DDB1A193EC4F800D083E0 /* AppDelegate.swift */,
+				C5AC6DAA19AA65FA00D1C96E /* Library.swift */,
 				FE5DDB1C193EC4F800D083E0 /* Images.xcassets */,
 				C5A2E676199BE8F600EB5D37 /* Settings.swift */,
 				FE5DDB1E193EC4F800D083E0 /* MainMenu.xib */,
+				C5A1E87E1A215F2400BA0A3C /* PHash.swift */,
 				C5C67372199474EB001888D4 /* Photo.swift */,
 				FE5DDB16193EC4F800D083E0 /* Supporting Files */,
 				C592C363199B0BFA00E08731 /* PathArray.swift */,
@@ -96,7 +127,7 @@
 			isa = PBXGroup;
 			children = (
 				FE5DDB17193EC4F800D083E0 /* Info.plist */,
-				FE5DDB18193EC4F800D083E0 /* main.swift */,
+				C5A1E87C1A215C6F00BA0A3C /* main.swift */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -185,6 +216,12 @@
 			mainGroup = FE5DDB0A193EC4F800D083E0;
 			productRefGroup = FE5DDB14193EC4F800D083E0 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = C5A78CFA1A216EED005FF6B8 /* Products */;
+					ProjectRef = C5A78CF91A216EED005FF6B8 /* Surge.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				FE5DDB12193EC4F800D083E0 /* SwiftHelloWorldMac */,
@@ -192,6 +229,23 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		C5A78CFF1A216EED005FF6B8 /* Surge.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = Surge.framework;
+			remoteRef = C5A78CFE1A216EED005FF6B8 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C5A78D011A216EED005FF6B8 /* SurgeTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = SurgeTests.xctest;
+			remoteRef = C5A78D001A216EED005FF6B8 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		FE5DDB11193EC4F800D083E0 /* Resources */ = {
@@ -218,9 +272,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				C5C67373199474EB001888D4 /* Photo.swift in Sources */,
+				C5AC6DAB19AA65FA00D1C96E /* Library.swift in Sources */,
+				C5A1E87D1A215C6F00BA0A3C /* main.swift in Sources */,
+				C5A1E87F1A215F2400BA0A3C /* PHash.swift in Sources */,
 				FE5DDB1B193EC4F800D083E0 /* AppDelegate.swift in Sources */,
 				C592C364199B0BFA00E08731 /* PathArray.swift in Sources */,
-				FE5DDB19193EC4F800D083E0 /* main.swift in Sources */,
 				C5A2E677199BE8F600EB5D37 /* Settings.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -336,10 +392,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = SwiftHelloWorldMac/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_INSTALL_OBJC_HEADER = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
@@ -347,10 +406,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = SwiftHelloWorldMac/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_INSTALL_OBJC_HEADER = NO;
 			};
 			name = Release;
 		};

@@ -19,6 +19,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @IBOutlet var outputField : NSTextField!
     @IBOutlet var imageView: NSImageView!
     
+
+    
+    var storeURL = NSURL(fileURLWithPath: "~/.photos")
+    
     var inputs = pathArray()
     
     func applicationDidFinishLaunching(aNotification: NSNotification?) {
@@ -26,28 +30,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         self.outputField.stringValue = "Hello, World!"
         
-        var settingsObjectURL = NSBundle.mainBundle()
-        settingsObjectURL.URLForResource("Core_Data", withExtension: "momd")
-        var settingsObjectModel = NSManagedObjectModel()
-        var psCoordinator = NSPersistentStoreCoordinator(managedObjectModel: settingsObjectModel)
-        var managedObjectContext = NSManagedObjectContext()
-        managedObjectContext.persistentStoreCoordinator = psCoordinator
-        
-        var settingsEntity = NSEntityDescription.entityForName("OutputFolder", inManagedObjectContext: managedObjectContext)
-        var managedObject = NSManagedObject(entity: settingsEntity, insertIntoManagedObjectContext: managedObjectContext)
-        
-        /*NSEntityDescription *entityDescription = [NSEntityDescription entityForName:@"Person" inManagedObjectContext:self.managedObjectContext];
-        NSManagedObject *newPerson = [[NSManagedObject alloc] initWithEntity:entityDescription insertIntoManagedObjectContext:self.managedObjectContext];
-     */
-        
-        
-        
-        var storeURL = NSURL(fileURLWithPath: "~/.swiftphotos")
-        var storeType = NSXMLStoreType
-        var storeError = NSError()
-        var store = psCoordinator.addPersistentStoreWithType(storeType, configuration: nil, URL: storeURL, options: nil, error: nil)
-        
-        
+    
         tableView.setDataSource(inputs)
     }
     
@@ -65,8 +48,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         if result == NSOKButton {
             println("OK Clicked")
-            var outputPath = filePicker.URL
-            outputTextField.stringValue = outputPath.relativePath
+            var outputPath = filePicker.URL!
+            outputTextField.stringValue = outputPath.relativePath!
             println(outputPath.relativePath)
             filePicker.close()
         } else if result == NSCancelButton {
@@ -85,6 +68,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             println("OK Clicked")
             for url in filePicker.URLs as [NSURL] {
                 inputs.append(url)
+                println(url.description)
             }
             tableView.reloadData()
             filePicker.close()
@@ -130,7 +114,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 self.outputField.stringValue = self.outputField.stringValue + "Size: \(photo.width!)x\(height)"
             }
             self.outputField.stringValue = self.outputField.stringValue + "\nDate: \(photo.created.description)"
-            imageView.image = photo.getImage()
+            var image = photo.getImage()
+            self.outputField.stringValue += "\nphash: \(phash(image))"
+            imageView.image = imageToGreyImage(image)
         } else {
             self.outputField.stringValue = "Failed to get photo 😞."
         }

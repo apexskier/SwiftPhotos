@@ -36,29 +36,32 @@ class Photo {
         return NSImage(byReferencingURL: fileURL)
     }
     
+    func CGImageSource() -> CGImageSourceRef {
+        return CGImageSourceCreateWithURL(fileURL, nil)
+    }
+    
     func readData() {
-        let imageSource = CGImageSourceCreateWithURL(fileURL, nil).takeRetainedValue()
-        let options = [kCGImageSourceShouldCache: false] as NSDictionary
+        let imageSource = CGImageSourceCreateWithURL(fileURL, nil)
         
         var index: UInt = 0
-        let imageProperties = CGImageSourceCopyPropertiesAtIndex(imageSource, index, options).takeRetainedValue()
+        let imageProperties = CGImageSourceCopyPropertiesAtIndex(imageSource, index, NSDictionary())
         
         if imageProperties != nil {
-            var dictionary = imageProperties.__conversion()
+            var dictionary = imageProperties as NSDictionary
             
             height = dictionary.objectForKey("PixelHeight") as NSNumber!
             width = dictionary.objectForKey("PixelWidth") as NSNumber!
             
-            var exifTree = dictionary.objectForKey("{Exif}") as [String: NSObject!]
-            if exifTree != nil {
+            var exifTree = dictionary.objectForKey("{Exif}") as [String: NSObject]?
+            if let eT = exifTree {
                 var dateFormatter = NSDateFormatter()
                 dateFormatter.dateFormat = "yyyy:MM:dd HH:mm:ss"
                 
-                if let exifDateTimeOriginal = exifTree["DateTimeOriginal"] {
+                if let exifDateTimeOriginal = eT["DateTimeOriginal"] {
                     created = dateFormatter.dateFromString(exifDateTimeOriginal as String) as NSDate!
                 }
                 
-                for (key, value) in exifTree {
+                for (key, value) in eT {
                     println(key)
                 }
             }
@@ -75,7 +78,7 @@ class Photo {
             NSException(name: "Photo File not found", reason: "", userInfo: nil).raise()
         } else {
             println("File exists: \(path)")
-            fileURL = NSURL(fileURLWithPath: path) //   NSURL(string: path) as CFURLRef
+            fileURL = NSURL(fileURLWithPath: path)! //   NSURL(string: path) as CFURLRef
             readData()
         }
     }

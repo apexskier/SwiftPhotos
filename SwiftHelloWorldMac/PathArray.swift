@@ -24,7 +24,7 @@ class pathArray: NSObject, NSTableViewDataSource, NSTableViewDelegate {
         println(items);
         var array: [String] = []
         for item in items {
-            array.append(item.relativePath)
+            array.append(item.relativePath!)
         }
         return array as NSArray;
     }

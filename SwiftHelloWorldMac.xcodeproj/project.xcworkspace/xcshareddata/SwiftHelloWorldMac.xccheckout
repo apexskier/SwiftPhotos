@@ -10,6 +10,8 @@
 	<string>SwiftHelloWorldMac</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
+		<key>9F65A476A58933AE6B22EAE730A194955F98FC66</key>
+		<string>github.com:mattt/Surge.git</string>
 		<key>C0C9A16AF1AC77A97069EBDF6DC628D6587169DA</key>
 		<string>github.com:BergQuester/SwiftHelloWorldMac.git</string>
 	</dict>
@@ -17,6 +19,8 @@
 	<string>SwiftHelloWorldMac.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
+		<key>9F65A476A58933AE6B22EAE730A194955F98FC66</key>
+		<string>../../../Surge</string>
 		<key>C0C9A16AF1AC77A97069EBDF6DC628D6587169DA</key>
 		<string>../..</string>
 	</dict>
@@ -28,6 +32,14 @@
 	<string>C0C9A16AF1AC77A97069EBDF6DC628D6587169DA</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>9F65A476A58933AE6B22EAE730A194955F98FC66</string>
+			<key>IDESourceControlWCCName</key>
+			<string>Surge</string>
+		</dict>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>

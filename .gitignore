@@ -17,3 +17,14 @@ DerivedData
 *.ipa
 
 *.xcbkptlist
+
+
+# Xcode
+.DS_Store
+*.xcworkspace
+!default.xcworkspace
+xcuserdata
+profile
+.idea/
+# Pods - for those of you who use CocoaPods
+Pods

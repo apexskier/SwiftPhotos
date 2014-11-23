@@ -19,17 +19,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @IBOutlet var outputField : NSTextField!
     @IBOutlet var imageView: NSImageView!
     
-
     
     var storeURL = NSURL(fileURLWithPath: "~/.photos")
     
-    var inputs = pathArray()
+    var inputs = PathArray()
+    
+    var pendingOperations = PhotoOperations()
     
     func applicationDidFinishLaunching(aNotification: NSNotification?) {
         // Insert code here to initialize your application
         
         self.outputField.stringValue = "Hello, World!"
-        
     
         tableView.setDataSource(inputs)
     }
@@ -97,7 +97,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         if result == NSOKButton {
             println("OK Clicked")
             if let firstURL = filePicker.URLs.first as NSURL! {
-                displayImage(Photo(url: firstURL))
+                var photo = Photo(url: firstURL)
+                displayImage(photo)
+                startPhotoOperations(photo)
             }
             filePicker.close()
         } else if result == NSCancelButton {
@@ -108,22 +110,51 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func displayImage(photo: Photo) {
         self.outputField.stringValue = "Getting photo!"
         
-        if photo.valid {
+        if photo.state == .New {
             self.outputField.stringValue = "Got \(photo.fileURL.description)\n"
             if let height = photo.height {
                 self.outputField.stringValue += "Size: \(photo.width!)x\(height)"
             }
             self.outputField.stringValue += "\nDate: \(photo.created.description)"
             var image = photo.getImage()
-            var ph = phash(image)
-            var ah = avghash(image)
-            self.outputField.stringValue += "\nphash: \(ph)"
-            self.outputField.stringValue += "\navghash: \(ah)"
-            self.outputField.stringValue += "\nhash ^ differences: \(hammingDistance(ph, ah))"
+            //var ph = phash(image)
+            //var ah = avghash(image)
+            //self.outputField.stringValue += "\nphash: \(ph)"
+            //self.outputField.stringValue += "\navghash: \(ah)"
+            //self.outputField.stringValue += "\nhash ^ differences: \(hammingDistance(ph, ah))"
             imageView.image = image
         } else {
             self.outputField.stringValue = "Failed to get photo 😞."
         }
+    }
+    
+    func startPhotoOperations(photo: Photo) {
+        switch (photo.state) {
+        case .New:
+            startHashingPhoto(photo)
+        default:
+            NSLog("Do nothing")
+        }
+    }
+    
+    func startHashingPhoto(photo: Photo) {
+        if let currentOperation = pendingOperations.hashesInProgress[photo.fileURL] {
+            return
+        }
+        
+        let op = PhotoHasher(photo: photo)
+        op.completionBlock = {
+            if op.cancelled {
+                return
+            }
+            dispatch_async(dispatch_get_main_queue(), {
+                self.pendingOperations.hashesInProgress.removeValueForKey(photo.fileURL)
+                self.outputField.stringValue += "\nphash: \(photo.hash)"
+            })
+        }
+        
+        pendingOperations.hashesInProgress[photo.fileURL] = op
+        pendingOperations.hashesQueue.addOperation(op)
     }
 }
 

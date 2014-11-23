@@ -9,7 +9,7 @@
 import Foundation
 import AppKit
 
-class pathArray: NSObject, NSTableViewDataSource, NSTableViewDelegate {
+class PathArray: NSObject, NSTableViewDataSource, NSTableViewDelegate {
     var items: [NSURL] = []
     
     func numberOfRowsInTableView(aTableView: NSTableView!) -> Int {

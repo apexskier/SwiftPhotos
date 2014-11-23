@@ -10,6 +10,9 @@ import Foundation
 import CoreFoundation
 import AppKit
 
+enum PhotoState {
+    case New, Known, Modified, Deleted, Broken
+}
 
 class Photo {
     // class var dateFormatter: NSDateFormatter = {
@@ -20,9 +23,13 @@ class Photo {
     
     var fileURL: NSURL = NSURL()
     var created: NSDate = NSDate()
-    var valid: Bool = false
+    var state: PhotoState = PhotoState.New
     var height: NSNumber?
     var width: NSNumber?
+    
+    lazy var hash: UInt64 = {
+        return phash(self.getImage())
+    }()
     
     func move(newpath: String) {
         // TODO: implement
@@ -65,8 +72,8 @@ class Photo {
                     println(key)
                 }
             }
-            
-            valid = true
+        } else {
+            state = .Broken
         }
     }
     
@@ -75,7 +82,7 @@ class Photo {
         if !filemanager.fileExistsAtPath(path) {
             // Handle this
             println("File doesn't exist: \(path)")
-            NSException(name: "Photo File not found", reason: "", userInfo: nil).raise()
+            state = .Broken
         } else {
             println("File exists: \(path)")
             fileURL = NSURL(fileURLWithPath: path)! //   NSURL(string: path) as CFURLRef

@@ -1,10 +1,11 @@
 //
-//  PHash.swift
+//  PhotoHashingUtils.swift
 //  SwiftHelloWorldMac
 //
 //  Created by Cameron Little on 11/22/14.
-//  Copyright (c) 2014 Daniel Bergquist. All rights reserved.
+//  Copyright (c) 2014 Cameron Little. All rights reserved.
 //
+//  Some utilities for computing photo similarity hashes and comparing them.
 
 import Foundation
 import AppKit

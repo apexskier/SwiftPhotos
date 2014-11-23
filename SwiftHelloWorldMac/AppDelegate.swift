@@ -115,8 +115,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             }
             self.outputField.stringValue += "\nDate: \(photo.created.description)"
             var image = photo.getImage()
-            self.outputField.stringValue += "\nphash: \(phash(image))"
-            //self.outputField.stringValue += "\navghash: \(avghash(image))"
+            var ph = phash(image)
+            var ah = avghash(image)
+            self.outputField.stringValue += "\nphash: \(ph)"
+            self.outputField.stringValue += "\navghash: \(ah)"
+            self.outputField.stringValue += "\nhash ^ differences: \(hammingDistance(ph, ah))"
             imageView.image = image
         } else {
             self.outputField.stringValue = "Failed to get photo 😞."

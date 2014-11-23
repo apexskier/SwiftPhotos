@@ -6,6 +6,7 @@
 //  Copyright (c) 2014 Cameron Little. All rights reserved.
 //
 //  Some utilities for computing photo similarity hashes and comparing them.
+//  TODO: use Surge or something to make math faster
 
 import Foundation
 import AppKit

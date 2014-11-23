@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6252" systemVersion="14B25" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="Path" syncable="YES">
+        <attribute name="path" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="PathArray" syncable="YES">
+        <relationship name="paths" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="PathArray" inverseName="paths" inverseEntity="PathArray" syncable="YES"/>
+    </entity>
+    <entity name="Settings" syncable="YES"/>
+    <elements>
+        <element name="Settings" positionX="-63" positionY="-18" width="128" height="45"/>
+        <element name="PathArray" positionX="-54" positionY="-9" width="128" height="60"/>
+        <element name="Path" positionX="-36" positionY="9" width="128" height="60"/>
+    </elements>
+</model>

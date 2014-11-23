@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		C573A59E1A224D5000FABE7F /* PhotoOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = C573A59D1A224D5000FABE7F /* PhotoOperations.swift */; };
+		C573A6011A22684000FABE7F /* SwiftPhotos.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C573A5FF1A22684000FABE7F /* SwiftPhotos.xcdatamodeld */; };
 		C592C364199B0BFA00E08731 /* PathArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = C592C363199B0BFA00E08731 /* PathArray.swift */; };
 		C5A1E87D1A215C6F00BA0A3C /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A1E87C1A215C6F00BA0A3C /* main.swift */; };
 		C5A1E87F1A215F2400BA0A3C /* PhotoHashingUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A1E87E1A215F2400BA0A3C /* PhotoHashingUtils.swift */; };
@@ -57,6 +58,7 @@
 
 /* Begin PBXFileReference section */
 		C573A59D1A224D5000FABE7F /* PhotoOperations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoOperations.swift; sourceTree = "<group>"; };
+		C573A6001A22684000FABE7F /* SwiftPhotos.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SwiftPhotos.xcdatamodel; sourceTree = "<group>"; };
 		C592C363199B0BFA00E08731 /* PathArray.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PathArray.swift; sourceTree = "<group>"; };
 		C5A1E87C1A215C6F00BA0A3C /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		C5A1E87E1A215F2400BA0A3C /* PhotoHashingUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoHashingUtils.swift; sourceTree = "<group>"; };
@@ -131,6 +133,7 @@
 				C5A1E87E1A215F2400BA0A3C /* PhotoHashingUtils.swift */,
 				C5C67372199474EB001888D4 /* Photo.swift */,
 				C573A59D1A224D5000FABE7F /* PhotoOperations.swift */,
+				C573A5FF1A22684000FABE7F /* SwiftPhotos.xcdatamodeld */,
 				FE5DDB16193EC4F800D083E0 /* Supporting Files */,
 				C592C363199B0BFA00E08731 /* PathArray.swift */,
 			);
@@ -286,6 +289,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C573A6011A22684000FABE7F /* SwiftPhotos.xcdatamodeld in Sources */,
 				C5C67373199474EB001888D4 /* Photo.swift in Sources */,
 				C5AC6DAB19AA65FA00D1C96E /* Library.swift in Sources */,
 				C5A1E87D1A215C6F00BA0A3C /* main.swift in Sources */,
@@ -500,6 +504,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		C573A5FF1A22684000FABE7F /* SwiftPhotos.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				C573A6001A22684000FABE7F /* SwiftPhotos.xcdatamodel */,
+			);
+			currentVersion = C573A6001A22684000FABE7F /* SwiftPhotos.xcdatamodel */;
+			path = SwiftPhotos.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = FE5DDB0B193EC4F800D083E0 /* Project object */;
 }

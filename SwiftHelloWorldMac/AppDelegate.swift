@@ -111,12 +111,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         if photo.valid {
             self.outputField.stringValue = "Got \(photo.fileURL.description)\n"
             if let height = photo.height {
-                self.outputField.stringValue = self.outputField.stringValue + "Size: \(photo.width!)x\(height)"
+                self.outputField.stringValue += "Size: \(photo.width!)x\(height)"
             }
-            self.outputField.stringValue = self.outputField.stringValue + "\nDate: \(photo.created.description)"
+            self.outputField.stringValue += "\nDate: \(photo.created.description)"
             var image = photo.getImage()
             self.outputField.stringValue += "\nphash: \(phash(image))"
-            imageView.image = imageToGreyImage(image)
+            //self.outputField.stringValue += "\navghash: \(avghash(image))"
+            imageView.image = image
         } else {
             self.outputField.stringValue = "Failed to get photo 😞."
         }

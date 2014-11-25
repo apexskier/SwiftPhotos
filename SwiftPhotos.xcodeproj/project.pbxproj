@@ -20,7 +20,7 @@
 		FE5DDB1B193EC4F800D083E0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE5DDB1A193EC4F800D083E0 /* AppDelegate.swift */; };
 		FE5DDB1D193EC4F800D083E0 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FE5DDB1C193EC4F800D083E0 /* Images.xcassets */; };
 		FE5DDB20193EC4F800D083E0 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = FE5DDB1E193EC4F800D083E0 /* MainMenu.xib */; };
-		FE5DDB2C193EC4F800D083E0 /* SwiftHelloWorldMacTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE5DDB2B193EC4F800D083E0 /* SwiftHelloWorldMacTests.swift */; };
+		FE5DDB2C193EC4F800D083E0 /* SwiftPhotosTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE5DDB2B193EC4F800D083E0 /* SwiftPhotosTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -54,7 +54,7 @@
 			containerPortal = FE5DDB0B193EC4F800D083E0 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = FE5DDB12193EC4F800D083E0;
-			remoteInfo = SwiftHelloWorldMac;
+			remoteInfo = SwiftPhotos;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -70,14 +70,14 @@
 		C5C67372199474EB001888D4 /* Photo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Photo.swift; sourceTree = "<group>"; };
 		C5C7329A1A22D6A000B17279 /* CoreDataAppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataAppDelegate.swift; sourceTree = "<group>"; };
 		C5C7329E1A22DFEC00B17279 /* Models.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
-		FE5DDB13193EC4F800D083E0 /* SwiftHelloWorldMac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftHelloWorldMac.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		FE5DDB13193EC4F800D083E0 /* SwiftPhotos.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftPhotos.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE5DDB17193EC4F800D083E0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FE5DDB1A193EC4F800D083E0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FE5DDB1C193EC4F800D083E0 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		FE5DDB1F193EC4F800D083E0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
-		FE5DDB25193EC4F800D083E0 /* SwiftHelloWorldMacTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftHelloWorldMacTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		FE5DDB25193EC4F800D083E0 /* SwiftPhotosTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftPhotosTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE5DDB2A193EC4F800D083E0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		FE5DDB2B193EC4F800D083E0 /* SwiftHelloWorldMacTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftHelloWorldMacTests.swift; sourceTree = "<group>"; };
+		FE5DDB2B193EC4F800D083E0 /* SwiftPhotosTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftPhotosTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -110,8 +110,8 @@
 		FE5DDB0A193EC4F800D083E0 = {
 			isa = PBXGroup;
 			children = (
-				FE5DDB15193EC4F800D083E0 /* SwiftHelloWorldMac */,
-				FE5DDB28193EC4F800D083E0 /* SwiftHelloWorldMacTests */,
+				FE5DDB15193EC4F800D083E0 /* SwiftPhotos */,
+				FE5DDB28193EC4F800D083E0 /* SwiftPhotosTests */,
 				FE5DDB14193EC4F800D083E0 /* Products */,
 				C5A78CF91A216EED005FF6B8 /* Surge.xcodeproj */,
 			);
@@ -120,13 +120,13 @@
 		FE5DDB14193EC4F800D083E0 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				FE5DDB13193EC4F800D083E0 /* SwiftHelloWorldMac.app */,
-				FE5DDB25193EC4F800D083E0 /* SwiftHelloWorldMacTests.xctest */,
+				FE5DDB13193EC4F800D083E0 /* SwiftPhotos.app */,
+				FE5DDB25193EC4F800D083E0 /* SwiftPhotosTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		FE5DDB15193EC4F800D083E0 /* SwiftHelloWorldMac */ = {
+		FE5DDB15193EC4F800D083E0 /* SwiftPhotos */ = {
 			isa = PBXGroup;
 			children = (
 				FE5DDB1A193EC4F800D083E0 /* AppDelegate.swift */,
@@ -143,7 +143,7 @@
 				FE5DDB16193EC4F800D083E0 /* Supporting Files */,
 				C592C363199B0BFA00E08731 /* PathArray.swift */,
 			);
-			path = SwiftHelloWorldMac;
+			path = SwiftPhotos;
 			sourceTree = "<group>";
 		};
 		FE5DDB16193EC4F800D083E0 /* Supporting Files */ = {
@@ -155,13 +155,13 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		FE5DDB28193EC4F800D083E0 /* SwiftHelloWorldMacTests */ = {
+		FE5DDB28193EC4F800D083E0 /* SwiftPhotosTests */ = {
 			isa = PBXGroup;
 			children = (
-				FE5DDB2B193EC4F800D083E0 /* SwiftHelloWorldMacTests.swift */,
+				FE5DDB2B193EC4F800D083E0 /* SwiftPhotosTests.swift */,
 				FE5DDB29193EC4F800D083E0 /* Supporting Files */,
 			);
-			path = SwiftHelloWorldMacTests;
+			path = SwiftPhotosTests;
 			sourceTree = "<group>";
 		};
 		FE5DDB29193EC4F800D083E0 /* Supporting Files */ = {
@@ -175,9 +175,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		FE5DDB12193EC4F800D083E0 /* SwiftHelloWorldMac */ = {
+		FE5DDB12193EC4F800D083E0 /* SwiftPhotos */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = FE5DDB2F193EC4F800D083E0 /* Build configuration list for PBXNativeTarget "SwiftHelloWorldMac" */;
+			buildConfigurationList = FE5DDB2F193EC4F800D083E0 /* Build configuration list for PBXNativeTarget "SwiftPhotos" */;
 			buildPhases = (
 				FE5DDB0F193EC4F800D083E0 /* Sources */,
 				FE5DDB10193EC4F800D083E0 /* Frameworks */,
@@ -188,14 +188,14 @@
 			);
 			dependencies = (
 			);
-			name = SwiftHelloWorldMac;
-			productName = SwiftHelloWorldMac;
-			productReference = FE5DDB13193EC4F800D083E0 /* SwiftHelloWorldMac.app */;
+			name = SwiftPhotos;
+			productName = SwiftPhotos;
+			productReference = FE5DDB13193EC4F800D083E0 /* SwiftPhotos.app */;
 			productType = "com.apple.product-type.application";
 		};
-		FE5DDB24193EC4F800D083E0 /* SwiftHelloWorldMacTests */ = {
+		FE5DDB24193EC4F800D083E0 /* SwiftPhotosTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = FE5DDB32193EC4F800D083E0 /* Build configuration list for PBXNativeTarget "SwiftHelloWorldMacTests" */;
+			buildConfigurationList = FE5DDB32193EC4F800D083E0 /* Build configuration list for PBXNativeTarget "SwiftPhotosTests" */;
 			buildPhases = (
 				FE5DDB21193EC4F800D083E0 /* Sources */,
 				FE5DDB22193EC4F800D083E0 /* Frameworks */,
@@ -206,9 +206,9 @@
 			dependencies = (
 				FE5DDB27193EC4F800D083E0 /* PBXTargetDependency */,
 			);
-			name = SwiftHelloWorldMacTests;
-			productName = SwiftHelloWorldMacTests;
-			productReference = FE5DDB25193EC4F800D083E0 /* SwiftHelloWorldMacTests.xctest */;
+			name = SwiftPhotosTests;
+			productName = SwiftPhotosTests;
+			productReference = FE5DDB25193EC4F800D083E0 /* SwiftPhotosTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -229,7 +229,7 @@
 					};
 				};
 			};
-			buildConfigurationList = FE5DDB0E193EC4F800D083E0 /* Build configuration list for PBXProject "SwiftHelloWorldMac" */;
+			buildConfigurationList = FE5DDB0E193EC4F800D083E0 /* Build configuration list for PBXProject "SwiftPhotos" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -248,8 +248,8 @@
 			);
 			projectRoot = "";
 			targets = (
-				FE5DDB12193EC4F800D083E0 /* SwiftHelloWorldMac */,
-				FE5DDB24193EC4F800D083E0 /* SwiftHelloWorldMacTests */,
+				FE5DDB12193EC4F800D083E0 /* SwiftPhotos */,
+				FE5DDB24193EC4F800D083E0 /* SwiftPhotosTests */,
 			);
 		};
 /* End PBXProject section */
@@ -295,7 +295,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C573A6011A22684000FABE7F /* SwiftPhotos.xcdatamodeld in Sources */,
 				C5C7329B1A22D6A000B17279 /* CoreDataAppDelegate.swift in Sources */,
 				C5C67373199474EB001888D4 /* Photo.swift in Sources */,
 				C5AC6DAB19AA65FA00D1C96E /* Library.swift in Sources */,
@@ -306,6 +305,7 @@
 				C5C7329F1A22DFEC00B17279 /* Models.swift in Sources */,
 				C573A59E1A224D5000FABE7F /* PhotoOperations.swift in Sources */,
 				C5A2E677199BE8F600EB5D37 /* Settings.swift in Sources */,
+				C573A6011A22684000FABE7F /* SwiftPhotos.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -313,7 +313,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FE5DDB2C193EC4F800D083E0 /* SwiftHelloWorldMacTests.swift in Sources */,
+				FE5DDB2C193EC4F800D083E0 /* SwiftPhotosTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -322,7 +322,7 @@
 /* Begin PBXTargetDependency section */
 		FE5DDB27193EC4F800D083E0 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = FE5DDB12193EC4F800D083E0 /* SwiftHelloWorldMac */;
+			target = FE5DDB12193EC4F800D083E0 /* SwiftPhotos */;
 			targetProxy = FE5DDB26193EC4F800D083E0 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -422,9 +422,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
-				INFOPLIST_FILE = SwiftHelloWorldMac/Info.plist;
+				INFOPLIST_FILE = SwiftPhotos/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = SwiftPhotos;
 				SWIFT_INSTALL_OBJC_HEADER = NO;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -436,9 +436,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
-				INFOPLIST_FILE = SwiftHelloWorldMac/Info.plist;
+				INFOPLIST_FILE = SwiftPhotos/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = SwiftPhotos;
 				SWIFT_INSTALL_OBJC_HEADER = NO;
 			};
 			name = Release;
@@ -446,7 +446,7 @@
 		FE5DDB33193EC4F800D083E0 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/SwiftHelloWorldMac.app/Contents/MacOS/SwiftHelloWorldMac";
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/SwiftPhotos.app/Contents/MacOS/SwiftPhotos";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
@@ -456,10 +456,10 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = SwiftHelloWorldMacTests/Info.plist;
+				INFOPLIST_FILE = SwiftPhotosTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				METAL_ENABLE_DEBUG_INFO = YES;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = SwiftPhotosTests;
 				TEST_HOST = "$(BUNDLE_LOADER)";
 			};
 			name = Debug;
@@ -467,16 +467,16 @@
 		FE5DDB34193EC4F800D083E0 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/SwiftHelloWorldMac.app/Contents/MacOS/SwiftHelloWorldMac";
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/SwiftPhotos.app/Contents/MacOS/SwiftPhotos";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = SwiftHelloWorldMacTests/Info.plist;
+				INFOPLIST_FILE = SwiftPhotosTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				METAL_ENABLE_DEBUG_INFO = NO;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = SwiftPhotosTests;
 				TEST_HOST = "$(BUNDLE_LOADER)";
 			};
 			name = Release;
@@ -484,7 +484,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		FE5DDB0E193EC4F800D083E0 /* Build configuration list for PBXProject "SwiftHelloWorldMac" */ = {
+		FE5DDB0E193EC4F800D083E0 /* Build configuration list for PBXProject "SwiftPhotos" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				FE5DDB2D193EC4F800D083E0 /* Debug */,
@@ -493,7 +493,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		FE5DDB2F193EC4F800D083E0 /* Build configuration list for PBXNativeTarget "SwiftHelloWorldMac" */ = {
+		FE5DDB2F193EC4F800D083E0 /* Build configuration list for PBXNativeTarget "SwiftPhotos" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				FE5DDB30193EC4F800D083E0 /* Debug */,
@@ -502,7 +502,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		FE5DDB32193EC4F800D083E0 /* Build configuration list for PBXNativeTarget "SwiftHelloWorldMacTests" */ = {
+		FE5DDB32193EC4F800D083E0 /* Build configuration list for PBXNativeTarget "SwiftPhotosTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				FE5DDB33193EC4F800D083E0 /* Debug */,

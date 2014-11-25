@@ -1,12 +1,12 @@
 //
-//  SwiftHelloWorldMacTests.swift
-//  SwiftHelloWorldMacTests
+//  SwiftPhotosTests.swift
+//  SwiftPhotosTests
 //
 //
 
 import XCTest
 
-class SwiftHelloWorldMacTests: XCTestCase {
+class SwiftPhotosTests: XCTestCase {
     
     override func setUp() {
         super.setUp()

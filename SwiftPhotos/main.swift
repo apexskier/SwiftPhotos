@@ -1,6 +1,6 @@
 //
 //  main.swift
-//  SwiftHelloWorldMac
+//  SwiftPhotos
 //
 //
 

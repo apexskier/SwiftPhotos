@@ -7,41 +7,50 @@
 //
 
 import Foundation
+import CoreData
 import AppKit
 
-class PathArray: NSObject, NSTableViewDataSource, NSTableViewDelegate {
-    var items: [NSURL] = []
+class PathArray: NSManagedObject, NSTableViewDataSource, NSTableViewDelegate {
+    @NSManaged var paths: [Path]
+    @NSManaged var type: String
     
     func numberOfRowsInTableView(aTableView: NSTableView!) -> Int {
-        return self.items.count
+        return self.paths.count
     }
     
     func tableView(tableView: NSTableView!, objectValueForTableColumn tableColumn: NSTableColumn!, row: Int) -> AnyObject! {
-        return self.items[row].description as NSString;
+        return self.paths[row].description as NSString;
     }
     
     func getDataArray() -> NSArray {
-        println(items);
+        println(paths);
         var array: [String] = []
-        for item in items {
-            array.append(item.relativePath!)
+        for item in paths {
+            //array.append(item.relativePath!)
         }
         return array as NSArray;
     }
     
-    convenience override init() {
-        self.init(array: [])
-    }
-    init(array: [NSURL]) {
-        super.init()
-        self.items = array
-    }
-    
     func append(item: NSURL) {
-        self.items.append(item)
+        let str = item.absoluteString!
+        let ctx = self.managedObjectContext!
+        let entity =  NSEntityDescription.entityForName("Path", inManagedObjectContext: ctx)
+        let path = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: ctx)
+        
+        path.setValue(str, forKey: "path")
+        
+        var error: NSError?
+        if !ctx.save(&error) {
+            println("Could not save \(error), \(error?.userInfo)")
+        }
+        
+        var rel = valueForKeyPath("paths") as NSMutableSet
+        rel.addObject(entity!)// += [item.absoluteURL]
+        //setValue(paths, "paths")
+        //self.items.append(item)
     }
     
     func removeAt(index: Int) {
-        self.items.removeAtIndex(index)
+        self.paths.removeAtIndex(index)
     }
 }

@@ -15,6 +15,8 @@
 		C5A2E677199BE8F600EB5D37 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A2E676199BE8F600EB5D37 /* Settings.swift */; };
 		C5AC6DAB19AA65FA00D1C96E /* Library.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5AC6DAA19AA65FA00D1C96E /* Library.swift */; };
 		C5C67373199474EB001888D4 /* Photo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5C67372199474EB001888D4 /* Photo.swift */; };
+		C5C7329B1A22D6A000B17279 /* CoreDataAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5C7329A1A22D6A000B17279 /* CoreDataAppDelegate.swift */; };
+		C5C7329F1A22DFEC00B17279 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5C7329E1A22DFEC00B17279 /* Models.swift */; };
 		FE5DDB1B193EC4F800D083E0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE5DDB1A193EC4F800D083E0 /* AppDelegate.swift */; };
 		FE5DDB1D193EC4F800D083E0 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FE5DDB1C193EC4F800D083E0 /* Images.xcassets */; };
 		FE5DDB20193EC4F800D083E0 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = FE5DDB1E193EC4F800D083E0 /* MainMenu.xib */; };
@@ -66,6 +68,8 @@
 		C5A78CF91A216EED005FF6B8 /* Surge.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Surge.xcodeproj; path = ../Surge/Surge.xcodeproj; sourceTree = "<group>"; };
 		C5AC6DAA19AA65FA00D1C96E /* Library.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Library.swift; sourceTree = "<group>"; };
 		C5C67372199474EB001888D4 /* Photo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Photo.swift; sourceTree = "<group>"; };
+		C5C7329A1A22D6A000B17279 /* CoreDataAppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataAppDelegate.swift; sourceTree = "<group>"; };
+		C5C7329E1A22DFEC00B17279 /* Models.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		FE5DDB13193EC4F800D083E0 /* SwiftHelloWorldMac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftHelloWorldMac.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE5DDB17193EC4F800D083E0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FE5DDB1A193EC4F800D083E0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -126,6 +130,7 @@
 			isa = PBXGroup;
 			children = (
 				FE5DDB1A193EC4F800D083E0 /* AppDelegate.swift */,
+				C5C7329A1A22D6A000B17279 /* CoreDataAppDelegate.swift */,
 				C5AC6DAA19AA65FA00D1C96E /* Library.swift */,
 				FE5DDB1C193EC4F800D083E0 /* Images.xcassets */,
 				C5A2E676199BE8F600EB5D37 /* Settings.swift */,
@@ -134,6 +139,7 @@
 				C5C67372199474EB001888D4 /* Photo.swift */,
 				C573A59D1A224D5000FABE7F /* PhotoOperations.swift */,
 				C573A5FF1A22684000FABE7F /* SwiftPhotos.xcdatamodeld */,
+				C5C7329E1A22DFEC00B17279 /* Models.swift */,
 				FE5DDB16193EC4F800D083E0 /* Supporting Files */,
 				C592C363199B0BFA00E08731 /* PathArray.swift */,
 			);
@@ -290,12 +296,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				C573A6011A22684000FABE7F /* SwiftPhotos.xcdatamodeld in Sources */,
+				C5C7329B1A22D6A000B17279 /* CoreDataAppDelegate.swift in Sources */,
 				C5C67373199474EB001888D4 /* Photo.swift in Sources */,
 				C5AC6DAB19AA65FA00D1C96E /* Library.swift in Sources */,
 				C5A1E87D1A215C6F00BA0A3C /* main.swift in Sources */,
 				C5A1E87F1A215F2400BA0A3C /* PhotoHashingUtils.swift in Sources */,
 				FE5DDB1B193EC4F800D083E0 /* AppDelegate.swift in Sources */,
 				C592C364199B0BFA00E08731 /* PathArray.swift in Sources */,
+				C5C7329F1A22DFEC00B17279 /* Models.swift in Sources */,
 				C573A59E1A224D5000FABE7F /* PhotoOperations.swift in Sources */,
 				C5A2E677199BE8F600EB5D37 /* Settings.swift in Sources */,
 			);

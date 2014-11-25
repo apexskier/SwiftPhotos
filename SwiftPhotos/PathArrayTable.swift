@@ -10,16 +10,15 @@ import Foundation
 import CoreData
 import AppKit
 
-class PathArray: NSManagedObject, NSTableViewDataSource, NSTableViewDelegate {
-    @NSManaged var paths: [Path]
-    @NSManaged var type: String
+class PathArrayTable: NSObject, NSTableViewDataSource, NSTableViewDelegate {
+    var paths: [String] = []
     
     func numberOfRowsInTableView(aTableView: NSTableView!) -> Int {
         return self.paths.count
     }
     
     func tableView(tableView: NSTableView!, objectValueForTableColumn tableColumn: NSTableColumn!, row: Int) -> AnyObject! {
-        return self.paths[row].description as NSString;
+        return self.paths[row] as NSString;
     }
     
     func getDataArray() -> NSArray {
@@ -33,7 +32,7 @@ class PathArray: NSManagedObject, NSTableViewDataSource, NSTableViewDelegate {
     
     func append(item: NSURL) {
         let str = item.absoluteString!
-        let ctx = self.managedObjectContext!
+        /*let ctx = self.managedObjectContext!
         let entity =  NSEntityDescription.entityForName("Path", inManagedObjectContext: ctx)
         let path = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: ctx)
         
@@ -45,7 +44,7 @@ class PathArray: NSManagedObject, NSTableViewDataSource, NSTableViewDelegate {
         }
         
         var rel = valueForKeyPath("paths") as NSMutableSet
-        rel.addObject(entity!)// += [item.absoluteURL]
+        rel.addObject(entity!)// += [item.absoluteURL]*/
         //setValue(paths, "paths")
         //self.items.append(item)
     }
@@ -53,4 +52,5 @@ class PathArray: NSManagedObject, NSTableViewDataSource, NSTableViewDelegate {
     func removeAt(index: Int) {
         self.paths.removeAtIndex(index)
     }
+    
 }

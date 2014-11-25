@@ -21,20 +21,20 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     var storeURL = NSURL(fileURLWithPath: "~/.photos")
     
-    lazy var inputs: PathArray = {
+    /*lazy var inputs: PathArrayTable = {
         let ctx = self.managedObjectContext!
         let fetchRequest = NSFetchRequest(entityName: "PathArray")
         var error: NSError?
-        let fetchedResults = ctx.executeFetchRequest(fetchRequest, error: &error) as [PathArray]
+        let fetchedResults = ctx.executeFetchRequest(fetchRequest, error: &error) as [PathArrayTable]
         let c = fetchedResults.count
         if c == 1 {
-            return fetchedResults[0] as PathArray
+            return fetchedResults[0] as PathArrayTable
         } else if c > 1 {
             println("Found \(fetchedResults.count) importpaths")
         }
         let entity = NSEntityDescription.entityForName("PathArray", inManagedObjectContext: ctx)
         
-        var pa = PathArray(entity: entity!, insertIntoManagedObjectContext: ctx)
+        var pa = PathArrayTable(entity: entity!, insertIntoManagedObjectContext: ctx)
         pa.paths = []
         pa.type = "inputs"
         if (ctx.save(&error)) {
@@ -42,7 +42,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             println("Error saving ctx")
         }
         return pa
-    }()
+    }()*/
+    var inputs: PathArrayTable = PathArrayTable()
     
     var pendingOperations = PhotoOperations()
     
@@ -191,7 +192,30 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     lazy var managedObjectModel: NSManagedObjectModel = {
         // The managed object model for the application. This property is not optional. It is a fatal error for the application not to be able to find and load its model.
         let modelURL = NSBundle.mainBundle().URLForResource("SwiftPhotos", withExtension: "momd")!
-        return NSManagedObjectModel(contentsOfURL: modelURL)!
+        //return NSManagedObjectModel(contentsOfURL: modelURL)!
+        
+        let managedObjectModel = NSManagedObjectModel(contentsOfURL: modelURL)!
+        
+        // Check if we are running as test or not
+        let environment = NSProcessInfo.processInfo().environment as [String : AnyObject]
+        let isTest = (environment["XCInjectBundle"] as? String)?.pathExtension == "xctest"
+        
+        // Create the module name
+        let moduleName = (isTest) ? "SwiftPhotosTests" : "SwiftPhotos"
+        
+        // Create a new managed object model with updated entity class names
+        var newEntities = [] as [NSEntityDescription]
+        for (_, entity) in enumerate(managedObjectModel.entities) {
+            let newEntity = entity.copy() as NSEntityDescription
+            newEntity.managedObjectClassName = "\(moduleName).\(entity.name)"
+            newEntities.append(newEntity)
+        }
+        let newManagedObjectModel = NSManagedObjectModel()
+        newManagedObjectModel.entities = newEntities
+        
+        return newManagedObjectModel
+        
+        
         }()
     
     lazy var persistentStoreCoordinator: NSPersistentStoreCoordinator? = {

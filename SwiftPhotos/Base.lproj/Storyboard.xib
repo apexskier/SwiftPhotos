@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6250" systemVersion="14B25" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6250"/>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6254"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
@@ -724,7 +725,7 @@ DQ
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ZCY-cc-2ho">
+                    <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ZCY-cc-2ho" userLabel="Add Import Source">
                         <rect key="frame" x="20" y="156" width="59" height="25"/>
                         <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSAddTemplate" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="fkM-tG-xhl">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -734,19 +735,19 @@ DQ
                             <action selector="addImportSourceClick:" target="Voe-Tx-rLC" id="70R-iO-JEK"/>
                         </connections>
                     </button>
-                    <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qu8-fr-5VU">
-                        <rect key="frame" x="20" y="156" width="59" height="25"/>
-                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSAddTemplate" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="S1W-S9-xwz">
+                    <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8Rn-Hh-seN" userLabel="Remove Import Source">
+                        <rect key="frame" x="78" y="156" width="59" height="25"/>
+                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSRemoveTemplate" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="uvS-Uk-qSg">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
+                            <connections>
+                                <action selector="removeImportSourceClick:" target="Voe-Tx-rLC" id="uNX-fE-cNp"/>
+                            </connections>
                         </buttonCell>
-                        <connections>
-                            <action selector="addImportSourceClick:" target="Voe-Tx-rLC" id="NGn-al-FKr"/>
-                        </connections>
                     </button>
-                    <scrollView focusRingType="none" fixedFrame="YES" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ydd-HP-eFW">
+                    <scrollView focusRingType="none" fixedFrame="YES" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ydd-HP-eFW" userLabel="Import Source Table View">
                         <rect key="frame" x="20" y="189" width="765" height="127"/>
-                        <clipView key="contentView" focusRingType="none" ambiguous="YES" misplaced="YES" id="xdi-Is-OzM">
+                        <clipView key="contentView" focusRingType="none" misplaced="YES" id="xdi-Is-OzM">
                             <rect key="frame" x="1" y="17" width="238" height="117"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
@@ -784,16 +785,6 @@ DQ
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
                     </scrollView>
-                    <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8Rn-Hh-seN">
-                        <rect key="frame" x="78" y="156" width="59" height="25"/>
-                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSRemoveTemplate" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="uvS-Uk-qSg">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
-                            <connections>
-                                <action selector="removeImportSourceClick:" target="Voe-Tx-rLC" id="uNX-fE-cNp"/>
-                            </connections>
-                        </buttonCell>
-                    </button>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ddV-hu-yjl">
                         <rect key="frame" x="20" y="324" width="95" height="17"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Import Folders" id="L5p-jJ-VSi">
@@ -802,7 +793,7 @@ DQ
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pCM-FE-e9H">
+                    <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pCM-FE-e9H" userLabel="Output Folder Text Field">
                         <rect key="frame" x="20" y="355" width="592" height="22"/>
                         <textFieldCell key="cell" lineBreakMode="truncatingHead" enabled="NO" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" placeholderString="Output Folder" id="dg0-bX-Zgy">
                             <font key="font" metaFont="system"/>
@@ -822,21 +813,6 @@ DQ
                     </button>
                 </subviews>
             </view>
-            <toolbar key="toolbar" implicitIdentifier="8569BD6A-AAE2-4532-B14C-5463062BA290" autosavesConfiguration="NO" displayMode="iconAndLabel" sizeMode="regular" id="o3k-x1-f14">
-                <allowedToolbarItems>
-                    <toolbarItem implicitItemIdentifier="NSToolbarShowColorsItem" id="JAu-MF-0iU"/>
-                    <toolbarItem implicitItemIdentifier="NSToolbarShowFontsItem" id="dlb-55-yyV"/>
-                    <toolbarItem implicitItemIdentifier="NSToolbarPrintItem" id="yMS-u2-Hzz"/>
-                    <toolbarItem implicitItemIdentifier="NSToolbarSpaceItem" id="bYC-ld-QU8"/>
-                    <toolbarItem implicitItemIdentifier="NSToolbarFlexibleSpaceItem" id="MaH-8o-LSB"/>
-                </allowedToolbarItems>
-                <defaultToolbarItems>
-                    <toolbarItem reference="JAu-MF-0iU"/>
-                    <toolbarItem reference="dlb-55-yyV"/>
-                    <toolbarItem reference="MaH-8o-LSB"/>
-                    <toolbarItem reference="yMS-u2-Hzz"/>
-                </defaultToolbarItems>
-            </toolbar>
             <point key="canvasLocation" x="-93.5" y="-183"/>
         </window>
         <userDefaultsController representsSharedInstance="YES" id="TJJ-Cf-QNN"/>

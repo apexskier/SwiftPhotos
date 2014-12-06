@@ -35,7 +35,7 @@ class PhotoHasher: NSOperation {
             }
             
             let ph = self.photo.hash
-            self.photo.state = .Known
+            self.photo.stateEnum = .Known
             println("Done hashing \(self.photo.fileURL)")
         }
     }

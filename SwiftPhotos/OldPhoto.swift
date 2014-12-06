@@ -5,7 +5,7 @@
 //  Created by Cameron Little on 8/7/14.
 //  Copyright (c) 2014 Cameron Little. All rights reserved.
 //
-
+/*
 import Foundation
 import CoreFoundation
 import AppKit
@@ -94,4 +94,4 @@ class Photo {
         fileURL = url
         readData()
     }
-}
+}*/

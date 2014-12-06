@@ -41,7 +41,7 @@ extension NSImage {
 }
 
 
-func avghash(image: NSImage) -> UInt64 {
+func calcAvghash(image: NSImage) -> UInt64 {
     // 1. Reduce size to 8x8.
     // 2. Reduce to grayscale.
     var workingImage = imageToGreyImage(image, CGSize(width: 8, height: 8))
@@ -81,7 +81,7 @@ func avghash(image: NSImage) -> UInt64 {
     return hash
 }
 
-func phash(image: NSImage) -> UInt64 {
+func calcPhash(image: NSImage) -> UInt64 {
     // http://www.hackerfactor.com/blog/?/archives/432-Looks-Like-It.html
     
     /// 1. Reduce size to 32x32. (reduce high frequencies)

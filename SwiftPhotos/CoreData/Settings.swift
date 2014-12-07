@@ -11,7 +11,7 @@ import CoreData
 
 class Settings: NSManagedObject {
 
-    @NSManaged var imports: NSOrderedSet
+    @NSManaged var imports: [Folder]
     @NSManaged var output: Folder
 
 }

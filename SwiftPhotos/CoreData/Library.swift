@@ -13,6 +13,6 @@ class Library: NSManagedObject {
 
     @NSManaged var name: String
     @NSManaged var settings: Settings
-    @NSManaged var photos: NSSet
+    @NSManaged var photos: [Photo]
 
 }

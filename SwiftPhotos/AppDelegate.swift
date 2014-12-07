@@ -13,7 +13,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     @IBOutlet var window: NSWindow!
     
-    @IBOutlet var importArrayController: NSArrayController!
+    // @IBOutlet var importArrayController: NSArrayController!
     @IBOutlet var outputTextField: NSTextField!
     
     @IBOutlet var tableView: NSTableView!

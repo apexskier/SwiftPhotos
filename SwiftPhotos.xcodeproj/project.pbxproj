@@ -64,7 +64,6 @@
 		FE5DDB17193EC4F800D083E0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FE5DDB1A193EC4F800D083E0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FE5DDB1C193EC4F800D083E0 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		FE5DDB1F193EC4F800D083E0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/Storyboard.xib; sourceTree = "<group>"; };
 		FE5DDB25193EC4F800D083E0 /* SwiftPhotosTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftPhotosTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE5DDB2A193EC4F800D083E0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FE5DDB2B193EC4F800D083E0 /* SwiftPhotosTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftPhotosTests.swift; sourceTree = "<group>"; };
@@ -125,7 +124,6 @@
 				C51697151A32AFAB00026B77 /* Main.storyboard */,
 				C516970F1A32A14700026B77 /* CoreDataStackManager.swift */,
 				FE5DDB1C193EC4F800D083E0 /* Images.xcassets */,
-				FE5DDB1E193EC4F800D083E0 /* Storyboard.xib */,
 				C51697131A32ACFD00026B77 /* PreferencesViewController.swift */,
 				C5A1E87E1A215F2400BA0A3C /* PhotoHashingUtils.swift */,
 				C5C67372199474EB001888D4 /* OldPhoto.swift */,
@@ -296,17 +294,6 @@
 			targetProxy = FE5DDB26193EC4F800D083E0 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
-
-/* Begin PBXVariantGroup section */
-		FE5DDB1E193EC4F800D083E0 /* Storyboard.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				FE5DDB1F193EC4F800D083E0 /* Base */,
-			);
-			name = Storyboard.xib;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		FE5DDB2D193EC4F800D083E0 /* Debug */ = {

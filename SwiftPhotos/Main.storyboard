@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="RbV-IH-fiS">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="tnW-Ib-dFQ">
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6254"/>
@@ -178,7 +178,62 @@
                 <customObject id="7lv-Ua-7vI" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
                 <userDefaultsController representsSharedInstance="YES" id="2ih-Xd-vDm"/>
             </objects>
-            <point key="canvasLocation" x="82" y="741"/>
+            <point key="canvasLocation" x="53" y="741"/>
+        </scene>
+        <!--Window Controller-->
+        <scene sceneID="Bdf-MV-yao">
+            <objects>
+                <windowController showSeguePresentationStyle="single" id="tnW-Ib-dFQ" sceneMemberID="viewController">
+                    <window key="window" title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" animationBehavior="default" id="ZdX-7s-6hG">
+                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
+                        <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+                        <rect key="contentRect" x="294" y="313" width="480" height="270"/>
+                        <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1057"/>
+                    </window>
+                    <connections>
+                        <segue destination="0vp-VM-WNX" kind="relationship" relationship="window.shadowedContentViewController" id="u9O-iI-Mwu"/>
+                    </connections>
+                </windowController>
+                <customObject id="BvZ-SI-Bjc" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="706" y="300"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="c0x-Aq-qBa">
+            <objects>
+                <viewController id="0vp-VM-WNX" sceneMemberID="viewController">
+                    <view key="view" id="TUB-pw-Ewc">
+                        <rect key="frame" x="0.0" y="0.0" width="708" height="437"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <scrollView fixedFrame="YES" autohidesScrollers="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9Uw-cB-yzn">
+                                <rect key="frame" x="20" y="20" width="668" height="397"/>
+                                <clipView key="contentView" misplaced="YES" id="qhf-aa-O2H">
+                                    <rect key="frame" x="1" y="1" width="248" height="158"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <collectionView id="uKW-3Y-JXU">
+                                            <rect key="frame" x="0.0" y="0.0" width="248" height="158"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            <color key="primaryBackgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                        </collectionView>
+                                    </subviews>
+                                </clipView>
+                                <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="nUW-6G-bCs">
+                                    <rect key="frame" x="1" y="144" width="233" height="15"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </scroller>
+                                <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="Wfl-h0-uTB">
+                                    <rect key="frame" x="234" y="1" width="15" height="143"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </scroller>
+                            </scrollView>
+                        </subviews>
+                    </view>
+                </viewController>
+                <customObject id="zOK-uE-ldh" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="820" y="778.5"/>
         </scene>
         <!--Object-->
         <scene sceneID="tn2-Wt-FXj">
@@ -197,7 +252,11 @@
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="wiL-n3-SSM"/>
-                                        <menuItem title="Preferences…" keyEquivalent="," id="sgt-n7-NPR"/>
+                                        <menuItem title="Preferences…" keyEquivalent="," id="sgt-n7-NPR">
+                                            <connections>
+                                                <segue destination="RbV-IH-fiS" kind="show" id="NF2-HF-0js"/>
+                                            </connections>
+                                        </menuItem>
                                         <menuItem isSeparatorItem="YES" id="R2s-go-4BQ"/>
                                         <menuItem title="Services" id="aWg-a1-7bm">
                                             <modifierMask key="keyEquivalentModifierMask"/>
@@ -322,7 +381,7 @@
                 </application>
                 <customObject id="E1T-Tr-OgV" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-18.5" y="-15"/>
+            <point key="canvasLocation" x="-66.5" y="-9"/>
         </scene>
     </scenes>
     <resources>

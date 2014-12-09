@@ -11,14 +11,7 @@ import Foundation
 
 class AppDelegate: NSObject, NSApplicationDelegate {
     
-    @IBOutlet var window: NSWindow!
-    
-    // @IBOutlet var importArrayController: NSArrayController!
-    @IBOutlet var outputTextField: NSTextField!
-    
-    @IBOutlet var tableView: NSTableView!
-    @IBOutlet var outputField : NSTextField!
-    @IBOutlet var imageView: NSImageView!
+    //@IBOutlet var imageView: NSImageView!
     
     /// Managed object context for the view controller (which is bound to the persistent store coordinator for the application).
     private lazy var managedObjectContext: NSManagedObjectContext = {
@@ -28,63 +21,19 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }()
     
     var inputs: PathArrayTable = PathArrayTable()
+    var testStr: String = ""
     
     var pendingOperations = PhotoOperations()
     
     func applicationDidFinishLaunching(aNotification: NSNotification?) {
         // Insert code here to initialize your application
-        outputField.stringValue = "Hello, World!"
-        
-        tableView.setDataSource(inputs)
     }
     
     func applicationWillTerminate(aNotification: NSNotification?) {
         // Insert code here to tear down your application
     }
     
-    @IBAction func chooseOutputClick(sender: NSButton) {
-        var filePicker = NSOpenPanel()
-        filePicker.canChooseDirectories = true
-        filePicker.canChooseFiles = false
-        filePicker.allowsMultipleSelection = false
-        
-        var result = filePicker.runModal()
-        
-        if result == NSOKButton {
-            println("OK Clicked")
-            var outputPath = filePicker.URL!
-            outputTextField.stringValue = outputPath.relativePath!
-            println(outputPath.relativePath)
-            filePicker.close()
-        } else if result == NSCancelButton {
-            println("Cancel Clicked")
-        }
-    }
-    @IBAction func addImportSourceClick(sender: AnyObject) {
-        var filePicker = NSOpenPanel()
-        filePicker.canChooseDirectories = true
-        filePicker.canChooseFiles = false
-        filePicker.allowsMultipleSelection = true
-        
-        var result = filePicker.runModal()
-        
-        if result == NSOKButton {
-            for url in filePicker.URLs as [NSURL] {
-                inputs.append(url)
-                println(url.description)
-            }
-            tableView.reloadData()
-            filePicker.close()
-        }
-    }
-    @IBAction func removeImportSourceClick(sender: NSButtonCell) {
-        var idx = tableView.selectedRow
-        if idx != -1 {
-            inputs.removeAt(idx)
-        }
-        tableView.reloadData()
-    }
-    
+    /*
     @IBAction func openButtonClick(sender: AnyObject) { openOpen() }
     @IBAction func openClick(sender: NSMenuItem) { openOpen() }
     func openOpen() {
@@ -116,9 +65,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             filePicker.close()
         }
     }
+    */
     
     func displayImage(photo: Photo) {
-        self.outputField.stringValue = "Getting photo!"
+        /*self.outputField.stringValue = "Getting photo!"
         
         print("\(photo.state)")
         if photo.stateEnum != .Broken {
@@ -136,7 +86,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             imageView.image = image
         } else {
             self.outputField.stringValue = "Failed to get photo."
-        }
+        }*/
     }
     
     func startPhotoOperations(photo: Photo) {
@@ -160,7 +110,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             }
             dispatch_async(dispatch_get_main_queue(), {
                 self.pendingOperations.hashesInProgress.removeValueForKey(photo.fileURL)
-                self.outputField.stringValue += "\nphash: \(photo.hash)"
+                self.testStr += "\nphash: \(photo.hash)"
             })
         }
         

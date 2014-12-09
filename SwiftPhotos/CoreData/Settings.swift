@@ -11,7 +11,14 @@ import CoreData
 
 class Settings: NSManagedObject {
 
-    @NSManaged var imports: [Folder]
-    @NSManaged var output: Folder
+    @NSManaged var imports: NSMutableOrderedSet
+    @NSManaged dynamic var output: Folder?
 
+}
+
+extension Settings {
+    func appendImport(folder: Folder) {
+        var imports = self.mutableOrderedSetValueForKey("imports")
+        imports.addObject(folder)
+    }
 }

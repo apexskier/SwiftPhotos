@@ -9,7 +9,7 @@
         <scene sceneID="76p-Us-CQ0">
             <objects>
                 <windowController showSeguePresentationStyle="single" id="RbV-IH-fiS" sceneMemberID="viewController">
-                    <window key="window" title="Earthquakes" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" animationBehavior="default" id="dGG-LE-dby" userLabel="Preferences">
+                    <window key="window" title="Preferences" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" animationBehavior="default" id="dGG-LE-dby" userLabel="Preferences">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
                         <rect key="contentRect" x="231" y="511" width="480" height="270"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1057"/>
@@ -63,7 +63,6 @@
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <tableView focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" columnSelection="YES" columnResizing="NO" autosaveColumns="NO" rowSizeStyle="automatic" viewBased="YES" id="MEq-lc-w13">
-                                            <rect key="frame" x="0.0" y="0.0" width="544" height="19"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <size key="intercellSpacing" width="3" height="2"/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -129,6 +128,9 @@
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
+                                <connections>
+                                    <action selector="chooseOutputFolder:" target="Isx-t4-DDu" id="CBi-CU-lfU"/>
+                                </connections>
                             </button>
                             <button translatesAutoresizingMaskIntoConstraints="NO" id="MTD-GU-MmA" userLabel="Remove Import Source">
                                 <rect key="frame" x="78" y="20" width="59" height="25"/>
@@ -168,6 +170,7 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="outputTextField" destination="xWT-Op-F0S" id="oCJ-Ap-RPW"/>
                         <outlet property="removeImportButton" destination="MTD-GU-MmA" id="8BL-bm-Aek"/>
                         <outlet property="tableView" destination="MEq-lc-w13" id="9SY-tb-pY7"/>
                     </connections>

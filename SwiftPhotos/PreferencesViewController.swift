@@ -10,11 +10,42 @@ import Foundation
 
 import Cocoa
 
+extension String {
+    subscript (i: Int) -> String {
+        return String(Array(self)[i])
+    }
+}
 
 class PreferencesViewController: NSViewController, NSTableViewDataSource, NSTableViewDelegate {
     
-    private var inputs = [Folder]()
+    private var settings: Settings {
+        get {
+            var settings: Settings
+            var anyError: NSError?
+            
+            let request = NSFetchRequest(entityName: "Settings")
+            let fetchedSources = self.managedObjectContext.executeFetchRequest(request, error: &anyError)
+            if let sources = fetchedSources {
+                if sources.count == 0 {
+                    settings = NSEntityDescription.insertNewObjectForEntityForName("Settings", inManagedObjectContext: self.managedObjectContext) as Settings
+                    settings.output = Folder()
+                    
+                    if !self.managedObjectContext.save(&anyError) {
+                        println("Error saving batch: \(anyError)")
+                        fatalError("Saving batch failed.")
+                    }
+                } else {
+                    settings = sources[sources.count - 1] as Settings
+                }
+            } else {
+                println("Error fetching: \(anyError)")
+                fatalError("Fetch failed.")
+            }
+            return settings
+        }
+    }
     
+    @IBOutlet weak var outputTextField: NSTextField!
     @IBOutlet weak var tableView: NSTableView!
     @IBOutlet weak var removeImportButton: NSButton!
     
@@ -25,17 +56,33 @@ class PreferencesViewController: NSViewController, NSTableViewDataSource, NSTabl
         return moc
     }()
     
-    private lazy var taskContext: NSManagedObjectContext = {
-        var anyError: NSError?
+    @IBAction func chooseOutputFolder(sender: AnyObject) {
+        var filePicker = NSOpenPanel()
+        filePicker.canChooseDirectories = true
+        filePicker.canChooseFiles = false
+        filePicker.allowsMultipleSelection = false
         
-        let taskContext = privateQueueContext(&anyError)
-        if taskContext == nil {
-            println("Error creating fetching context: \(anyError)")
-            fatalError("Couldn't create fetching context.")
+        var result = filePicker.runModal()
+        
+        if result == NSOKButton {
+            var outputPath = filePicker.URL!
+            
+            var folder: Folder = NSEntityDescription.insertNewObjectForEntityForName("Folder", inManagedObjectContext: managedObjectContext) as Folder
+            folder.path = outputPath.relativePath!
+            settings.output = folder
+            
+            var anyError: NSError?
+            if !managedObjectContext.save(&anyError) {
+                println("Error saving batch: \(anyError)")
+                fatalError("Saving batch failed.")
+                return
+            }
+            
+            reloadTableView(self)
+            
+            filePicker.close()
         }
-        
-        return taskContext
-    }()
+    }
     
     @IBAction func addImportSourceClick(sender: AnyObject) {
         var filePicker = NSOpenPanel()
@@ -46,22 +93,22 @@ class PreferencesViewController: NSViewController, NSTableViewDataSource, NSTabl
         var result = filePicker.runModal()
         
         if result == NSOKButton {
-            for url in filePicker.URLs as [NSURL] {
-                var folder: Folder = NSEntityDescription.insertNewObjectForEntityForName("Folder", inManagedObjectContext: taskContext) as Folder
-                folder.path = url.absoluteString!
-                inputs.append(folder)
-                println("Adding import source: \(folder.path)")
-            }
-            
             var anyError: NSError?
-            if !taskContext.save(&anyError) {
-                println("Error saving batch: \(anyError)")
-                fatalError("Saving batch failed.")
-                return
-            }
-            taskContext.reset()
             
-            self.reloadTableView(nil)
+            for url in filePicker.URLs as [NSURL] {
+                var folder: Folder = NSEntityDescription.insertNewObjectForEntityForName("Folder", inManagedObjectContext: managedObjectContext) as Folder
+                folder.path = url.absoluteString!
+                settings.appendImport(folder)
+                
+                if !managedObjectContext.save(&anyError) {
+                    println("Error saving batch: \(anyError)")
+                    fatalError("Saving batch failed.")
+                    return
+                }
+                managedObjectContext.reset()
+            }
+            
+            reloadTableView(nil)
             
             filePicker.close()
         }
@@ -75,46 +122,48 @@ class PreferencesViewController: NSViewController, NSTableViewDataSource, NSTabl
             let length = range.length
             for var i = (location + length - 1); i >= location; i-- {
                 if i != -1 {
-                    self.taskContext.deleteObject(self.inputs[i])
-                    self.inputs.removeAtIndex(i)
+                    self.managedObjectContext.deleteObject(self.settings.imports.objectAtIndex(i) as NSManagedObject)
                 }
             }
         })
         
         var anyError: NSError?
-        if !self.taskContext.save(&anyError) {
+        if !self.managedObjectContext.save(&anyError) {
             println("Error saving batch: \(anyError)")
             fatalError("Saving batch failed.")
             return
         }
-        self.taskContext.reset()
+        self.managedObjectContext.reset()
         
         reloadTableView(self)
+    }
+    // Delete row on backspace.
+    override func keyDown(theEvent: NSEvent) {
+        if let keys = theEvent.charactersIgnoringModifiers {
+            var delete = Character(UnicodeScalar(NSDeleteCharacter))
+            var key: Character = Array(keys)[0]
+            if key == Character(UnicodeScalar(NSDeleteCharacter)) {
+                self.removeImportSourceClick(self)
+            }
+        }
     }
     
     // MARK: View Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         tableView.setDataSource(self)
         reloadTableView(self)
     }
     
     /// Fetch Folders in settings object and display.
     private func reloadTableView(sender: AnyObject?) {
-        let request = NSFetchRequest(entityName: "Folder")
+        // TODO: reload settings object ?
         
-        var anyError: NSError?
-        
-        let fetchedSources = taskContext.executeFetchRequest(request, error:&anyError)
-        
-        if fetchedSources == nil {
-            println("Error fetching: \(anyError)")
-            fatalError("Fetch failed.")
-            return
+        if let output = settings.output {
+            self.outputTextField.stringValue = output.path
         }
-        
-        inputs = fetchedSources as [Folder]
         
         tableView.reloadData()
     }
@@ -122,18 +171,18 @@ class PreferencesViewController: NSViewController, NSTableViewDataSource, NSTabl
     // MARK: NSTableViewDataSource
     
     func numberOfRowsInTableView(tableView: NSTableView) -> Int {
-        if inputs.count <= 0 {
+        if settings.imports.count <= 0 {
             removeImportButton.enabled = false
         } else {
             removeImportButton.enabled = true
         }
-        return inputs.count
+        return settings.imports.count
     }
     
     // MARK: NSTableViewDelegate
     
     func tableView(tableView: NSTableView, objectValueForTableColumn tableColumn: NSTableColumn?, row: Int) -> AnyObject? {
-        let relativePath = NSURL(string: inputs[row].path)?.relativeString
+        let relativePath = NSURL(string: settings.imports[row].path)?.relativeString
         return NSString(string: relativePath!).stringByReplacingPercentEscapesUsingEncoding(NSUTF8StringEncoding)
     }
 }
@@ -144,7 +193,7 @@ private func privateQueueContext(outError: NSErrorPointer) -> NSManagedObjectCon
     let localCoordinator = NSPersistentStoreCoordinator(managedObjectModel: CoreDataStackManager.sharedManager.managedObjectModel)
     var error: NSError?
     
-    let persistentStore = localCoordinator.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: CoreDataStackManager.sharedManager.storeURL, options: nil, error:&error)
+    let persistentStore = localCoordinator.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: CoreDataStackManager.sharedManager.storeURL, options: nil, error: &error)
     if persistentStore == nil {
         if outError != nil {
             outError.memory = error

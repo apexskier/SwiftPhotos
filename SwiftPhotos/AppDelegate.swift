@@ -14,60 +14,90 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     //@IBOutlet var imageView: NSImageView!
     
     /// Managed object context for the view controller (which is bound to the persistent store coordinator for the application).
-    private lazy var managedObjectContext: NSManagedObjectContext = {
+    lazy var managedObjectContext: NSManagedObjectContext = {
         let moc = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
         moc.persistentStoreCoordinator = CoreDataStackManager.sharedManager.persistentStoreCoordinator
         return moc
     }()
     
-    var inputs: PathArrayTable = PathArrayTable()
+    var settings: Settings {
+        get {
+            var settings: Settings
+            var anyError: NSError?
+            
+            let request = NSFetchRequest(entityName: "Settings")
+            let fetchedSources = self.managedObjectContext.executeFetchRequest(request, error: &anyError)
+            if let sources = fetchedSources {
+                if sources.count == 0 {
+                    settings = NSEntityDescription.insertNewObjectForEntityForName("Settings", inManagedObjectContext: self.managedObjectContext) as Settings
+                    settings.output = Folder()
+                    
+                    if !self.managedObjectContext.save(&anyError) {
+                        println("Error saving batch: \(anyError)")
+                        fatalError("Saving batch failed.")
+                    }
+                } else {
+                    settings = sources[sources.count - 1] as Settings
+                }
+            } else {
+                println("Error fetching: \(anyError)")
+                fatalError("Fetch failed.")
+            }
+            return settings
+        }
+    }
+    
     var testStr: String = ""
     
     var pendingOperations = PhotoOperations()
     
     func applicationDidFinishLaunching(aNotification: NSNotification?) {
         // Insert code here to initialize your application
+        println("Starting application.")
+        
+        let fileManager = NSFileManager()
+        
+        for folder in settings.imports.objectEnumerator().allObjects as [Folder] {
+            println("--------------------------\nStarting folder \(folder.path)")
+            let path = NSURL(string: folder.path)!
+            var count = 0
+            //let path = NSURL(fileURLWithPath: folder.path)!
+            println(path.absoluteString!)
+            if let dirEnumerator: NSDirectoryEnumerator = fileManager.enumeratorAtURL(
+                path,
+                includingPropertiesForKeys: [NSURLPathKey, NSURLNameKey, NSURLIsDirectoryKey],
+                options: NSDirectoryEnumerationOptions.SkipsHiddenFiles,
+                errorHandler: { (url: NSURL!, error: NSError!) -> Bool in
+                    if let u = url {
+                        println("Error at \(url.absoluteString!))")
+                    }
+                        
+                    println(error)
+                    return true
+            }) {
+                for url: NSURL in dirEnumerator.allObjects as [NSURL] {
+                    var error: NSError?
+                    var isDir: NSNumber? = nil
+                    count++
+                    
+                    /*
+                    if url.getResourceValue(&isDir as AnyObject, forKey: NSURLIsDirectoryKey, error: &error) {
+                        print("Error getting resource from url '\(url)'.\n\(error)")
+                    } else if (!isDir) {
+                    }*/
+                }
+            } else {
+                println("Couldn't initialize NSDirectoryEnumerator for \(folder.path)")
+            }
+            println("Found \(count) files.")
+        }
     }
     
     func applicationWillTerminate(aNotification: NSNotification?) {
         // Insert code here to tear down your application
     }
     
-    /*
-    @IBAction func openButtonClick(sender: AnyObject) { openOpen() }
-    @IBAction func openClick(sender: NSMenuItem) { openOpen() }
-    func openOpen() {
-        var filePicker = NSOpenPanel()
-        filePicker.canChooseDirectories = false
-        filePicker.canChooseFiles = true
-        filePicker.allowsMultipleSelection = true
-        
-        var result = filePicker.runModal()
-        
-        if result == NSOKButton {
-            if let firstURL = filePicker.URLs.first as NSURL! {
-                var anyError: NSError?
-                let taskContext = privateQueueContext(&anyError)
-                if taskContext == nil {
-                    println("Error creating fetching context: \(anyError)")
-                    fatalError("Couldn't create fetching context.")
-                    return
-                }
-                
-                let path = firstURL.absoluteString!
-                var photo = NSEntityDescription.insertNewObjectForEntityForName("Photo", inManagedObjectContext: taskContext) as Photo
-                photo.filepath = path
-                photo.readData()
-                
-                displayImage(photo)
-                startPhotoOperations(photo)
-            }
-            filePicker.close()
-        }
-    }
-    */
-    
-    func displayImage(photo: Photo) {
+    /*func displayImage(photo: Photo) {
         /*self.outputField.stringValue = "Getting photo!"
         
         print("\(photo.state)")
@@ -87,14 +117,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         } else {
             self.outputField.stringValue = "Failed to get photo."
         }*/
-    }
+    }*/
     
     func startPhotoOperations(photo: Photo) {
         switch (photo.stateEnum) {
-        case .New:
-            startHashingPhoto(photo)
-        default:
-            NSLog("Do nothing")
+            case .New:
+                startHashingPhoto(photo)
+            default:
+                NSLog("Do nothing")
         }
     }
     

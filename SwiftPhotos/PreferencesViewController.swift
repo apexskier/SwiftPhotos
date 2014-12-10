@@ -18,7 +18,7 @@ extension String {
 
 class PreferencesViewController: NSViewController, NSTableViewDataSource, NSTableViewDelegate {
     
-    private var settings: Settings {
+    var settings: Settings {
         get {
             var settings: Settings
             var anyError: NSError?

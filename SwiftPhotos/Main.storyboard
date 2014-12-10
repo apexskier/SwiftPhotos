@@ -1,10 +1,172 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="tnW-Ib-dFQ">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="ylS-Le-OWr">
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6254"/>
+        <plugIn identifier="com.apple.imagekit.ibplugin" version="6254"/>
     </dependencies>
     <scenes>
+        <!--Application-->
+        <scene sceneID="tn2-Wt-FXj">
+            <objects>
+                <application id="78H-N2-wO2" userLabel="Application" sceneMemberID="viewController">
+                    <menu key="mainMenu" title="Main Menu" systemMenu="main" id="czY-D3-Tlz">
+                        <items>
+                            <menuItem title="SwiftPhotos" id="qsO-I2-kEU">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="SwiftPhotos" systemMenu="apple" id="kTg-Tp-dtP">
+                                    <items>
+                                        <menuItem title="About SwiftPhotos" id="yM4-UW-tXu">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="orderFrontStandardAboutPanel:" target="E1T-Tr-OgV" id="P2d-ec-8do"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="wiL-n3-SSM"/>
+                                        <menuItem title="Preferences…" keyEquivalent="," id="sgt-n7-NPR">
+                                            <connections>
+                                                <segue destination="RbV-IH-fiS" kind="show" id="NF2-HF-0js"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="R2s-go-4BQ"/>
+                                        <menuItem title="Services" id="aWg-a1-7bm">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <menu key="submenu" title="Services" systemMenu="services" id="f2n-9H-4t7"/>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="3te-qb-Pf3"/>
+                                        <menuItem title="Hide SwiftPhotos" keyEquivalent="h" id="cbJ-2z-DQ7">
+                                            <connections>
+                                                <action selector="hide:" target="E1T-Tr-OgV" id="b6U-Mr-s1Z"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Hide Others" keyEquivalent="h" id="wQJ-Es-RQT">
+                                            <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                            <connections>
+                                                <action selector="hideOtherApplications:" target="E1T-Tr-OgV" id="Clt-84-7WN"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Show All" id="rFd-Fd-7oX">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="unhideAllApplications:" target="E1T-Tr-OgV" id="ZyQ-0z-VO6"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="kdy-cu-l2Z"/>
+                                        <menuItem title="Quit SwiftPhotos" keyEquivalent="q" id="N3l-wy-fJr">
+                                            <connections>
+                                                <action selector="terminate:" target="E1T-Tr-OgV" id="PX0-hj-Yg9"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
+                            <menuItem title="File" id="ZZv-xR-V48">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="File" id="OUl-wi-A86">
+                                    <items>
+                                        <menuItem title="Open…" keyEquivalent="o" id="ZtP-9G-YKB">
+                                            <connections>
+                                                <action selector="openDocument:" target="E1T-Tr-OgV" id="ZFb-ct-4Xp"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Open Recent" id="mMm-5m-eLz">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <menu key="submenu" title="Open Recent" systemMenu="recentDocuments" id="R5K-aj-fMC">
+                                                <items>
+                                                    <menuItem title="Clear Menu" id="Xj6-DM-bXG">
+                                                        <modifierMask key="keyEquivalentModifierMask"/>
+                                                        <connections>
+                                                            <action selector="clearRecentDocuments:" target="E1T-Tr-OgV" id="Rs3-FX-fPa"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="lPF-bR-SBw"/>
+                                        <menuItem title="Close" keyEquivalent="w" id="vjq-9b-qAa">
+                                            <connections>
+                                                <action selector="performClose:" target="E1T-Tr-OgV" id="JN5-dB-TA1"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
+                            <menuItem title="View" id="AUU-JK-3mn">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="View" id="xDj-Lt-D9y">
+                                    <items>
+                                        <menuItem title="Show Toolbar" keyEquivalent="t" id="nyv-go-7uE">
+                                            <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                            <connections>
+                                                <action selector="toggleToolbarShown:" target="E1T-Tr-OgV" id="2xO-zg-2BX"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Show Main Window" id="fHG-Bq-uD5">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <segue destination="ylS-Le-OWr" kind="show" id="3hx-Iq-xni"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Customize Toolbar…" id="OJa-dQ-35u">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="runToolbarCustomizationPalette:" target="E1T-Tr-OgV" id="RMa-00-WGX"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
+                            <menuItem title="Window" id="F0A-OU-LeI">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="Window" systemMenu="window" id="eUr-Mf-7bP">
+                                    <items>
+                                        <menuItem title="Minimize" keyEquivalent="m" id="LO3-Y2-zg0">
+                                            <connections>
+                                                <action selector="performMiniaturize:" target="E1T-Tr-OgV" id="RKo-TV-kVc"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Zoom" id="8Vu-fl-goU">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="performZoom:" target="E1T-Tr-OgV" id="aLw-Ph-Ep5"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="JLm-dG-Hwy"/>
+                                        <menuItem title="Bring All to Front" id="v8K-is-VQE">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="arrangeInFront:" target="E1T-Tr-OgV" id="RHM-Q3-bRg"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
+                            <menuItem title="Help" id="NSB-eQ-Xbq">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="Help" systemMenu="help" id="90m-NJ-M3q">
+                                    <items>
+                                        <menuItem title="SwiftPhotos Help" keyEquivalent="?" id="G6d-qH-peF">
+                                            <connections>
+                                                <action selector="showHelp:" target="E1T-Tr-OgV" id="Zy0-oR-zWd"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
+                        </items>
+                        <connections>
+                            <outlet property="delegate" destination="6xF-0o-AEK" id="9Io-Nd-cYO"/>
+                        </connections>
+                    </menu>
+                    <connections>
+                        <outlet property="delegate" destination="6xF-0o-AEK" id="PrD-fu-P6m"/>
+                    </connections>
+                </application>
+                <customObject id="6xF-0o-AEK" customClass="AppDelegate" customModule="SwiftPhotos" customModuleProvider="target"/>
+                <customObject id="E1T-Tr-OgV" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="179.5" y="-79"/>
+        </scene>
         <!--Window Controller-->
         <scene sceneID="76p-Us-CQ0">
             <objects>
@@ -170,7 +332,7 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="outputTextField" destination="xWT-Op-F0S" id="oCJ-Ap-RPW"/>
+                        <outlet property="outputTextField" destination="xWT-Op-F0S" id="kUr-Ul-J7Q"/>
                         <outlet property="removeImportButton" destination="MTD-GU-MmA" id="8BL-bm-Aek"/>
                         <outlet property="tableView" destination="MEq-lc-w13" id="9SY-tb-pY7"/>
                     </connections>
@@ -180,208 +342,49 @@
             </objects>
             <point key="canvasLocation" x="53" y="741"/>
         </scene>
-        <!--Window Controller-->
-        <scene sceneID="Bdf-MV-yao">
-            <objects>
-                <windowController showSeguePresentationStyle="single" id="tnW-Ib-dFQ" sceneMemberID="viewController">
-                    <window key="window" title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" animationBehavior="default" id="ZdX-7s-6hG">
-                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
-                        <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-                        <rect key="contentRect" x="294" y="313" width="480" height="270"/>
-                        <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1057"/>
-                    </window>
-                    <connections>
-                        <segue destination="0vp-VM-WNX" kind="relationship" relationship="window.shadowedContentViewController" id="u9O-iI-Mwu"/>
-                    </connections>
-                </windowController>
-                <customObject id="BvZ-SI-Bjc" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="706" y="300"/>
-        </scene>
-        <!--View Controller-->
+        <!--Image Browser Window Controller-->
         <scene sceneID="c0x-Aq-qBa">
             <objects>
-                <viewController id="0vp-VM-WNX" sceneMemberID="viewController">
+                <viewController id="0vp-VM-WNX" customClass="ImageBrowserWindowController" customModule="SwiftPhotos" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="TUB-pw-Ewc">
-                        <rect key="frame" x="0.0" y="0.0" width="708" height="437"/>
+                        <rect key="frame" x="0.0" y="0.0" width="577" height="513"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <scrollView fixedFrame="YES" autohidesScrollers="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9Uw-cB-yzn">
-                                <rect key="frame" x="20" y="20" width="668" height="397"/>
-                                <clipView key="contentView" misplaced="YES" id="qhf-aa-O2H">
-                                    <rect key="frame" x="1" y="1" width="248" height="158"/>
-                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                    <subviews>
-                                        <collectionView id="uKW-3Y-JXU">
-                                            <rect key="frame" x="0.0" y="0.0" width="248" height="158"/>
-                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                            <color key="primaryBackgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                        </collectionView>
-                                    </subviews>
-                                </clipView>
-                                <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="nUW-6G-bCs">
-                                    <rect key="frame" x="1" y="144" width="233" height="15"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                </scroller>
-                                <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="Wfl-h0-uTB">
-                                    <rect key="frame" x="234" y="1" width="15" height="143"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                </scroller>
-                            </scrollView>
+                            <ikImageBrowserView autoresizesSubviews="NO" fixedFrame="YES" zoomValue="0.3700261116027832" translatesAutoresizingMaskIntoConstraints="NO" id="wVE-bI-VXR">
+                                <rect key="frame" x="20" y="20" width="537" height="473"/>
+                                <autoresizingMask key="contentResizingMask" heightSizable="YES"/>
+                                <size key="cellSize" width="100" height="100"/>
+                            </ikImageBrowserView>
                         </subviews>
                     </view>
+                    <connections>
+                        <outlet property="mImageBrowser" destination="wVE-bI-VXR" id="3un-IL-A9J"/>
+                    </connections>
                 </viewController>
                 <customObject id="zOK-uE-ldh" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="820" y="778.5"/>
+            <point key="canvasLocation" x="754.5" y="816.5"/>
         </scene>
-        <!--Object-->
-        <scene sceneID="tn2-Wt-FXj">
+        <!--Window Controller-->
+        <scene sceneID="YTv-et-YFU">
             <objects>
-                <application id="78H-N2-wO2" customClass="NSObject" sceneMemberID="viewController">
-                    <menu key="mainMenu" title="Main Menu" systemMenu="main" id="czY-D3-Tlz">
-                        <items>
-                            <menuItem title="SwiftPhotos" id="qsO-I2-kEU">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="SwiftPhotos" systemMenu="apple" id="kTg-Tp-dtP">
-                                    <items>
-                                        <menuItem title="About SwiftPhotos" id="yM4-UW-tXu">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="orderFrontStandardAboutPanel:" target="E1T-Tr-OgV" id="P2d-ec-8do"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem isSeparatorItem="YES" id="wiL-n3-SSM"/>
-                                        <menuItem title="Preferences…" keyEquivalent="," id="sgt-n7-NPR">
-                                            <connections>
-                                                <segue destination="RbV-IH-fiS" kind="show" id="NF2-HF-0js"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem isSeparatorItem="YES" id="R2s-go-4BQ"/>
-                                        <menuItem title="Services" id="aWg-a1-7bm">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <menu key="submenu" title="Services" systemMenu="services" id="f2n-9H-4t7"/>
-                                        </menuItem>
-                                        <menuItem isSeparatorItem="YES" id="3te-qb-Pf3"/>
-                                        <menuItem title="Hide SwiftPhotos" keyEquivalent="h" id="cbJ-2z-DQ7">
-                                            <connections>
-                                                <action selector="hide:" target="E1T-Tr-OgV" id="b6U-Mr-s1Z"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="Hide Others" keyEquivalent="h" id="wQJ-Es-RQT">
-                                            <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
-                                            <connections>
-                                                <action selector="hideOtherApplications:" target="E1T-Tr-OgV" id="Clt-84-7WN"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="Show All" id="rFd-Fd-7oX">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="unhideAllApplications:" target="E1T-Tr-OgV" id="ZyQ-0z-VO6"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem isSeparatorItem="YES" id="kdy-cu-l2Z"/>
-                                        <menuItem title="Quit SwiftPhotos" keyEquivalent="q" id="N3l-wy-fJr">
-                                            <connections>
-                                                <action selector="terminate:" target="E1T-Tr-OgV" id="PX0-hj-Yg9"/>
-                                            </connections>
-                                        </menuItem>
-                                    </items>
-                                </menu>
-                            </menuItem>
-                            <menuItem title="File" id="ZZv-xR-V48">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="File" id="OUl-wi-A86">
-                                    <items>
-                                        <menuItem title="Open…" keyEquivalent="o" id="ZtP-9G-YKB">
-                                            <connections>
-                                                <action selector="openDocument:" target="E1T-Tr-OgV" id="ZFb-ct-4Xp"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="Open Recent" id="mMm-5m-eLz">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <menu key="submenu" title="Open Recent" systemMenu="recentDocuments" id="R5K-aj-fMC">
-                                                <items>
-                                                    <menuItem title="Clear Menu" id="Xj6-DM-bXG">
-                                                        <modifierMask key="keyEquivalentModifierMask"/>
-                                                        <connections>
-                                                            <action selector="clearRecentDocuments:" target="E1T-Tr-OgV" id="Rs3-FX-fPa"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                </items>
-                                            </menu>
-                                        </menuItem>
-                                        <menuItem isSeparatorItem="YES" id="lPF-bR-SBw"/>
-                                        <menuItem title="Close" keyEquivalent="w" id="vjq-9b-qAa">
-                                            <connections>
-                                                <action selector="performClose:" target="E1T-Tr-OgV" id="JN5-dB-TA1"/>
-                                            </connections>
-                                        </menuItem>
-                                    </items>
-                                </menu>
-                            </menuItem>
-                            <menuItem title="View" id="AUU-JK-3mn">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="View" id="xDj-Lt-D9y">
-                                    <items>
-                                        <menuItem title="Show Toolbar" keyEquivalent="t" id="nyv-go-7uE">
-                                            <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
-                                            <connections>
-                                                <action selector="toggleToolbarShown:" target="E1T-Tr-OgV" id="2xO-zg-2BX"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="Customize Toolbar…" id="OJa-dQ-35u">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="runToolbarCustomizationPalette:" target="E1T-Tr-OgV" id="RMa-00-WGX"/>
-                                            </connections>
-                                        </menuItem>
-                                    </items>
-                                </menu>
-                            </menuItem>
-                            <menuItem title="Window" id="F0A-OU-LeI">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="Window" systemMenu="window" id="eUr-Mf-7bP">
-                                    <items>
-                                        <menuItem title="Minimize" keyEquivalent="m" id="LO3-Y2-zg0">
-                                            <connections>
-                                                <action selector="performMiniaturize:" target="E1T-Tr-OgV" id="RKo-TV-kVc"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="Zoom" id="8Vu-fl-goU">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="performZoom:" target="E1T-Tr-OgV" id="aLw-Ph-Ep5"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem isSeparatorItem="YES" id="JLm-dG-Hwy"/>
-                                        <menuItem title="Bring All to Front" id="v8K-is-VQE">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="arrangeInFront:" target="E1T-Tr-OgV" id="RHM-Q3-bRg"/>
-                                            </connections>
-                                        </menuItem>
-                                    </items>
-                                </menu>
-                            </menuItem>
-                            <menuItem title="Help" id="NSB-eQ-Xbq">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="Help" systemMenu="help" id="90m-NJ-M3q">
-                                    <items>
-                                        <menuItem title="SwiftPhotos Help" keyEquivalent="?" id="G6d-qH-peF">
-                                            <connections>
-                                                <action selector="showHelp:" target="E1T-Tr-OgV" id="Zy0-oR-zWd"/>
-                                            </connections>
-                                        </menuItem>
-                                    </items>
-                                </menu>
-                            </menuItem>
-                        </items>
-                    </menu>
-                </application>
-                <customObject id="E1T-Tr-OgV" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+                <windowController showSeguePresentationStyle="single" id="ylS-Le-OWr" sceneMemberID="viewController">
+                    <window key="window" title="Main Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" animationBehavior="default" id="QEe-bL-ipd" userLabel="Main Window">
+                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
+                        <rect key="contentRect" x="231" y="511" width="480" height="270"/>
+                        <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1057"/>
+                        <view key="contentView" id="zGU-xn-iPF">
+                            <rect key="frame" x="14" y="22" width="480" height="270"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                        </view>
+                    </window>
+                    <connections>
+                        <segue destination="0vp-VM-WNX" kind="relationship" relationship="window.shadowedContentViewController" id="8Wy-2s-99p"/>
+                    </connections>
+                </windowController>
+                <customObject id="HMm-92-bsW" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-66.5" y="-9"/>
+            <point key="canvasLocation" x="706" y="300"/>
         </scene>
     </scenes>
     <resources>

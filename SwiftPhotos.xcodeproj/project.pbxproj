@@ -10,16 +10,16 @@
 		C51697101A32A14700026B77 /* CoreDataStackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C516970F1A32A14700026B77 /* CoreDataStackManager.swift */; };
 		C51697141A32ACFD00026B77 /* PreferencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51697131A32ACFD00026B77 /* PreferencesViewController.swift */; };
 		C51697161A32AFAB00026B77 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C51697151A32AFAB00026B77 /* Main.storyboard */; };
+		C54814B31A376B3E0030D931 /* ImageBrowserWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54814B21A376B3E0030D931 /* ImageBrowserWindowController.swift */; };
 		C573A59E1A224D5000FABE7F /* PhotoOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = C573A59D1A224D5000FABE7F /* PhotoOperations.swift */; };
 		C573A6011A22684000FABE7F /* Library.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C573A5FF1A22684000FABE7F /* Library.xcdatamodeld */; };
-		C592C364199B0BFA00E08731 /* PathArrayTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C592C363199B0BFA00E08731 /* PathArrayTable.swift */; };
 		C595EE1A1A24E46900875B82 /* Library.swift in Sources */ = {isa = PBXBuildFile; fileRef = C595EE191A24E46900875B82 /* Library.swift */; };
 		C595EE1C1A24E46900875B82 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = C595EE1B1A24E46900875B82 /* Settings.swift */; };
 		C595EE1E1A24E46900875B82 /* Photo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C595EE1D1A24E46900875B82 /* Photo.swift */; };
 		C595EE201A24E46900875B82 /* Folder.swift in Sources */ = {isa = PBXBuildFile; fileRef = C595EE1F1A24E46900875B82 /* Folder.swift */; };
 		C5A1E87D1A215C6F00BA0A3C /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A1E87C1A215C6F00BA0A3C /* main.swift */; };
 		C5A1E87F1A215F2400BA0A3C /* PhotoHashingUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A1E87E1A215F2400BA0A3C /* PhotoHashingUtils.swift */; };
-		C5C67373199474EB001888D4 /* OldPhoto.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5C67372199474EB001888D4 /* OldPhoto.swift */; };
+		C5FA0DB31A37E2DA008DC9AC /* Application.xib in Resources */ = {isa = PBXBuildFile; fileRef = C5FA0DB21A37E2DA008DC9AC /* Application.xib */; };
 		FE5DDB1B193EC4F800D083E0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE5DDB1A193EC4F800D083E0 /* AppDelegate.swift */; };
 		FE5DDB1D193EC4F800D083E0 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FE5DDB1C193EC4F800D083E0 /* Images.xcassets */; };
 		FE5DDB2C193EC4F800D083E0 /* SwiftPhotosTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE5DDB2B193EC4F800D083E0 /* SwiftPhotosTests.swift */; };
@@ -50,16 +50,16 @@
 		C516970F1A32A14700026B77 /* CoreDataStackManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStackManager.swift; sourceTree = "<group>"; };
 		C51697131A32ACFD00026B77 /* PreferencesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreferencesViewController.swift; sourceTree = "<group>"; };
 		C51697151A32AFAB00026B77 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+		C54814B21A376B3E0030D931 /* ImageBrowserWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageBrowserWindowController.swift; sourceTree = "<group>"; };
 		C573A59D1A224D5000FABE7F /* PhotoOperations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoOperations.swift; sourceTree = "<group>"; };
 		C573A6001A22684000FABE7F /* Library.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Library.xcdatamodel; sourceTree = "<group>"; };
-		C592C363199B0BFA00E08731 /* PathArrayTable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PathArrayTable.swift; sourceTree = "<group>"; };
 		C595EE191A24E46900875B82 /* Library.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Library.swift; path = CoreData/Library.swift; sourceTree = "<group>"; };
 		C595EE1B1A24E46900875B82 /* Settings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Settings.swift; path = CoreData/Settings.swift; sourceTree = "<group>"; };
 		C595EE1D1A24E46900875B82 /* Photo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Photo.swift; path = CoreData/Photo.swift; sourceTree = "<group>"; };
 		C595EE1F1A24E46900875B82 /* Folder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Folder.swift; sourceTree = "<group>"; };
 		C5A1E87C1A215C6F00BA0A3C /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		C5A1E87E1A215F2400BA0A3C /* PhotoHashingUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoHashingUtils.swift; sourceTree = "<group>"; };
-		C5C67372199474EB001888D4 /* OldPhoto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OldPhoto.swift; sourceTree = "<group>"; };
+		C5FA0DB21A37E2DA008DC9AC /* Application.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Application.xib; sourceTree = "<group>"; };
 		FE5DDB13193EC4F800D083E0 /* SwiftPhotos.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftPhotos.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE5DDB17193EC4F800D083E0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FE5DDB1A193EC4F800D083E0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -121,16 +121,16 @@
 			isa = PBXGroup;
 			children = (
 				FE5DDB1A193EC4F800D083E0 /* AppDelegate.swift */,
+				C54814B21A376B3E0030D931 /* ImageBrowserWindowController.swift */,
 				C51697151A32AFAB00026B77 /* Main.storyboard */,
+				C5FA0DB21A37E2DA008DC9AC /* Application.xib */,
 				C516970F1A32A14700026B77 /* CoreDataStackManager.swift */,
 				FE5DDB1C193EC4F800D083E0 /* Images.xcassets */,
 				C51697131A32ACFD00026B77 /* PreferencesViewController.swift */,
 				C5A1E87E1A215F2400BA0A3C /* PhotoHashingUtils.swift */,
-				C5C67372199474EB001888D4 /* OldPhoto.swift */,
 				C573A59D1A224D5000FABE7F /* PhotoOperations.swift */,
 				C595EE101A24E23C00875B82 /* Models */,
 				FE5DDB16193EC4F800D083E0 /* Supporting Files */,
-				C592C363199B0BFA00E08731 /* PathArrayTable.swift */,
 			);
 			path = SwiftPhotos;
 			sourceTree = "<group>";
@@ -244,6 +244,7 @@
 			files = (
 				FE5DDB1D193EC4F800D083E0 /* Images.xcassets in Resources */,
 				C51697161A32AFAB00026B77 /* Main.storyboard in Resources */,
+				C5FA0DB31A37E2DA008DC9AC /* Application.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -261,15 +262,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C5C67373199474EB001888D4 /* OldPhoto.swift in Sources */,
 				C5A1E87D1A215C6F00BA0A3C /* main.swift in Sources */,
 				C51697101A32A14700026B77 /* CoreDataStackManager.swift in Sources */,
 				C5A1E87F1A215F2400BA0A3C /* PhotoHashingUtils.swift in Sources */,
 				C51697141A32ACFD00026B77 /* PreferencesViewController.swift in Sources */,
 				C595EE201A24E46900875B82 /* Folder.swift in Sources */,
+				C54814B31A376B3E0030D931 /* ImageBrowserWindowController.swift in Sources */,
 				C595EE1C1A24E46900875B82 /* Settings.swift in Sources */,
 				FE5DDB1B193EC4F800D083E0 /* AppDelegate.swift in Sources */,
-				C592C364199B0BFA00E08731 /* PathArrayTable.swift in Sources */,
 				C595EE1E1A24E46900875B82 /* Photo.swift in Sources */,
 				C573A59E1A224D5000FABE7F /* PhotoOperations.swift in Sources */,
 				C573A6011A22684000FABE7F /* Library.xcdatamodeld in Sources */,

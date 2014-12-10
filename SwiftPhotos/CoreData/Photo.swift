@@ -9,6 +9,7 @@
 import AppKit
 import CoreData
 import Foundation
+import Quartz
 
 enum PhotoState: Int16 {
     case New = 0
@@ -18,7 +19,7 @@ enum PhotoState: Int16 {
     case Broken = 4
 }
 
-class Photo: NSManagedObject {
+class Photo: NSManagedObject/*, IKImageBrowserItem*/ {
 
     @NSManaged var filename: String
     @NSManaged var phash: UInt64
@@ -99,44 +100,22 @@ class Photo: NSManagedObject {
             stateEnum = .Broken
         }
     }
-    
-/*
-    init(path: String, managedObjectContext: NSManagedObjectContext) {
-        let myEntity: NSString = "Photo"
-        if let entity = NSEntityDescription.entityForName(myEntity, inManagedObjectContext: managedObjectContext) {
-            super.init(entity: entity, insertIntoManagedObjectContext: managedObjectContext)
-
-            let filemanager = NSFileManager.defaultManager()
-            if filemanager.fileExistsAtPath(path) {
-                println("File exists: \(path)")
-                fileURL = NSURL(fileURLWithPath: path)! //   NSURL(string: path) as CFURLRef
-                readData()
-                return
-            }
-            stateEnum = .Broken
-        } else {
-            var error: NSError?
-            NSException.raise("Exception", format:"Error: %@", arguments:getVaList([error ?? "nil"]))
-            super.init()
+        
+    func setPath(path: String) {
+        if filepath != path {
+            filepath = path
         }
     }
     
-    
-    
-    init(url: NSURL, managedObjectContext: NSManagedObjectContext) {
-        let myEntity: NSString = NSString(string: "Photo")
-        var entity = NSEntityDescription.entityForName(myEntity, inManagedObjectContext: managedObjectContext)
-        if entity == nil {
-            entity = NSEntityDescription.insertNewObjectForEntityForName(myEntity, inManagedObjectContext: managedObjectContext) as NSEntityDescription
-        }
-        if entity != nil {
-            super.init(entity: entity!, insertIntoManagedObjectContext: managedObjectContext)
-            fileURL = url
-            return
-        } else {
-            NSException.raise("Exception", format:"Error: Couldn't load entity '\(myEntity)'", arguments:getVaList([]))
-            super.init()
-        }
+    override func imageRepresentationType() -> String {
+        return IKImageBrowserPathRepresentationType
     }
-*/    
+    
+    override func imageRepresentation() -> AnyObject {
+        return filepath
+    }
+    
+    override func imageUID() -> String {
+        return filepath
+    }
 }

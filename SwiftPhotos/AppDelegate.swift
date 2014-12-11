@@ -7,6 +7,7 @@
 
 import Cocoa
 import CoreData
+import Dispatch
 import Foundation
 
 class AppDelegate: NSObject, NSApplicationDelegate {
@@ -60,36 +61,61 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         for folder in settings.imports.objectEnumerator().allObjects as [Folder] {
             println("--------------------------\nStarting folder \(folder.path)")
             let path = NSURL(string: folder.path)!
-            var count = 0
-            //let path = NSURL(fileURLWithPath: folder.path)!
-            println(path.absoluteString!)
             if let dirEnumerator: NSDirectoryEnumerator = fileManager.enumeratorAtURL(
                 path,
                 includingPropertiesForKeys: [NSURLPathKey, NSURLNameKey, NSURLIsDirectoryKey],
                 options: NSDirectoryEnumerationOptions.SkipsHiddenFiles,
                 errorHandler: { (url: NSURL!, error: NSError!) -> Bool in
                     if let u = url {
-                        println("Error at \(url.absoluteString!))")
+                        println("Error at \(url.relativePath!))")
                     }
-                        
                     println(error)
                     return true
             }) {
                 for url: NSURL in dirEnumerator.allObjects as [NSURL] {
                     var error: NSError?
-                    var isDir: NSNumber? = nil
-                    count++
+                    var isDirObj: AnyObject?
                     
-                    /*
-                    if url.getResourceValue(&isDir as AnyObject, forKey: NSURLIsDirectoryKey, error: &error) {
-                        print("Error getting resource from url '\(url)'.\n\(error)")
-                    } else if (!isDir) {
-                    }*/
+                    if !url.getResourceValue(&isDirObj, forKey: NSURLIsDirectoryKey, error: &error) {
+                        println("Error getting resource from url '\(url)'.\n\(error)")
+                    } else if let isDir = isDirObj as? NSNumber {
+                        if isDir == 0 {
+                            if !fileManager.fileExistsAtPath(url.relativePath!) {
+                                // Handle this
+                                println("File doesn't exist: \(url.relativePath!)")
+                            } else {
+                                //let photoDescription = NSEntityDescription.entityForName("Photo", inManagedObjectContext: self.managedObjectContext)
+                                let request = NSFetchRequest(entityName: "Photo")
+                                let predicate = NSPredicate(format: "filepath == %@",
+                                    argumentArray: [url.relativePath!])
+                                let sortDescriptor = NSSortDescriptor(key: "filepath", ascending: true)
+                                request.sortDescriptors = NSArray(array: [sortDescriptor])
+                                
+                                if let results = self.managedObjectContext.executeFetchRequest(request, error: &error) {
+                                    var photo: Photo
+                                    
+                                    if results.count > 0 {
+                                        photo = results[0] as Photo
+                                    } else {
+                                        photo = NSEntityDescription.insertNewObjectForEntityForName("Photo", inManagedObjectContext: self.managedObjectContext) as Photo
+                                        photo.filepath = url.relativePath!
+                                        
+                                        if !self.managedObjectContext.save(&error) {
+                                            println("Error saving batch: \(error)")
+                                            fatalError("Saving batch failed.")
+                                        }
+                                    }
+                                    startPhotoOperations(photo)
+                                } else {
+                                    fatalError("Couldn't query photos: \(error)")
+                                }
+                            }
+                        }
+                    }
                 }
             } else {
                 println("Couldn't initialize NSDirectoryEnumerator for \(folder.path)")
             }
-            println("Found \(count) files.")
         }
     }
     
@@ -102,7 +128,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         print("\(photo.state)")
         if photo.stateEnum != .Broken {
-            self.outputField.stringValue = "Got \(photo.fileURL.description)\n"
+            self.outputField.stringValue = "Got \(photo.filepath.description)\n"
             if photo.height > 0 {
                 self.outputField.stringValue += "Size: \(photo.width)x\(photo.height)"
             }
@@ -119,32 +145,34 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }*/
     }*/
     
+    // Concurrent task management
+    
     func startPhotoOperations(photo: Photo) {
         switch (photo.stateEnum) {
             case .New:
-                startHashingPhoto(photo)
+                discoverPhoto(photo)
             default:
                 NSLog("Do nothing")
         }
     }
     
-    func startHashingPhoto(photo: Photo) {
-        if let currentOperation = pendingOperations.hashesInProgress[photo.fileURL] {
+    func discoverPhoto(photo: Photo) {
+        if let currentOperation = pendingOperations.hashesInProgress[photo.filepath] {
             return
         }
         
-        let op = PhotoHasher(photo: photo)
+        let op = PhotoDiscoverer(photo: photo)
         op.completionBlock = {
             if op.cancelled {
                 return
             }
             dispatch_async(dispatch_get_main_queue(), {
-                self.pendingOperations.hashesInProgress.removeValueForKey(photo.fileURL)
+                self.pendingOperations.hashesInProgress.removeValueForKey(photo.filepath)
                 self.testStr += "\nphash: \(photo.hash)"
             })
         }
         
-        pendingOperations.hashesInProgress[photo.fileURL] = op
+        pendingOperations.hashesInProgress[photo.filepath] = op
         pendingOperations.hashesQueue.addOperation(op)
     }
 }

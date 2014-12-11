@@ -19,6 +19,7 @@
 		C595EE201A24E46900875B82 /* Folder.swift in Sources */ = {isa = PBXBuildFile; fileRef = C595EE1F1A24E46900875B82 /* Folder.swift */; };
 		C5A1E87D1A215C6F00BA0A3C /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A1E87C1A215C6F00BA0A3C /* main.swift */; };
 		C5A1E87F1A215F2400BA0A3C /* PhotoHashingUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A1E87E1A215F2400BA0A3C /* PhotoHashingUtils.swift */; };
+		C5EB25971A390B27006C7019 /* Tasks.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5EB25961A390B27006C7019 /* Tasks.swift */; };
 		C5FA0DB31A37E2DA008DC9AC /* Application.xib in Resources */ = {isa = PBXBuildFile; fileRef = C5FA0DB21A37E2DA008DC9AC /* Application.xib */; };
 		FE5DDB1B193EC4F800D083E0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE5DDB1A193EC4F800D083E0 /* AppDelegate.swift */; };
 		FE5DDB1D193EC4F800D083E0 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FE5DDB1C193EC4F800D083E0 /* Images.xcassets */; };
@@ -59,6 +60,7 @@
 		C595EE1F1A24E46900875B82 /* Folder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Folder.swift; sourceTree = "<group>"; };
 		C5A1E87C1A215C6F00BA0A3C /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		C5A1E87E1A215F2400BA0A3C /* PhotoHashingUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoHashingUtils.swift; sourceTree = "<group>"; };
+		C5EB25961A390B27006C7019 /* Tasks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tasks.swift; sourceTree = "<group>"; };
 		C5FA0DB21A37E2DA008DC9AC /* Application.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Application.xib; sourceTree = "<group>"; };
 		FE5DDB13193EC4F800D083E0 /* SwiftPhotos.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftPhotos.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE5DDB17193EC4F800D083E0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -121,6 +123,7 @@
 			isa = PBXGroup;
 			children = (
 				FE5DDB1A193EC4F800D083E0 /* AppDelegate.swift */,
+				C5EB25961A390B27006C7019 /* Tasks.swift */,
 				C54814B21A376B3E0030D931 /* ImageBrowserWindowController.swift */,
 				C51697151A32AFAB00026B77 /* Main.storyboard */,
 				C5FA0DB21A37E2DA008DC9AC /* Application.xib */,
@@ -272,6 +275,7 @@
 				FE5DDB1B193EC4F800D083E0 /* AppDelegate.swift in Sources */,
 				C595EE1E1A24E46900875B82 /* Photo.swift in Sources */,
 				C573A59E1A224D5000FABE7F /* PhotoOperations.swift in Sources */,
+				C5EB25971A390B27006C7019 /* Tasks.swift in Sources */,
 				C573A6011A22684000FABE7F /* Library.xcdatamodeld in Sources */,
 				C595EE1A1A24E46900875B82 /* Library.swift in Sources */,
 			);

@@ -6,11 +6,12 @@
 //  Copyright (c) 2014 Cameron Little. All rights reserved.
 //
 
+/*
 import Foundation
 
 // http://www.raywenderlich.com/76341/use-nsoperation-nsoperationqueue-swift
 class PhotoOperations {
-    lazy var hashesInProgress = [NSURL:NSOperation]()
+    lazy var hashesInProgress = [String:NSOperation]()
     lazy var hashesQueue: NSOperationQueue = {
         var q = NSOperationQueue()
         q.name = "Hashes Queue"
@@ -40,3 +41,4 @@ class PhotoHasher: NSOperation {
         }
     }
 }
+*/

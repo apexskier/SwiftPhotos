@@ -55,6 +55,13 @@ class Photo: NSManagedObject/*, IKImageBrowserItem*/ {
         phash = calcPhash(self.getImage())
     }
     
+    func genFhash() {
+        println("starting fhashing \(filepath)")
+        let data: NSMutableData = NSMutableData(contentsOfFile: filepath)!
+        fhash = MD5(data)
+        println("\(filepath) MD5 = \(fhash)")
+    }
+    
     func move(newpath: String) {
         // TODO: implement
     }

@@ -182,7 +182,7 @@ class PreferencesViewController: NSViewController, NSTableViewDataSource, NSTabl
     // MARK: NSTableViewDelegate
     
     func tableView(tableView: NSTableView, objectValueForTableColumn tableColumn: NSTableColumn?, row: Int) -> AnyObject? {
-        let relativePath = NSURL(string: settings.imports[row].path)?.relativeString
+        let relativePath = NSURL(string: settings.imports[row].path)?.absoluteString
         return NSString(string: relativePath!).stringByReplacingPercentEscapesUsingEncoding(NSUTF8StringEncoding)
     }
 }

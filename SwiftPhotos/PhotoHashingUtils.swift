@@ -202,122 +202,131 @@ private func imageToGreyImage(image: NSImage, size: CGSize) -> NSImage {
 
 // Note: All variables are unsigned 32 bit and wrap modulo 2^32 when calculating
 
-// s specifies the per-round shift amounts
-// let s: [UInt32][64]
-private var s: [UInt32] = [7, 12, 17, 22,  7, 12, 17, 22,  7, 12, 17, 22,  7, 12, 17, 22,
-                    5,  9, 14, 20,  5,  9, 14, 20,  5,  9, 14, 20,  5,  9, 14, 20,
-                    4, 11, 16, 23,  4, 11, 16, 23,  4, 11, 16, 23,  4, 11, 16, 23,
-                    6, 10, 15, 21,  6, 10, 15, 21,  6, 10, 15, 21,  6, 10, 15, 21]
 
-// let K: [UInt32][64]
-private var K: [UInt32] = [0xd76aa478, 0xe8c7b756, 0x242070db, 0xc1bdceee,
-                    0xf57c0faf, 0x4787c62a, 0xa8304613, 0xfd469501,
-                    0x698098d8, 0x8b44f7af, 0xffff5bb1, 0x895cd7be,
-                    0x6b901122, 0xfd987193, 0xa679438e, 0x49b40821,
-                    0xf61e2562, 0xc040b340, 0x265e5a51, 0xe9b6c7aa,
-                    0xd62f105d, 0x02441453, 0xd8a1e681, 0xe7d3fbc8,
-                    0x21e1cde6, 0xc33707d6, 0xf4d50d87, 0x455a14ed,
-                    0xa9e3e905, 0xfcefa3f8, 0x676f02d9, 0x8d2a4c8a,
-                    0xfffa3942, 0x8771f681, 0x6d9d6122, 0xfde5380c,
-                    0xa4beea44, 0x4bdecfa9, 0xf6bb4b60, 0xbebfbc70,
-                    0x289b7ec6, 0xeaa127fa, 0xd4ef3085, 0x04881d05,
-                    0xd9d4d039, 0xe6db99e5, 0x1fa27cf8, 0xc4ac5665,
-                    0xf4292244, 0x432aff97, 0xab9423a7, 0xfc93a039,
-                    0x655b59c3, 0x8f0ccc92, 0xffeff47d, 0x85845dd1,
-                    0x6fa87e4f, 0xfe2ce6e0, 0xa3014314, 0x4e0811a1,
-                    0xf7537e82, 0xbd3af235, 0x2ad7d2bb, 0xeb86d391]
-// Use binary integer part of the sines of integers (Radians) as constants:
-/*let K: [UInt32] = {
+class MD5 {
+    // s specifies the per-round shift amounts
+    // let s: [UInt32][64]
+    private var s: [UInt32] = [7, 12, 17, 22,  7, 12, 17, 22,  7, 12, 17, 22,  7, 12, 17, 22,
+        5,  9, 14, 20,  5,  9, 14, 20,  5,  9, 14, 20,  5,  9, 14, 20,
+        4, 11, 16, 23,  4, 11, 16, 23,  4, 11, 16, 23,  4, 11, 16, 23,
+        6, 10, 15, 21,  6, 10, 15, 21,  6, 10, 15, 21,  6, 10, 15, 21]
+    
+    // let K: [UInt32][64]
+    private var K: [UInt32] = [0xd76aa478, 0xe8c7b756, 0x242070db, 0xc1bdceee,
+        0xf57c0faf, 0x4787c62a, 0xa8304613, 0xfd469501,
+        0x698098d8, 0x8b44f7af, 0xffff5bb1, 0x895cd7be,
+        0x6b901122, 0xfd987193, 0xa679438e, 0x49b40821,
+        0xf61e2562, 0xc040b340, 0x265e5a51, 0xe9b6c7aa,
+        0xd62f105d, 0x02441453, 0xd8a1e681, 0xe7d3fbc8,
+        0x21e1cde6, 0xc33707d6, 0xf4d50d87, 0x455a14ed,
+        0xa9e3e905, 0xfcefa3f8, 0x676f02d9, 0x8d2a4c8a,
+        0xfffa3942, 0x8771f681, 0x6d9d6122, 0xfde5380c,
+        0xa4beea44, 0x4bdecfa9, 0xf6bb4b60, 0xbebfbc70,
+        0x289b7ec6, 0xeaa127fa, 0xd4ef3085, 0x04881d05,
+        0xd9d4d039, 0xe6db99e5, 0x1fa27cf8, 0xc4ac5665,
+        0xf4292244, 0x432aff97, 0xab9423a7, 0xfc93a039,
+        0x655b59c3, 0x8f0ccc92, 0xffeff47d, 0x85845dd1,
+        0x6fa87e4f, 0xfe2ce6e0, 0xa3014314, 0x4e0811a1,
+        0xf7537e82, 0xbd3af235, 0x2ad7d2bb, 0xeb86d391]
+    // Use binary integer part of the sines of integers (Radians) as constants:
+    /*let K: [UInt32] = {
     var K: [UInt32] = [UInt32](count: 64, repeatedValue: 0)
     for i in 0...63 {
-        var val = floor(abs(sin(Float(i) + 1)) * (2.0 % 32.0))
-        K[i] = UInt32(val)
+    var val = floor(abs(sin(Float(i) + 1)) * (2.0 % 32.0))
+    K[i] = UInt32(val)
     }
     return K
-}()*/
-
-
-func MD5(data: NSMutableData) -> UInt64 {
-    // Initialize variables
-    var a0: UInt32 = 0x67452301 // A
-    var b0: UInt32 = 0xefcdab89 // B
-    var c0: UInt32 = 0x98badcfe // C
-    var d0: UInt32 = 0x10325476 // D
+    }()*/
     
-    let origLength = data.length * 4
-    
-    // Pre-processing: adding a single 1 bit
-    var oneZeros: Int8 = 0x08
-    var zeroByte: Int8 = 0x00
-    data.appendBytes(&oneZeros, length: 1)
-    
-    /* Notice: the input bytes are considered as bits strings,
-    where the first bit is the most significant bit of the byte. */
-
-    // Pre-processing: padding with zeros
-    // append "0" bit until message length in bits ≡ 448 (mod 512)
-    while data.length != 448 % 512 {
-        data.appendBytes(&zeroByte, length: 1)
-    }
-    // append original length in bits mod (2 pow 64) to message
-    var lenPart: Int = origLength % Int(pow(Double(2), Double(64)))
-    data.appendBytes(&lenPart, length: 1)
-
-    // Process the message in successive 512-bit chunks:
-    var chunk: [UInt32] = [UInt32](count: 4, repeatedValue: 0)
-    for var chunkBoundary = 0; chunkBoundary < data.length; chunkBoundary += 128 {
-        var chunk = data.subdataWithRange(NSRange(location: chunkBoundary, length: 128))
+    func Hash(data: NSMutableData) -> String {
+        // Initialize variables
+        var a0: UInt32 = 0x67452301 // A
+        var b0: UInt32 = 0xefcdab89 // B
+        var c0: UInt32 = 0x98badcfe // C
+        var d0: UInt32 = 0x10325476 // D
         
-        // break chunk into sixteen 32-bit words
-        var M: [UInt32] = [UInt32](count: 32, repeatedValue: 0)
-        chunk.getBytes(&M, length: sizeof(UInt32) * 16)
+        let origLength: Int64 = Int64(data.length) * 4
         
-        //Initialize hash value for this chunk:
-        var A: UInt32 = a0
-        var B: UInt32 = b0
-        var C: UInt32 = c0
-        var D: UInt32 = d0
-        var F: UInt32 = 0
-        var G: UInt32 = 0
-        //Main loop:
-        for i: UInt32 in 0...63 {
-            if (0 <= i) && (i <= 15) {
-                F = (B & C) | ((~B) & D)
-                G = i
-            } else if (16 <= i) && (i <= 31) {
-                F = (D & B) | ((~D) & C)
-                G = (5 * i + 1) % 16
-            } else if (32 <= i) && (i <= 47) {
-                F = B ^ C ^ D
-                G = (3 * i + 5) % 16
-            } else if (48 <= i) && (i <= 63) {
-                F = C ^ (B | (~D))
-                G = (7 * i) % 16
-            }
-            var dTemp = D
-            D = C
-            C = B
-            B = B + leftrotate(A + F + K[Int(i)] + M[Int(G)], s[Int(i)])
-            A = dTemp
+        // Pre-processing: adding a single 1 bit
+        var oneZeros: Int8 = 0x08
+        var zeroByte: Int8 = 0x00
+        data.appendBytes(&oneZeros, length: 1)
+        
+        /* Notice: the input bytes are considered as bits strings,
+        where the first bit is the most significant bit of the byte. */
+        
+        // Pre-processing: padding with zeros
+        // append "0" bit until message length in bits ≡ 448 (mod 512)
+        while data.length % 128 != 120 {
+            data.appendBytes(&zeroByte, length: 1)
         }
-        //Add this chunk's hash to result so far:
-        a0 = a0 + A
-        b0 = b0 + B
-        c0 = c0 + C
-        d0 = d0 + D
+        // append original length in bits mod (2 pow 64) to message
+        var lenPart: UInt64 = UInt64(origLength) % UINT64_MAX
+        data.appendBytes(&lenPart, length: 8)
+        
+        // Process the message in successive 512-bit chunks
+        for var chunkBoundary = 0; chunkBoundary < data.length; chunkBoundary += 128 {
+            var chunk = data.subdataWithRange(NSRange(location: chunkBoundary, length: 128))
+            
+            // break chunk into sixteen 32-bit words
+            var M: [UInt32] = [UInt32](count: 16, repeatedValue: 0)
+            chunk.getBytes(&M, length: sizeof(UInt32) * 16)
+            
+            // Initialize hash value for this chunk:
+            var A: UInt32 = a0
+            var B: UInt32 = b0
+            var C: UInt32 = c0
+            var D: UInt32 = d0
+            var F: UInt32 = 0
+            var G: UInt32 = 0
+            // Main loop:
+            for i: UInt32 in 0...63 {
+                if (0 <= i) && (i <= 15) {
+                    F = (B & C) | ((~B) & D)
+                    G = i
+                } else if (16 <= i) && (i <= 31) {
+                    F = (D & B) | ((~D) & C)
+                    G = (5 * i + 1) % 16
+                } else if (32 <= i) && (i <= 47) {
+                    F = B ^ C ^ D
+                    G = (3 * i + 5) % 16
+                } else if (48 <= i) && (i <= 63) {
+                    F = C ^ (B | (~D))
+                    G = (7 * i) % 16
+                }
+                var dTemp = D
+                D = C
+                C = B
+                //B = B + leftrotate(A + F + K[Int(i)] + M[Int(G)], s[Int(i)])
+                var x = (A &+ F &+ K[Int(i)] &+ M[Int(G)])
+                var c = s[Int(i)]
+                var lr = (x << c) | (x >> (32 - c))
+                B = B &+ lr
+                A = dTemp
+            }
+            //Add this chunk's hash to result so far:
+            a0 = a0 &+ A
+            b0 = b0 &+ B
+            c0 = c0 &+ C
+            d0 = d0 &+ D
+        }
+        
+        var intArrDigest: [UInt32] = [a0, b0, c0, d0]
+        // var digest: [char][16]
+        var dataDigest = NSMutableData(bytes: &intArrDigest, length: 16)
+        /*var charDigest: [Character] = [Character](count: 16, repeatedValue: "\0")
+        dataDigest.getBytes(&charDigest, length: 16)
+        for char in charDigest {
+            print(char)
+            println()
+        }*/
+        // var uint64Digest: UInt64 = 0
+        // dataDigest.getBytes(&uint64Digest, length: 8)
+        
+        return dataDigest.base64EncodedStringWithOptions(nil)
     }
     
-    var intArrDigest: [UInt32] = [a0, b0, c0, d0]
-    // var digest: [char][16]
-    var dataDigest = NSMutableData(bytes: &intArrDigest, length: 16)
-    var charDigest: [Character] = [Character](count: 16, repeatedValue: "\0")
-    dataDigest.getBytes(&charDigest, length: 16)
-    var uint64Digest: UInt64 = 0
-    dataDigest.getBytes(&uint64Digest, length: 8)
-    
-    return uint64Digest
-}
-
-private func leftrotate (x: UInt32, c: UInt32) -> UInt32 {
-    return (x << c) | (x >> (32 - c));
+    private class func leftrotate (x: UInt32, c: UInt32) -> UInt32 {
+        return (x << c) | (x >> (32 - c));
+    }
 }

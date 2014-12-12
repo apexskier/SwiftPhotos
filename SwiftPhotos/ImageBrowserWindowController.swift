@@ -12,20 +12,29 @@ import Quartz
 
 class ImageBrowserWindowController: NSViewController {
     
-    @IBOutlet weak var window: NSWindow!
-    @IBOutlet weak var mImageBrowser: IKImageBrowserView!
+    private var appDelegate = NSApplication.sharedApplication().delegate as AppDelegate
     
-    var mImages: [Photo] = []
+    //@IBOutlet weak var window: NSWindow!
+    @IBOutlet weak var mImageBrowser: IKImageBrowserView!
+    @IBOutlet weak var imageSizeSlider: NSSlider!
+    
+    var mImages: [Photo] {
+        get {
+            return appDelegate.photos
+        }
+    }
     var mImportedImages: [Photo] = []
     
-    override func awakeFromNib() {
-        mImages = [Photo]()
-        mImportedImages = [Photo]()
+    override func viewDidLoad() {
+        mImageBrowser.setDataSource(self)
+        mImageBrowser.reloadData()
+        
+        NSNotificationCenter.defaultCenter().addObserverForName("newPhotos", object: nil, queue: nil, usingBlock: { (notification: NSNotification!) in
+            self.mImageBrowser.reloadData()
+        })
     }
     
     func updateDatasource() {
-        //mImages.addObjectsFromArray(mImportedImages)
-        //mImportedImages.removeAllObjects
         mImageBrowser.reloadData()
     }
     

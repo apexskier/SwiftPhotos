@@ -18,43 +18,22 @@ extension String {
 
 class PreferencesViewController: NSViewController, NSTableViewDataSource, NSTableViewDelegate {
     
-    var settings: Settings {
+    private var appDelegate = NSApplication.sharedApplication().delegate as AppDelegate
+    
+    private var settings: Settings {
         get {
-            var settings: Settings
-            var anyError: NSError?
-            
-            let request = NSFetchRequest(entityName: "Settings")
-            let fetchedSources = self.managedObjectContext.executeFetchRequest(request, error: &anyError)
-            if let sources = fetchedSources {
-                if sources.count == 0 {
-                    settings = NSEntityDescription.insertNewObjectForEntityForName("Settings", inManagedObjectContext: self.managedObjectContext) as Settings
-                    settings.output = Folder()
-                    
-                    if !self.managedObjectContext.save(&anyError) {
-                        println("Error saving batch: \(anyError)")
-                        fatalError("Saving batch failed.")
-                    }
-                } else {
-                    settings = sources[sources.count - 1] as Settings
-                }
-            } else {
-                println("Error fetching: \(anyError)")
-                fatalError("Fetch failed.")
-            }
-            return settings
+            return appDelegate.settings
+        }
+    }
+    private var managedObjectContext: NSManagedObjectContext {
+        get {
+            return appDelegate.managedObjectContext
         }
     }
     
     @IBOutlet weak var outputTextField: NSTextField!
     @IBOutlet weak var tableView: NSTableView!
     @IBOutlet weak var removeImportButton: NSButton!
-    
-    /// Managed object context for the view controller (which is bound to the persistent store coordinator for the application).
-    private lazy var managedObjectContext: NSManagedObjectContext = {
-        let moc = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
-        moc.persistentStoreCoordinator = CoreDataStackManager.sharedManager.persistentStoreCoordinator
-        return moc
-    }()
     
     @IBAction func chooseOutputFolder(sender: AnyObject) {
         var filePicker = NSOpenPanel()
@@ -68,7 +47,7 @@ class PreferencesViewController: NSViewController, NSTableViewDataSource, NSTabl
             var outputPath = filePicker.URL!
             
             var folder: Folder = NSEntityDescription.insertNewObjectForEntityForName("Folder", inManagedObjectContext: managedObjectContext) as Folder
-            folder.path = outputPath.relativePath!
+            folder.path = outputPath.absoluteString!
             settings.output = folder
             
             var anyError: NSError?
@@ -77,6 +56,7 @@ class PreferencesViewController: NSViewController, NSTableViewDataSource, NSTabl
                 fatalError("Saving batch failed.")
                 return
             }
+            managedObjectContext.reset()
             
             reloadTableView(self)
             
@@ -96,6 +76,7 @@ class PreferencesViewController: NSViewController, NSTableViewDataSource, NSTabl
             var anyError: NSError?
             
             for url in filePicker.URLs as [NSURL] {
+                println("Adding import \(url.relativePath!)")
                 var folder: Folder = NSEntityDescription.insertNewObjectForEntityForName("Folder", inManagedObjectContext: managedObjectContext) as Folder
                 folder.path = url.absoluteString!
                 settings.appendImport(folder)
@@ -105,6 +86,8 @@ class PreferencesViewController: NSViewController, NSTableViewDataSource, NSTabl
                     fatalError("Saving batch failed.")
                     return
                 }
+                appDelegate.startProcessingFolder(url.absoluteString!)
+                
                 managedObjectContext.reset()
             }
             
@@ -128,12 +111,12 @@ class PreferencesViewController: NSViewController, NSTableViewDataSource, NSTabl
         })
         
         var anyError: NSError?
-        if !self.managedObjectContext.save(&anyError) {
+        if !managedObjectContext.save(&anyError) {
             println("Error saving batch: \(anyError)")
             fatalError("Saving batch failed.")
             return
         }
-        self.managedObjectContext.reset()
+        managedObjectContext.reset()
         
         reloadTableView(self)
     }
@@ -149,7 +132,6 @@ class PreferencesViewController: NSViewController, NSTableViewDataSource, NSTabl
     }
     
     // MARK: View Life Cycle
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -182,7 +164,7 @@ class PreferencesViewController: NSViewController, NSTableViewDataSource, NSTabl
     // MARK: NSTableViewDelegate
     
     func tableView(tableView: NSTableView, objectValueForTableColumn tableColumn: NSTableColumn?, row: Int) -> AnyObject? {
-        let relativePath = NSURL(string: settings.imports[row].path)?.absoluteString
+        let relativePath = NSURL(string: settings.imports[row].path)?.relativePath
         return NSString(string: relativePath!).stringByReplacingPercentEscapesUsingEncoding(NSUTF8StringEncoding)
     }
 }

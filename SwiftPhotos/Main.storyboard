@@ -350,14 +350,31 @@
                         <rect key="frame" x="0.0" y="0.0" width="577" height="513"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <ikImageBrowserView autoresizesSubviews="NO" fixedFrame="YES" zoomValue="0.3700261116027832" translatesAutoresizingMaskIntoConstraints="NO" id="wVE-bI-VXR">
-                                <rect key="frame" x="20" y="20" width="537" height="473"/>
+                            <slider verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Hdm-fa-VH5">
+                                <rect key="frame" x="455" y="18" width="104" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="100" id="Rlf-wx-1JC"/>
+                                    <constraint firstAttribute="height" constant="17" id="s5y-5h-mGZ"/>
+                                </constraints>
+                                <sliderCell key="cell" state="on" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="above" sliderType="linear" id="4Yh-au-7kP"/>
+                            </slider>
+                            <ikImageBrowserView autoresizesSubviews="NO" zoomValue="0.38527587056159973" translatesAutoresizingMaskIntoConstraints="NO" id="wVE-bI-VXR">
+                                <rect key="frame" x="20" y="45" width="537" height="448"/>
                                 <autoresizingMask key="contentResizingMask" heightSizable="YES"/>
-                                <size key="cellSize" width="100" height="100"/>
+                                <size key="cellSize" width="101" height="101"/>
                             </ikImageBrowserView>
                         </subviews>
+                        <constraints>
+                            <constraint firstItem="Hdm-fa-VH5" firstAttribute="top" secondItem="wVE-bI-VXR" secondAttribute="bottom" constant="8" id="66a-Cu-Fnj"/>
+                            <constraint firstItem="wVE-bI-VXR" firstAttribute="leading" secondItem="TUB-pw-Ewc" secondAttribute="leading" constant="20" id="Gjw-GL-wbo"/>
+                            <constraint firstAttribute="trailing" secondItem="wVE-bI-VXR" secondAttribute="trailing" constant="20" id="PIK-UA-tOf"/>
+                            <constraint firstAttribute="trailing" secondItem="Hdm-fa-VH5" secondAttribute="trailing" constant="20" id="ROh-nl-LxT"/>
+                            <constraint firstItem="wVE-bI-VXR" firstAttribute="top" secondItem="TUB-pw-Ewc" secondAttribute="top" constant="20" id="gu2-hF-9YW"/>
+                            <constraint firstAttribute="bottom" secondItem="Hdm-fa-VH5" secondAttribute="bottom" constant="20" id="oqC-Tt-TuC"/>
+                        </constraints>
                     </view>
                     <connections>
+                        <outlet property="imageSizeSlider" destination="Hdm-fa-VH5" id="2t7-Wv-F2Z"/>
                         <outlet property="mImageBrowser" destination="wVE-bI-VXR" id="3un-IL-A9J"/>
                     </connections>
                 </viewController>

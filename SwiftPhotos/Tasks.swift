@@ -21,10 +21,7 @@ class TaskManager {
         
         return Singleton.taskManager
     }
-    
-    private var discoveryQueue = dispatch_queue_create("com.camlittle.discoveryQueue", DISPATCH_QUEUE_CONCURRENT)
-    private var hashingQueue = dispatch_queue_create("com.camlittle.hashQueue", DISPATCH_QUEUE_CONCURRENT)
-    
+
 }
 
 // http://www.raywenderlich.com/76341/use-nsoperation-nsoperationqueue-swift
@@ -69,16 +66,15 @@ class PhotoDiscoverer: NSOperation {
     
     override func main() {
         autoreleasepool {
-            println("Attempting to discover \(self.photo.filepath)")
             if self.cancelled {
-                println("Cancelled discovering \(self.photo.filepath)")
                 return
             }
             
             self.photo.genFhash()
             self.photo.readData()
             self.photo.stateEnum = .Known
-            println("Done fhashing \(self.photo.filepath)")
+            
+            //self.photo.save()
         }
     }
 }

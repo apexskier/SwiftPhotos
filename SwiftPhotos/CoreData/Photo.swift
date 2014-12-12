@@ -21,16 +21,15 @@ enum PhotoState: Int16 {
 
 class Photo: NSManagedObject/*, IKImageBrowserItem*/ {
 
-    @NSManaged var filename: String
-    @NSManaged var phash: UInt64
-    @NSManaged var ahash: UInt64
-    @NSManaged var fhash: UInt64
+    @NSManaged var phash: NSNumber?
+    @NSManaged var ahash: NSNumber?
+    @NSManaged var fhash: String
     @NSManaged var state: Int16
-    @NSManaged var created: NSDate
+    @NSManaged var created: NSDate?
     @NSManaged var filepath: String
     
-    @NSManaged var height: Int
-    @NSManaged var width: Int
+    @NSManaged var height: NSNumber?
+    @NSManaged var width: NSNumber?
     
     var stateEnum: PhotoState {
         get {
@@ -42,23 +41,24 @@ class Photo: NSManagedObject/*, IKImageBrowserItem*/ {
     }
     
     lazy var fileURL: NSURL = {
-        let filemanager = NSFileManager.defaultManager()
-        if !filemanager.fileExistsAtPath(self.filepath) {
+        if let url = NSURL(string: self.filepath) {
+            return url
+        } else {
             // Handle this
             println("File doesn't exist: \(self.filepath)")
             self.stateEnum = .Broken
+            return NSURL()
         }
-        return NSURL(fileURLWithPath: self.filepath)!
     }()
     
     func genPhash() {
-        phash = calcPhash(self.getImage())
+        phash = NSNumber(unsignedLongLong: calcPhash(self.getImage()))
     }
     
     func genFhash() {
-        println("starting fhashing \(filepath)")
-        let data: NSMutableData = NSMutableData(contentsOfFile: filepath)!
-        fhash = MD5(data)
+        let data: NSMutableData = NSMutableData(contentsOfFile: fileURL.relativePath!)!
+        var md5: MD5 = MD5()
+        fhash = md5.Hash(data)
         println("\(filepath) MD5 = \(fhash)")
     }
     
@@ -98,10 +98,6 @@ class Photo: NSManagedObject/*, IKImageBrowserItem*/ {
                 if let exifDateTimeOriginal = eT["DateTimeOriginal"] {
                     created = dateFormatter.dateFromString(exifDateTimeOriginal as String) as NSDate!
                 }
-                
-                for (key, value) in eT {
-                    println(key)
-                }
             }
         } else {
             stateEnum = .Broken
@@ -115,11 +111,11 @@ class Photo: NSManagedObject/*, IKImageBrowserItem*/ {
     }
     
     override func imageRepresentationType() -> String {
-        return IKImageBrowserPathRepresentationType
+        return IKImageBrowserNSURLRepresentationType
     }
     
     override func imageRepresentation() -> AnyObject {
-        return filepath
+        return fileURL
     }
     
     override func imageUID() -> String {

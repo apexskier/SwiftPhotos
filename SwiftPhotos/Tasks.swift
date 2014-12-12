@@ -14,25 +14,31 @@ class TaskManager {
     private struct Constants {
     }
     
-    class var sharedManager: CoreDataStackManager {
+    class var sharedManager: TaskManager {
         struct Singleton {
-            static let taskManager = CoreDataStackManager()
+            static let taskManager = TaskManager()
         }
         
         return Singleton.taskManager
     }
 
+    var pendingDiscoveries = PhotoOperations("discoveryQueue")
+    var pendingHashes = PhotoOperations("hashQueue")
 }
 
 // http://www.raywenderlich.com/76341/use-nsoperation-nsoperationqueue-swift
 class PhotoOperations {
-    lazy var hashesInProgress = [String:NSOperation]()
-    lazy var hashesQueue: NSOperationQueue = {
+    var name: String
+    lazy var inProgress = [String:NSOperation]()
+    lazy var queue: NSOperationQueue = {
         var q = NSOperationQueue()
-        q.name = "Hashes Queue"
+        q.name = self.name
         q.maxConcurrentOperationCount = 1 // TODO: remove this line
         return q
     }()
+    init(_ name: String) {
+        self.name = name
+    }
 }
 
 class PhotoHasher: NSOperation {
@@ -51,7 +57,6 @@ class PhotoHasher: NSOperation {
             }
             
             self.photo.genPhash()
-            self.photo.stateEnum = .Known
             println("Done phashing \(self.photo.filepath)")
         }
     }
@@ -66,15 +71,13 @@ class PhotoDiscoverer: NSOperation {
     
     override func main() {
         autoreleasepool {
+            println("Started discovering \(self.photo.filepath)")
             if self.cancelled {
                 return
             }
             
             self.photo.genFhash()
             self.photo.readData()
-            self.photo.stateEnum = .Known
-            
-            //self.photo.save()
         }
     }
 }

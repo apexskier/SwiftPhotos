@@ -23,7 +23,7 @@ class Photo: NSManagedObject/*, IKImageBrowserItem*/ {
 
     @NSManaged var phash: NSNumber?
     @NSManaged var ahash: NSNumber?
-    @NSManaged var fhash: String
+    @NSManaged var fhash: NSNumber?
     @NSManaged var state: Int16
     @NSManaged var created: NSDate?
     @NSManaged var filepath: String
@@ -53,13 +53,18 @@ class Photo: NSManagedObject/*, IKImageBrowserItem*/ {
     
     func genPhash() {
         phash = NSNumber(unsignedLongLong: calcPhash(self.getImage()))
+        println("set phash")
+        stateEnum = .Known
     }
     
     func genFhash() {
         let data: NSMutableData = NSMutableData(contentsOfFile: fileURL.relativePath!)!
         var md5: MD5 = MD5()
-        fhash = md5.Hash(data)
-        println("\(filepath) MD5 = \(fhash)")
+        var hash = NSNumber(unsignedLongLong: CRCHash(data))
+        if hash != fhash {
+            stateEnum = .New
+        }
+        fhash = hash
     }
     
     func move(newpath: String) {

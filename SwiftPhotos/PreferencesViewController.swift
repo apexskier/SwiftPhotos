@@ -52,11 +52,8 @@ class PreferencesViewController: NSViewController, NSTableViewDataSource, NSTabl
             
             var anyError: NSError?
             if !managedObjectContext.save(&anyError) {
-                println("Error saving batch: \(anyError)")
-                fatalError("Saving batch failed.")
-                return
+                fatalError("Error saving: \(anyError)")
             }
-            managedObjectContext.reset()
             
             reloadTableView(self)
             
@@ -76,19 +73,15 @@ class PreferencesViewController: NSViewController, NSTableViewDataSource, NSTabl
             var anyError: NSError?
             
             for url in filePicker.URLs as [NSURL] {
-                println("Adding import \(url.relativePath!)")
                 var folder: Folder = NSEntityDescription.insertNewObjectForEntityForName("Folder", inManagedObjectContext: managedObjectContext) as Folder
                 folder.path = url.absoluteString!
                 settings.appendImport(folder)
                 
                 if !managedObjectContext.save(&anyError) {
-                    println("Error saving batch: \(anyError)")
-                    fatalError("Saving batch failed.")
-                    return
+                    fatalError("Error saving: \(anyError)")
                 }
-                appDelegate.startProcessingFolder(url.absoluteString!)
                 
-                managedObjectContext.reset()
+                appDelegate.startProcessingFolder(url.absoluteString!)
             }
             
             reloadTableView(nil)
@@ -112,11 +105,8 @@ class PreferencesViewController: NSViewController, NSTableViewDataSource, NSTabl
         
         var anyError: NSError?
         if !managedObjectContext.save(&anyError) {
-            println("Error saving batch: \(anyError)")
-            fatalError("Saving batch failed.")
-            return
+            fatalError("Error saving: \(anyError)")
         }
-        managedObjectContext.reset()
         
         reloadTableView(self)
     }

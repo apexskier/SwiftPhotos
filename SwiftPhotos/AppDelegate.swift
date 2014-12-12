@@ -13,6 +13,11 @@ import Quartz
 
 class AppDelegate: NSObject, NSApplicationDelegate {
     
+    /// Mark: Constants
+    struct Constants {
+        static let allowedExtentions: [String] = ["jpeg", "jpg", "png", "tiff", "gif"]
+    }
+    
     //@IBOutlet var imageBrowserView: ImageBrowserWindowController!
     
     /// Managed object context for the view controller (which is bound to the persistent store coordinator for the application).
@@ -70,8 +75,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
     
-    var pendingOperations = PhotoOperations()
-    
     func applicationDidFinishLaunching(aNotification: NSNotification?) {
         // Insert code here to initialize your application
         if settings.imports.count > 0 {
@@ -79,6 +82,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 startProcessingFolder(folder.path)
             }
         }
+    }
+    
+    func applicationWillTerminate(aNotification: NSNotification?) {
+        // Insert code here to tear down your application
+        var error: NSError?
+        if !self.managedObjectContext.save(&error) {
+            fatalError("Error saving: \(error)")
+        }
+        self.managedObjectContext.reset()
     }
     
     func startProcessingFolder(path: String) {
@@ -89,7 +101,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             options: NSDirectoryEnumerationOptions.SkipsHiddenFiles,
             errorHandler: { (url: NSURL!, error: NSError!) -> Bool in
                 if let u = url {
-                    println("Error at \(url.relativePath!))")
+                    println("Error at \(u.relativePath!))")
                 }
                 println(error)
                 return true
@@ -97,38 +109,37 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             for url: NSURL in dirEnumerator.allObjects as [NSURL] {
                 var error: NSError?
                 var isDirObj: AnyObject?
-                
-                if !url.getResourceValue(&isDirObj, forKey: NSURLIsDirectoryKey, error: &error) {
-                    println("Error getting resource from url '\(url)'.\n\(error)")
-                } else if let isDir = isDirObj as? NSNumber {
-                    if isDir == 0 {
-                        //let photoDescription = NSEntityDescription.entityForName("Photo", inManagedObjectContext: self.managedObjectContext)
-                        let request = NSFetchRequest(entityName: "Photo")
-                        let predicate = NSPredicate(format: "filepath == %@",
-                            argumentArray: [url.absoluteString!])
-                        request.predicate = predicate
-                        let sortDescriptor = NSSortDescriptor(key: "filepath", ascending: true)
-                        request.sortDescriptors = NSArray(array: [sortDescriptor])
-                        
-                        if let results = self.managedObjectContext.executeFetchRequest(request, error: &error) {
-                            var photo: Photo
+                let ext: String = NSString(string: url.pathExtension!).lowercaseString as String
+                if contains(Constants.allowedExtentions, ext) {
+                    if !url.getResourceValue(&isDirObj, forKey: NSURLIsDirectoryKey, error: &error) {
+                        println("Error getting resource from url '\(url)'.\n\(error)")
+                    } else if let isDir = isDirObj as? NSNumber {
+                        if isDir == 0 {
+                            //let photoDescription = NSEntityDescription.entityForName("Photo", inManagedObjectContext: self.managedObjectContext)
+                            let request = NSFetchRequest(entityName: "Photo")
+                            let predicate = NSPredicate(format: "filepath == %@",
+                                argumentArray: [url.absoluteString!])
+                            request.predicate = predicate
                             
-                            if results.count > 0 {
-                                photo = results[0] as Photo
-                            } else {
-                                photo = NSEntityDescription.insertNewObjectForEntityForName("Photo", inManagedObjectContext: self.managedObjectContext) as Photo
-                                photo.filepath = url.absoluteString!
-                                photo.stateEnum = .New
+                            if let results = self.managedObjectContext.executeFetchRequest(request, error: &error) {
+                                var photo: Photo
                                 
-                                if !self.managedObjectContext.save(&error) {
-                                    println("Error saving batch: \(error)")
-                                    fatalError("Saving batch failed.")
+                                if results.count > 0 {
+                                    photo = results[0] as Photo
+                                } else {
+                                    photo = NSEntityDescription.insertNewObjectForEntityForName("Photo", inManagedObjectContext: self.managedObjectContext) as Photo
+                                    photo.filepath = url.absoluteString!
+                                    photo.stateEnum = .New
+                                    
+                                    if !self.managedObjectContext.save(&error) {
+                                        fatalError("Error saving: \(error)")
+                                    }
                                 }
+                                
+                                discoverPhoto(photo)
+                            } else {
+                                fatalError("Couldn't query photos: \(error)")
                             }
-                            
-                            startPhotoOperations(photo)
-                        } else {
-                            fatalError("Couldn't query photos: \(error)")
                         }
                     }
                 }
@@ -140,26 +151,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
     
-    func applicationWillTerminate(aNotification: NSNotification?) {
-        // Insert code here to tear down your application
-    }
-    
     
     // Concurrent task management
-    
-    func startPhotoOperations(photo: Photo) {
-        switch (photo.stateEnum) {
-            case .New:
-                discoverPhoto(photo)
-            case .Known:
-                println("Found a known photo")
-            default:
-                NSLog("Do nothing")
+    var taskManager: TaskManager {
+        get {
+            return TaskManager.sharedManager
         }
     }
     
     func discoverPhoto(photo: Photo) {
-        if let currentOperation = pendingOperations.hashesInProgress[photo.filepath] {
+        NSNotificationCenter.defaultCenter().postNotificationName("startedTask", object: nil)
+        
+        if let currentOperation = taskManager.pendingDiscoveries.inProgress[photo.filepath] {
             return
         }
         
@@ -169,13 +172,46 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 return
             }
             dispatch_async(dispatch_get_main_queue(), {
-                self.pendingOperations.hashesInProgress.removeValueForKey(photo.filepath)
+                self.taskManager.pendingDiscoveries.inProgress.removeValueForKey(photo.filepath)
+                var error: NSError?
+                if !self.managedObjectContext.save(&error) {
+                    fatalError("Error saving: \(error)")
+                }
+                self.hashPhoto(photo)
                 return
             })
         }
         
-        pendingOperations.hashesInProgress[photo.filepath] = op
-        pendingOperations.hashesQueue.addOperation(op)
+        taskManager.pendingDiscoveries.inProgress[photo.filepath] = op
+        taskManager.pendingDiscoveries.queue.addOperation(op)
+    }
+    
+    func hashPhoto(photo: Photo) {
+        NSNotificationCenter.defaultCenter().postNotificationName("startedTask", object: nil)
+        
+        if photo.stateEnum == .New {
+            if let currentOperation = taskManager.pendingHashes.inProgress[photo.filepath] {
+                return
+            }
+            
+            let op = PhotoHasher(photo: photo)
+            op.completionBlock = {
+                if op.cancelled {
+                    return
+                }
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.taskManager.pendingHashes.inProgress.removeValueForKey(photo.filepath)
+                    var error: NSError?
+                    if !self.managedObjectContext.save(&error) {
+                        fatalError("Error saving: \(error)")
+                    }
+                    return
+                })
+            }
+            
+            taskManager.pendingHashes.inProgress[photo.filepath] = op
+            taskManager.pendingHashes.queue.addOperation(op)
+        }
     }
 }
 

@@ -238,7 +238,7 @@ class MD5 {
     return K
     }()*/
     
-    func Hash(data: NSMutableData) -> String {
+    func OldHash(data: NSMutableData) -> String {
         // Initialize variables
         var a0: UInt32 = 0x67452301 // A
         var b0: UInt32 = 0xefcdab89 // B
@@ -329,4 +329,26 @@ class MD5 {
     private class func leftrotate (x: UInt32, c: UInt32) -> UInt32 {
         return (x << c) | (x >> (32 - c));
     }
+}
+
+
+
+func CRCHash(data: NSMutableData) -> UInt64 {
+    // Variation of CRC32
+    let poly: UInt64 = 0x67452301
+    var shiftReg: UInt64 = 0
+    for i in 1...(data.length - 1) {
+        var chunk = data.subdataWithRange(NSRange(location: i, length: 1))
+        
+        // break chunk into sixteen 32-bit words
+        var c: UInt8 = 0
+        chunk.getBytes(&c, length: sizeof(UInt8))
+        
+        if (c & 8) != 0 {
+            shiftReg = (shiftReg << 1) ^ 0x67452301
+        } else {
+            shiftReg = (shiftReg << 1)
+        }
+    }
+    return shiftReg
 }

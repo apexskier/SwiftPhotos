@@ -11,7 +11,7 @@
     <entity name="Photo" representedClassName="SwiftPhotos.Photo" syncable="YES">
         <attribute name="ahash" optional="YES" attributeType="Integer 64" syncable="YES"/>
         <attribute name="created" optional="YES" attributeType="Date" syncable="YES"/>
-        <attribute name="fhash" optional="YES" attributeType="String" defaultValueString="&quot;&quot;" syncable="YES"/>
+        <attribute name="fhash" optional="YES" attributeType="Integer 64" syncable="YES"/>
         <attribute name="filepath" attributeType="String" syncable="YES"/>
         <attribute name="height" optional="YES" attributeType="Integer 64" defaultValueString="-1" syncable="YES"/>
         <attribute name="phash" optional="YES" attributeType="Integer 64" syncable="YES"/>

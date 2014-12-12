@@ -347,40 +347,128 @@
             <objects>
                 <viewController id="0vp-VM-WNX" customClass="ImageBrowserWindowController" customModule="SwiftPhotos" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="TUB-pw-Ewc">
-                        <rect key="frame" x="0.0" y="0.0" width="577" height="513"/>
+                        <rect key="frame" x="0.0" y="0.0" width="804" height="530"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <slider verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Hdm-fa-VH5">
-                                <rect key="frame" x="455" y="18" width="104" height="21"/>
+                                <rect key="frame" x="472" y="18" width="104" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="100" id="Rlf-wx-1JC"/>
                                     <constraint firstAttribute="height" constant="17" id="s5y-5h-mGZ"/>
                                 </constraints>
-                                <sliderCell key="cell" state="on" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="above" sliderType="linear" id="4Yh-au-7kP"/>
+                                <sliderCell key="cell" state="on" alignment="left" maxValue="1" doubleValue="0.5" tickMarkPosition="above" sliderType="linear" id="4Yh-au-7kP"/>
+                                <connections>
+                                    <action selector="zoomSliderChanged:" target="0vp-VM-WNX" id="WzK-WJ-JiG"/>
+                                </connections>
                             </slider>
-                            <ikImageBrowserView autoresizesSubviews="NO" zoomValue="0.38527587056159973" translatesAutoresizingMaskIntoConstraints="NO" id="wVE-bI-VXR">
-                                <rect key="frame" x="20" y="45" width="537" height="448"/>
-                                <autoresizingMask key="contentResizingMask" heightSizable="YES"/>
-                                <size key="cellSize" width="101" height="101"/>
-                            </ikImageBrowserView>
+                            <scrollView autohidesScrollers="YES" horizontalLineScroll="118" horizontalPageScroll="10" verticalLineScroll="118" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8V7-vk-8iV">
+                                <rect key="frame" x="20" y="45" width="554" height="465"/>
+                                <clipView key="contentView" copiesOnScroll="NO" id="eZw-uP-Jfm">
+                                    <rect key="frame" x="1" y="1" width="166" height="79"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <ikImageBrowserView autoresizesSubviews="NO" fixedFrame="YES" zoomValue="0.37548923492431641" allowsMultipleSelection="NO" allowsEmptySelection="NO" animates="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wVE-bI-VXR">
+                                            <rect key="frame" x="0.0" y="384" width="537" height="463"/>
+                                            <autoresizingMask key="contentResizingMask" heightSizable="YES"/>
+                                            <size key="cellSize" width="98" height="98"/>
+                                        </ikImageBrowserView>
+                                    </subviews>
+                                </clipView>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="230" id="ebH-6t-ecG"/>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="200" id="zL9-qw-eX8"/>
+                                </constraints>
+                                <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="Tvp-OT-syp">
+                                    <rect key="frame" x="1" y="80" width="166" height="15"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </scroller>
+                                <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="pby-al-de5">
+                                    <rect key="frame" x="167" y="1" width="15" height="79"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </scroller>
+                            </scrollView>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nrl-gf-Day">
+                                <rect key="frame" x="582" y="493" width="204" height="17"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="200" id="IWk-1n-NbQ"/>
+                                </constraints>
+                                <textFieldCell key="cell" sendsActionOnEndEditing="YES" placeholderString="Select a photo" usesSingleLineMode="YES" id="Mmt-Om-3np">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YT8-RM-DpJ">
+                                <rect key="frame" x="582" y="471" width="204" height="14"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="200" id="GX8-en-3Xj"/>
+                                </constraints>
+                                <textFieldCell key="cell" controlSize="small" sendsActionOnEndEditing="YES" id="FVI-fu-xQn">
+                                    <font key="font" metaFont="smallSystem"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="O9U-zt-j8M">
+                                <rect key="frame" x="578" y="38" width="121" height="32"/>
+                                <buttonCell key="cell" type="push" title="Show Similar" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="tK3-aM-JDE">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                            </button>
+                            <progressIndicator style="bar" translatesAutoresizingMaskIntoConstraints="NO" id="Iao-CZ-5Rk">
+                                <rect key="frame" x="20" y="18" width="96" height="20"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="18" id="3ve-3t-8sx"/>
+                                    <constraint firstAttribute="width" constant="96" id="CQW-dI-RpN"/>
+                                </constraints>
+                            </progressIndicator>
+                            <progressIndicator displayedWhenStopped="NO" style="bar" translatesAutoresizingMaskIntoConstraints="NO" id="nKP-Cb-tsH">
+                                <rect key="frame" x="20" y="10" width="96" height="20"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="96" id="Dxi-1G-R7L"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="96" id="k1j-sT-4qw"/>
+                                    <constraint firstAttribute="height" constant="18" id="ytt-6j-uFC"/>
+                                </constraints>
+                            </progressIndicator>
                         </subviews>
                         <constraints>
-                            <constraint firstItem="Hdm-fa-VH5" firstAttribute="top" secondItem="wVE-bI-VXR" secondAttribute="bottom" constant="8" id="66a-Cu-Fnj"/>
-                            <constraint firstItem="wVE-bI-VXR" firstAttribute="leading" secondItem="TUB-pw-Ewc" secondAttribute="leading" constant="20" id="Gjw-GL-wbo"/>
-                            <constraint firstAttribute="trailing" secondItem="wVE-bI-VXR" secondAttribute="trailing" constant="20" id="PIK-UA-tOf"/>
-                            <constraint firstAttribute="trailing" secondItem="Hdm-fa-VH5" secondAttribute="trailing" constant="20" id="ROh-nl-LxT"/>
-                            <constraint firstItem="wVE-bI-VXR" firstAttribute="top" secondItem="TUB-pw-Ewc" secondAttribute="top" constant="20" id="gu2-hF-9YW"/>
+                            <constraint firstItem="8V7-vk-8iV" firstAttribute="leading" secondItem="TUB-pw-Ewc" secondAttribute="leading" constant="20" id="12f-DO-AsP"/>
+                            <constraint firstAttribute="bottom" secondItem="O9U-zt-j8M" secondAttribute="bottom" constant="45" id="8LN-m1-LrX"/>
+                            <constraint firstItem="YT8-RM-DpJ" firstAttribute="leading" secondItem="8V7-vk-8iV" secondAttribute="trailing" constant="10" id="AQf-uu-AQA"/>
+                            <constraint firstItem="nrl-gf-Day" firstAttribute="top" secondItem="TUB-pw-Ewc" secondAttribute="top" constant="20" id="DIN-ub-ciV"/>
+                            <constraint firstItem="nKP-Cb-tsH" firstAttribute="trailing" secondItem="Iao-CZ-5Rk" secondAttribute="trailing" id="EQg-8B-om6"/>
+                            <constraint firstItem="nrl-gf-Day" firstAttribute="leading" secondItem="8V7-vk-8iV" secondAttribute="trailing" constant="10" id="HZo-GK-IFV"/>
+                            <constraint firstItem="Hdm-fa-VH5" firstAttribute="top" secondItem="8V7-vk-8iV" secondAttribute="bottom" constant="8" id="IHO-hi-8MS"/>
+                            <constraint firstAttribute="trailing" secondItem="nrl-gf-Day" secondAttribute="trailing" constant="20" id="Nc4-yI-cbo"/>
+                            <constraint firstItem="nKP-Cb-tsH" firstAttribute="top" secondItem="8V7-vk-8iV" secondAttribute="bottom" constant="16" id="OLO-TI-eNj"/>
+                            <constraint firstItem="8V7-vk-8iV" firstAttribute="top" secondItem="TUB-pw-Ewc" secondAttribute="top" constant="20" id="PhD-CP-slJ"/>
+                            <constraint firstAttribute="bottom" secondItem="Iao-CZ-5Rk" secondAttribute="bottom" constant="19" id="Wgs-ny-e2S"/>
+                            <constraint firstAttribute="trailing" secondItem="Hdm-fa-VH5" secondAttribute="trailing" constant="230" id="eCs-AC-eWl"/>
+                            <constraint firstItem="nKP-Cb-tsH" firstAttribute="leading" secondItem="TUB-pw-Ewc" secondAttribute="leading" constant="20" id="l2x-Jt-edP"/>
                             <constraint firstAttribute="bottom" secondItem="Hdm-fa-VH5" secondAttribute="bottom" constant="20" id="oqC-Tt-TuC"/>
+                            <constraint firstItem="O9U-zt-j8M" firstAttribute="leading" secondItem="8V7-vk-8iV" secondAttribute="trailing" constant="10" id="ox7-CE-bGO"/>
+                            <constraint firstItem="Iao-CZ-5Rk" firstAttribute="leading" secondItem="TUB-pw-Ewc" secondAttribute="leading" constant="20" id="t39-1K-Int"/>
+                            <constraint firstItem="YT8-RM-DpJ" firstAttribute="top" secondItem="nrl-gf-Day" secondAttribute="bottom" constant="8" id="wUR-KZ-zOb"/>
+                            <constraint firstAttribute="bottom" secondItem="nKP-Cb-tsH" secondAttribute="bottom" constant="11" id="xIT-H5-8S5"/>
+                            <constraint firstAttribute="trailing" secondItem="YT8-RM-DpJ" secondAttribute="trailing" constant="20" id="zN2-N9-h3L"/>
+                            <constraint firstItem="Iao-CZ-5Rk" firstAttribute="top" secondItem="8V7-vk-8iV" secondAttribute="bottom" constant="8" id="zYP-0G-trr"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="discoverProgressIndicator" destination="nKP-Cb-tsH" id="04f-H0-7NX"/>
+                        <outlet property="hashProgressIndicator" destination="Iao-CZ-5Rk" id="DsB-ya-z4c"/>
                         <outlet property="imageSizeSlider" destination="Hdm-fa-VH5" id="2t7-Wv-F2Z"/>
                         <outlet property="mImageBrowser" destination="wVE-bI-VXR" id="3un-IL-A9J"/>
+                        <outlet property="photoInfoText" destination="YT8-RM-DpJ" id="8DP-Wr-fns"/>
+                        <outlet property="photoLabel" destination="nrl-gf-Day" id="CFk-r6-mEu"/>
+                        <outlet property="progressIndicator" destination="Iao-CZ-5Rk" id="05h-ti-si8"/>
+                        <outlet property="similarButton" destination="O9U-zt-j8M" id="QC5-mv-1Om"/>
                     </connections>
                 </viewController>
                 <customObject id="zOK-uE-ldh" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="754.5" y="816.5"/>
+            <point key="canvasLocation" x="868" y="825"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="YTv-et-YFU">

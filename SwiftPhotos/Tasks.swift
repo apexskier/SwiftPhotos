@@ -50,14 +50,11 @@ class PhotoHasher: NSOperation {
     
     override func main() {
         autoreleasepool {
-            println("Started hashing \(self.photo.filepath)")
             if self.cancelled {
-                println("Cancelled hashing \(self.photo.filepath)")
                 return
             }
             
             self.photo.genPhash()
-            println("Done phashing \(self.photo.filepath)")
         }
     }
 }
@@ -71,7 +68,6 @@ class PhotoDiscoverer: NSOperation {
     
     override func main() {
         autoreleasepool {
-            println("Started discovering \(self.photo.filepath)")
             if self.cancelled {
                 return
             }

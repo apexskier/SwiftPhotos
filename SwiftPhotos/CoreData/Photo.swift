@@ -53,7 +53,6 @@ class Photo: NSManagedObject/*, IKImageBrowserItem*/ {
     
     func genPhash() {
         phash = NSNumber(unsignedLongLong: calcPhash(self.getImage()))
-        println("set phash")
         stateEnum = .Known
     }
     

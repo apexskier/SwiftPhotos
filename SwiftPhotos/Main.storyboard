@@ -361,16 +361,16 @@
                                     <action selector="zoomSliderChanged:" target="0vp-VM-WNX" id="WzK-WJ-JiG"/>
                                 </connections>
                             </slider>
-                            <scrollView autohidesScrollers="YES" horizontalLineScroll="118" horizontalPageScroll="10" verticalLineScroll="118" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8V7-vk-8iV">
+                            <scrollView autohidesScrollers="YES" horizontalLineScroll="113" horizontalPageScroll="10" verticalLineScroll="113" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8V7-vk-8iV">
                                 <rect key="frame" x="20" y="45" width="554" height="465"/>
                                 <clipView key="contentView" copiesOnScroll="NO" id="eZw-uP-Jfm">
                                     <rect key="frame" x="1" y="1" width="166" height="79"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <ikImageBrowserView autoresizesSubviews="NO" fixedFrame="YES" zoomValue="0.37548923492431641" allowsMultipleSelection="NO" allowsEmptySelection="NO" animates="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wVE-bI-VXR">
+                                        <ikImageBrowserView autoresizesSubviews="NO" fixedFrame="YES" zoomValue="0.45469886064529419" animates="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wVE-bI-VXR">
                                             <rect key="frame" x="0.0" y="384" width="537" height="463"/>
                                             <autoresizingMask key="contentResizingMask" heightSizable="YES"/>
-                                            <size key="cellSize" width="98" height="98"/>
+                                            <size key="cellSize" width="93" height="93"/>
                                         </ikImageBrowserView>
                                     </subviews>
                                 </clipView>
@@ -412,58 +412,65 @@
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="O9U-zt-j8M">
                                 <rect key="frame" x="578" y="38" width="121" height="32"/>
                                 <buttonCell key="cell" type="push" title="Show Similar" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="tK3-aM-JDE">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="showSimilar:" target="0vp-VM-WNX" id="K7t-L1-auK"/>
+                                </connections>
+                            </button>
+                            <progressIndicator horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" maxValue="100" displayedWhenStopped="NO" bezeled="NO" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="Iv0-yf-DIP">
+                                <rect key="frame" x="20" y="20" width="16" height="16"/>
+                            </progressIndicator>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="h93-OR-6Ma">
+                                <rect key="frame" x="578" y="71" width="133" height="32"/>
+                                <buttonCell key="cell" type="push" title="Show in Finder" bezelStyle="rounded" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="T19-Tc-cDF">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
+                                <connections>
+                                    <action selector="showInFinder:" target="0vp-VM-WNX" id="4Yp-fL-xHE"/>
+                                </connections>
                             </button>
-                            <progressIndicator style="bar" translatesAutoresizingMaskIntoConstraints="NO" id="Iao-CZ-5Rk">
-                                <rect key="frame" x="20" y="18" width="96" height="20"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="18" id="3ve-3t-8sx"/>
-                                    <constraint firstAttribute="width" constant="96" id="CQW-dI-RpN"/>
-                                </constraints>
-                            </progressIndicator>
-                            <progressIndicator displayedWhenStopped="NO" style="bar" translatesAutoresizingMaskIntoConstraints="NO" id="nKP-Cb-tsH">
-                                <rect key="frame" x="20" y="10" width="96" height="20"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="96" id="Dxi-1G-R7L"/>
-                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="96" id="k1j-sT-4qw"/>
-                                    <constraint firstAttribute="height" constant="18" id="ytt-6j-uFC"/>
-                                </constraints>
-                            </progressIndicator>
+                            <slider verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="gar-aL-FCd">
+                                <rect key="frame" x="699" y="45" width="87" height="21"/>
+                                <sliderCell key="cell" state="on" alignment="left" maxValue="20" doubleValue="10" tickMarkPosition="above" sliderType="linear" id="jR9-T3-mEw"/>
+                                <connections>
+                                    <action selector="similarSliderChange:" target="0vp-VM-WNX" id="ZVb-hQ-VUW"/>
+                                </connections>
+                            </slider>
                         </subviews>
                         <constraints>
                             <constraint firstItem="8V7-vk-8iV" firstAttribute="leading" secondItem="TUB-pw-Ewc" secondAttribute="leading" constant="20" id="12f-DO-AsP"/>
+                            <constraint firstItem="O9U-zt-j8M" firstAttribute="top" secondItem="h93-OR-6Ma" secondAttribute="bottom" constant="12" id="7V4-mE-vCK"/>
                             <constraint firstAttribute="bottom" secondItem="O9U-zt-j8M" secondAttribute="bottom" constant="45" id="8LN-m1-LrX"/>
                             <constraint firstItem="YT8-RM-DpJ" firstAttribute="leading" secondItem="8V7-vk-8iV" secondAttribute="trailing" constant="10" id="AQf-uu-AQA"/>
                             <constraint firstItem="nrl-gf-Day" firstAttribute="top" secondItem="TUB-pw-Ewc" secondAttribute="top" constant="20" id="DIN-ub-ciV"/>
-                            <constraint firstItem="nKP-Cb-tsH" firstAttribute="trailing" secondItem="Iao-CZ-5Rk" secondAttribute="trailing" id="EQg-8B-om6"/>
+                            <constraint firstItem="h93-OR-6Ma" firstAttribute="leading" secondItem="8V7-vk-8iV" secondAttribute="trailing" constant="10" id="Fmd-Mu-mDf"/>
                             <constraint firstItem="nrl-gf-Day" firstAttribute="leading" secondItem="8V7-vk-8iV" secondAttribute="trailing" constant="10" id="HZo-GK-IFV"/>
                             <constraint firstItem="Hdm-fa-VH5" firstAttribute="top" secondItem="8V7-vk-8iV" secondAttribute="bottom" constant="8" id="IHO-hi-8MS"/>
                             <constraint firstAttribute="trailing" secondItem="nrl-gf-Day" secondAttribute="trailing" constant="20" id="Nc4-yI-cbo"/>
-                            <constraint firstItem="nKP-Cb-tsH" firstAttribute="top" secondItem="8V7-vk-8iV" secondAttribute="bottom" constant="16" id="OLO-TI-eNj"/>
                             <constraint firstItem="8V7-vk-8iV" firstAttribute="top" secondItem="TUB-pw-Ewc" secondAttribute="top" constant="20" id="PhD-CP-slJ"/>
-                            <constraint firstAttribute="bottom" secondItem="Iao-CZ-5Rk" secondAttribute="bottom" constant="19" id="Wgs-ny-e2S"/>
+                            <constraint firstAttribute="trailing" secondItem="gar-aL-FCd" secondAttribute="trailing" constant="20" id="Q1Y-FT-26C"/>
                             <constraint firstAttribute="trailing" secondItem="Hdm-fa-VH5" secondAttribute="trailing" constant="230" id="eCs-AC-eWl"/>
-                            <constraint firstItem="nKP-Cb-tsH" firstAttribute="leading" secondItem="TUB-pw-Ewc" secondAttribute="leading" constant="20" id="l2x-Jt-edP"/>
+                            <constraint firstAttribute="bottom" secondItem="gar-aL-FCd" secondAttribute="bottom" constant="47" id="njF-gc-HGN"/>
                             <constraint firstAttribute="bottom" secondItem="Hdm-fa-VH5" secondAttribute="bottom" constant="20" id="oqC-Tt-TuC"/>
                             <constraint firstItem="O9U-zt-j8M" firstAttribute="leading" secondItem="8V7-vk-8iV" secondAttribute="trailing" constant="10" id="ox7-CE-bGO"/>
-                            <constraint firstItem="Iao-CZ-5Rk" firstAttribute="leading" secondItem="TUB-pw-Ewc" secondAttribute="leading" constant="20" id="t39-1K-Int"/>
+                            <constraint firstItem="gar-aL-FCd" firstAttribute="leading" secondItem="O9U-zt-j8M" secondAttribute="trailing" constant="8" id="uqP-Bd-gRs"/>
                             <constraint firstItem="YT8-RM-DpJ" firstAttribute="top" secondItem="nrl-gf-Day" secondAttribute="bottom" constant="8" id="wUR-KZ-zOb"/>
-                            <constraint firstAttribute="bottom" secondItem="nKP-Cb-tsH" secondAttribute="bottom" constant="11" id="xIT-H5-8S5"/>
                             <constraint firstAttribute="trailing" secondItem="YT8-RM-DpJ" secondAttribute="trailing" constant="20" id="zN2-N9-h3L"/>
-                            <constraint firstItem="Iao-CZ-5Rk" firstAttribute="top" secondItem="8V7-vk-8iV" secondAttribute="bottom" constant="8" id="zYP-0G-trr"/>
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="discoverProgressIndicator" destination="nKP-Cb-tsH" id="04f-H0-7NX"/>
-                        <outlet property="hashProgressIndicator" destination="Iao-CZ-5Rk" id="DsB-ya-z4c"/>
                         <outlet property="imageSizeSlider" destination="Hdm-fa-VH5" id="2t7-Wv-F2Z"/>
                         <outlet property="mImageBrowser" destination="wVE-bI-VXR" id="3un-IL-A9J"/>
                         <outlet property="photoInfoText" destination="YT8-RM-DpJ" id="8DP-Wr-fns"/>
                         <outlet property="photoLabel" destination="nrl-gf-Day" id="CFk-r6-mEu"/>
-                        <outlet property="progressIndicator" destination="Iao-CZ-5Rk" id="05h-ti-si8"/>
+                        <outlet property="progressIndicator" destination="Iv0-yf-DIP" id="ujj-MZ-g9u"/>
+                        <outlet property="showInFinderButton" destination="h93-OR-6Ma" id="lOS-mU-RZU"/>
+                        <outlet property="showSimilarClick" destination="O9U-zt-j8M" id="6L3-FC-wP7"/>
                         <outlet property="similarButton" destination="O9U-zt-j8M" id="QC5-mv-1Om"/>
+                        <outlet property="similarityThreshold" destination="gar-aL-FCd" id="Zn4-SY-svQ"/>
                     </connections>
                 </viewController>
                 <customObject id="zOK-uE-ldh" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>

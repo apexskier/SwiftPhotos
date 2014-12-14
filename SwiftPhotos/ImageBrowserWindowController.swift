@@ -12,7 +12,17 @@ import Quartz
 
 class ImageBrowserViewController: NSViewController {
     
-    var appDelegate = NSApplication.sharedApplication().delegate as AppDelegate
+    private var appDelegate = NSApplication.sharedApplication().delegate as AppDelegate
+    private var settings: Settings {
+        get {
+            return appDelegate.settings
+        }
+    }
+    private var managedObjectContext: NSManagedObjectContext {
+        get {
+            return appDelegate.managedObjectContext
+        }
+    }
     
     @IBOutlet weak var imageBrowser: IKImageBrowserView!
     
@@ -32,6 +42,13 @@ class ImageBrowserViewController: NSViewController {
     @IBAction func zoomSliderChanged(sender: AnyObject) {
         imageBrowser.setZoomValue(sender.floatValue)
         imageBrowser.needsDisplay = true
+        
+        settings.zoom = sender.floatValue
+        
+        var anyError: NSError?
+        if !managedObjectContext.save(&anyError) {
+            fatalError("Error saving: \(anyError)")
+        }
     }
     
     var selectedPhoto: Photo? {
@@ -50,6 +67,8 @@ class ImageBrowserViewController: NSViewController {
     
     override func viewDidLoad() {
         imageBrowser.setCanControlQuickLookPanel(false)
+        
+        imageSizeSlider.floatValue = settings.zoom
         imageBrowser.setZoomValue(imageSizeSlider.floatValue)
         
         orderSelectBox.selectItemAtIndex(0)
@@ -108,16 +127,23 @@ class ImageBrowserViewController: NSViewController {
         if areYouSure.runModal() == NSAlertFirstButtonReturn {
             // OK clicked, delete files
             var error: NSError?
-            selections.enumerateIndexesUsingBlock({ (i: Int, stop: UnsafeMutablePointer<ObjCBool>) in
-                var photo = self.images[i]
-                self.appDelegate.deletePhoto(photo, error: &error)
-                if error != nil {
-                    println("Failed to remove file: \(error)")
-                    stop.initialize(true)
+            selections.enumerateRangesWithOptions(NSEnumerationOptions.Reverse, { (range: NSRange, stop: UnsafeMutablePointer<ObjCBool>) in
+                let location = range.location
+                let length = range.length
+                for var i = (location + length - 1); i >= location; i-- {
+                    if i != -1 {
+                        var photo = self.images[i]
+                        self.appDelegate.deletePhoto(photo, error: &error)
+                        if error != nil {
+                            println("Failed to remove file: \(error)")
+                            stop.initialize(true)
+                        }
+                        
+                        self.images.removeAtIndex(i)
+                    }
                 }
-                
-                self.images.removeAtIndex(i)
             })
+            
             updateImages()
         }
     }

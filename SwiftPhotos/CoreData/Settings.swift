@@ -11,6 +11,7 @@ import CoreData
 
 class Settings: NSManagedObject {
 
+    @NSManaged var zoom: Float
     @NSManaged var imports: NSMutableOrderedSet
     @NSManaged dynamic var output: Folder?
 

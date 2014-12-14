@@ -112,6 +112,10 @@ class PhotoHUDController: NSViewController {
             default:
                 textArea.stringValue += "Unknown\n"
             }
+            textArea.stringValue += "\n"
+            
+            textArea.stringValue += "path: "
+            textArea.stringValue += photo.filepath
         }
     }
     

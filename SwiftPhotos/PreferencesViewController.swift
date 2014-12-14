@@ -157,24 +157,3 @@ class PreferencesViewController: NSViewController, NSTableViewDataSource, NSTabl
         return NSString(string: relativePath!).stringByReplacingPercentEscapesUsingEncoding(NSUTF8StringEncoding)
     }
 }
-
-// Creates a new Core Data stack and returns a managed object context associated with a private queue.
-private func privateQueueContext(outError: NSErrorPointer) -> NSManagedObjectContext! {
-    // It uses the same store and model, but a new persistent store coordinator and context.
-    let localCoordinator = NSPersistentStoreCoordinator(managedObjectModel: CoreDataStackManager.sharedManager.managedObjectModel)
-    var error: NSError?
-    
-    let persistentStore = localCoordinator.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: CoreDataStackManager.sharedManager.storeURL, options: nil, error: &error)
-    if persistentStore == nil {
-        if outError != nil {
-            outError.memory = error
-        }
-        return nil
-    }
-    
-    let context = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
-    context.persistentStoreCoordinator = localCoordinator
-    context.undoManager = nil
-    
-    return context
-}

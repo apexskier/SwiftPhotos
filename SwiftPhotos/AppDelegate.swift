@@ -88,6 +88,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 startProcessingFolder(folder.path)
             }
         }
+        
+        // start the filesystem monitor
+        FileSystemMonitor.sharedManager.start()
     }
     
     func applicationWillTerminate(aNotification: NSNotification?) {
@@ -128,31 +131,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                         println("Error getting resource from url '\(url)'.\n\(error)")
                     } else if let isDir = isDirObj as? NSNumber {
                         if isDir == 0 {
-                            //let photoDescription = NSEntityDescription.entityForName("Photo", inManagedObjectContext: self.managedObjectContext)
-                            let request = NSFetchRequest(entityName: "Photo")
-                            let predicate = NSPredicate(format: "filepath == %@",
-                                argumentArray: [url.absoluteString!])
-                            request.predicate = predicate
-                            
-                            if let results = self.managedObjectContext.executeFetchRequest(request, error: &error) {
-                                var photo: Photo
-                                
-                                if results.count > 0 {
-                                    photo = results[0] as Photo
-                                } else {
-                                    photo = NSEntityDescription.insertNewObjectForEntityForName("Photo", inManagedObjectContext: self.managedObjectContext) as Photo
-                                    photo.filepath = url.absoluteString!
-                                    photo.stateEnum = .New
-                                    
-                                    if !self.managedObjectContext.save(&error) {
-                                        fatalError("Error saving: \(error)")
-                                    }
-                                }
-                                
-                                discoverPhoto(photo)
-                            } else {
-                                fatalError("Couldn't query photos: \(error)")
-                            }
+                            addFile(url)
                         }
                     }
                 }
@@ -164,6 +143,39 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
     
+    func photoFromURL(url: NSURL) -> Photo? {
+        var error: NSError?
+        let request = NSFetchRequest(entityName: "Photo")
+        let predicate = NSPredicate(format: "filepath == %@",
+            argumentArray: [url.absoluteString!])
+        request.predicate = predicate
+        
+        if let results = self.managedObjectContext.executeFetchRequest(request, error: &error) {
+            if results.count > 0 {
+                return results[0] as? Photo
+            }
+        }
+        
+        return nil
+    }
+    
+    func addFile(url: NSURL) {
+        var error: NSError?
+        var photo: Photo?
+        
+        photo = photoFromURL(url)
+        if photo == nil {
+            photo = NSEntityDescription.insertNewObjectForEntityForName("Photo", inManagedObjectContext: self.managedObjectContext) as? Photo
+            photo!.filepath = url.absoluteString!
+        }
+        
+        photo!.stateEnum = .New
+        if !self.managedObjectContext.save(&error) {
+            fatalError("Error saving: \(error)")
+        }
+        
+        discoverPhoto(photo!)
+    }
     
     // Concurrent task management
     var taskManager: TaskManager {
@@ -185,13 +197,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             dispatch_async(dispatch_get_main_queue(), {
                 NSNotificationCenter.defaultCenter().postNotificationName("completedTask", object: nil)
                 self.taskManager.pendingDiscoveries.inProgress.removeValueForKey(photo.filepath)
-                var error: NSError?
                 
                 if photo.stateEnum == .Broken {
-                    println("Found broken photo")
-                    //self.managedObjectContext.deleteObject(photo)
+                    return
                 }
                 
+                var error: NSError?
                 if !self.managedObjectContext.save(&error) {
                     fatalError("Error saving: \(error)")
                 }
@@ -257,6 +268,26 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         taskManager.pendingQuality.queue.addOperation(op)
     }
     
+    func changeFound(url: NSURL, change: FileChange) {
+        switch change {
+        case .Removed:
+            if let photo = photoFromURL(url) {
+                photo.stateEnum = .Broken
+                var error: NSError?
+                deletePhoto(photo, error: &error)
+                if error != nil {
+                    println("Error deleting photo: \(error)")
+                }
+            }
+        case .Changed:
+            fallthrough
+        case .Added:
+            addFile(url)
+        }
+        
+        NSNotificationCenter.defaultCenter().postNotificationName("newPhotos", object: nil)
+    }
+    
     func deletePhoto(photo: Photo, error: NSErrorPointer) {
         var fileURL = photo.fileURL
         var filePath = photo.filepath
@@ -285,25 +316,4 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             fatalError("Error saving: \(err)")
         }
     }
-}
-
-// Creates a new Core Data stack and returns a managed object context associated with a private queue.
-private func privateQueueContext(outError: NSErrorPointer) -> NSManagedObjectContext! {
-    // It uses the same store and model, but a new persistent store coordinator and context.
-    let localCoordinator = NSPersistentStoreCoordinator(managedObjectModel: CoreDataStackManager.sharedManager.managedObjectModel)
-    var error: NSError?
-    
-    let persistentStore = localCoordinator.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: CoreDataStackManager.sharedManager.storeURL, options: nil, error:&error)
-    if persistentStore == nil {
-        if outError != nil {
-            outError.memory = error
-        }
-        return nil
-    }
-    
-    let context = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
-    context.persistentStoreCoordinator = localCoordinator
-    context.undoManager = nil
-    
-    return context
 }

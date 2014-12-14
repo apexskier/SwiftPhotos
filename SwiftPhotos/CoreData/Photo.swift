@@ -39,6 +39,13 @@ class Photo: NSManagedObject/*, IKImageBrowserItem*/ {
     
     var stateEnum: PhotoState {
         get {
+            if let path = fileURL.relativePath {
+                if !NSFileManager.defaultManager().fileExistsAtPath(path) {
+                    return .Broken
+                }
+            } else {
+                return .Broken
+            }
             return PhotoState(rawValue: self.state) ?? PhotoState.New
         }
         set {
@@ -49,15 +56,16 @@ class Photo: NSManagedObject/*, IKImageBrowserItem*/ {
     lazy var fileURL: NSURL = {
         if let url = NSURL(string: self.filepath) {
             return url
-        } else {
-            // Handle this
-            println("File doesn't exist: \(self.filepath)")
-            self.stateEnum = .Broken
-            return NSURL()
         }
+        // Handle this
+        self.stateEnum = .Broken
+        return NSURL()
     }()
     
     func genPhash() {
+        if stateEnum == .Broken {
+            return
+        }
         if phash != nil {
             return
         }
@@ -66,6 +74,10 @@ class Photo: NSManagedObject/*, IKImageBrowserItem*/ {
     }
     
     func genFhash() {
+        var url = fileURL
+        if stateEnum == .Broken {
+            return
+        }
         let data: NSMutableData = NSMutableData(contentsOfFile: fileURL.relativePath!)!
         var md5: MD5 = MD5()
         var hash = NSNumber(unsignedLongLong: CRCHash(data))
@@ -79,10 +91,16 @@ class Photo: NSManagedObject/*, IKImageBrowserItem*/ {
     }
     
     func genQualityMeasures() {
+        if stateEnum == .Broken {
+            return
+        }
         genExposure()
         genColorRange()
     }
     func genExposure() {
+        if stateEnum == .Broken {
+            return
+        }
         if exposure != nil {
             return
         }
@@ -129,6 +147,9 @@ class Photo: NSManagedObject/*, IKImageBrowserItem*/ {
         exposure = offset
     }
     func genColorRange() {
+        if stateEnum == .Broken {
+            return
+        }
         if color != nil {
             return
         }
@@ -213,10 +234,16 @@ class Photo: NSManagedObject/*, IKImageBrowserItem*/ {
     }
     
     func move(newpath: String) {
+        if stateEnum == .Broken {
+            return
+        }
         // TODO: implement
     }
     
     func updateExif() {
+        if stateEnum == .Broken {
+            return
+        }
         // TODO: get exif info from self
     }
     
@@ -229,6 +256,9 @@ class Photo: NSManagedObject/*, IKImageBrowserItem*/ {
     }
     
     func readData() {
+        if stateEnum == .Broken {
+            return
+        }
         let imageSource = CGImageSourceCreateWithURL(fileURL, nil)
         
         var index: UInt = 0
@@ -251,12 +281,6 @@ class Photo: NSManagedObject/*, IKImageBrowserItem*/ {
             }
         } else {
             stateEnum = .Broken
-        }
-    }
-        
-    func setPath(path: String) {
-        if filepath != path {
-            filepath = path
         }
     }
     

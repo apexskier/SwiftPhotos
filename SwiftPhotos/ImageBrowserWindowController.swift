@@ -65,7 +65,7 @@ class ImageBrowserViewController: NSViewController {
             self.updateImages()
             self.imageBrowserSelectionDidChange(nil)
         }))
-        observers.append(NSNotificationCenter.defaultCenter().addObserverForName("startedTask", object: nil, queue: nil, usingBlock: { (notification: NSNotification!) in
+        observers.append(NSNotificationCenter.defaultCenter().addObserverForName("completedTask", object: nil, queue: nil, usingBlock: { (notification: NSNotification!) in
             self.updateProgress()
         }))
         observers.append(NSNotificationCenter.defaultCenter().addObserverForName("updatePhotos", object: nil, queue: NSOperationQueue.mainQueue(), usingBlock: { (notification: NSNotification!) in

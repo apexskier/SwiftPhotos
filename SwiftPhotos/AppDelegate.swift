@@ -173,8 +173,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     func discoverPhoto(photo: Photo) {
-        NSNotificationCenter.defaultCenter().postNotificationName("startedTask", object: nil)
-        
         if let currentOperation = taskManager.pendingDiscoveries.inProgress[photo.filepath] {
             return
         }
@@ -185,6 +183,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 return
             }
             dispatch_async(dispatch_get_main_queue(), {
+                NSNotificationCenter.defaultCenter().postNotificationName("completedTask", object: nil)
                 self.taskManager.pendingDiscoveries.inProgress.removeValueForKey(photo.filepath)
                 var error: NSError?
                 
@@ -206,8 +205,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     func hashPhoto(photo: Photo) {
-        NSNotificationCenter.defaultCenter().postNotificationName("startedTask", object: nil)
-        
         if photo.stateEnum == .New {
             if let currentOperation = taskManager.pendingHashes.inProgress[photo.filepath] {
                 return
@@ -219,6 +216,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                     return
                 }
                 dispatch_async(dispatch_get_main_queue(), {
+                    NSNotificationCenter.defaultCenter().postNotificationName("completedTask", object: nil)
                     self.taskManager.pendingHashes.inProgress.removeValueForKey(photo.filepath)
                     var error: NSError?
                     if !self.managedObjectContext.save(&error) {
@@ -235,8 +233,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     func qualityPhoto(photo: Photo) {
-        NSNotificationCenter.defaultCenter().postNotificationName("startedTask", object: nil)
-        
         if let currentOperation = taskManager.pendingQuality.inProgress[photo.filepath] {
             return
         }
@@ -247,6 +243,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 return
             }
             dispatch_async(dispatch_get_main_queue(), {
+                NSNotificationCenter.defaultCenter().postNotificationName("completedTask", object: nil)
                 self.taskManager.pendingQuality.inProgress.removeValueForKey(photo.filepath)
                 var error: NSError?
                 if !self.managedObjectContext.save(&error) {

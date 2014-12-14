@@ -10,6 +10,7 @@
 		C51697101A32A14700026B77 /* CoreDataStackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C516970F1A32A14700026B77 /* CoreDataStackManager.swift */; };
 		C51697141A32ACFD00026B77 /* PreferencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51697131A32ACFD00026B77 /* PreferencesViewController.swift */; };
 		C51697161A32AFAB00026B77 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C51697151A32AFAB00026B77 /* Main.storyboard */; };
+		C54215201A3D777E009852EA /* TaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C542151F1A3D777E009852EA /* TaskViewController.swift */; };
 		C54814B31A376B3E0030D931 /* ImageBrowserWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54814B21A376B3E0030D931 /* ImageBrowserWindowController.swift */; };
 		C573A6011A22684000FABE7F /* Library.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C573A5FF1A22684000FABE7F /* Library.xcdatamodeld */; };
 		C595EE1A1A24E46900875B82 /* Library.swift in Sources */ = {isa = PBXBuildFile; fileRef = C595EE191A24E46900875B82 /* Library.swift */; };
@@ -50,6 +51,7 @@
 		C516970F1A32A14700026B77 /* CoreDataStackManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStackManager.swift; sourceTree = "<group>"; };
 		C51697131A32ACFD00026B77 /* PreferencesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreferencesViewController.swift; sourceTree = "<group>"; };
 		C51697151A32AFAB00026B77 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+		C542151F1A3D777E009852EA /* TaskViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskViewController.swift; sourceTree = "<group>"; };
 		C54814B21A376B3E0030D931 /* ImageBrowserWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageBrowserWindowController.swift; sourceTree = "<group>"; };
 		C573A6001A22684000FABE7F /* Library.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Library.xcdatamodel; sourceTree = "<group>"; };
 		C595EE191A24E46900875B82 /* Library.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Library.swift; path = CoreData/Library.swift; sourceTree = "<group>"; };
@@ -128,6 +130,7 @@
 				C516970F1A32A14700026B77 /* CoreDataStackManager.swift */,
 				FE5DDB1C193EC4F800D083E0 /* Images.xcassets */,
 				C51697131A32ACFD00026B77 /* PreferencesViewController.swift */,
+				C542151F1A3D777E009852EA /* TaskViewController.swift */,
 				C5A1E87E1A215F2400BA0A3C /* PhotoHashingUtils.swift */,
 				C595EE101A24E23C00875B82 /* Models */,
 				FE5DDB16193EC4F800D083E0 /* Supporting Files */,
@@ -262,6 +265,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C5A1E87D1A215C6F00BA0A3C /* main.swift in Sources */,
+				C54215201A3D777E009852EA /* TaskViewController.swift in Sources */,
 				C51697101A32A14700026B77 /* CoreDataStackManager.swift in Sources */,
 				C5F36B4B1A3D309E002D1789 /* PhotoHUD.swift in Sources */,
 				C5A1E87F1A215F2400BA0A3C /* PhotoHashingUtils.swift in Sources */,

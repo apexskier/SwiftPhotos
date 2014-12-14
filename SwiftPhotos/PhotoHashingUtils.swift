@@ -23,21 +23,6 @@ extension NSImage {
             return CGImageSourceCreateImageAtIndex(source, UInt(0), nil)
         }
     }
-    
-    /*//http://stackoverflow.com/questions/25146557/how-do-i-get-the-color-of-a-pixel-in-a-uiimage-with-swift
-    func pixelColor(point: CGPoint) -> UIColor {
-        var pixelData = CGDataProviderCopyData(CGImageGetDataProvider(self.CGImage))
-        var data: UnsafePointer<UInt8> = CFDataGetBytePtr(pixelData)
-        
-        var pixelInfo: Int = ((Int(self.size.width) * Int(point.y)) + Int(point.x)) * 4
-        
-        var r = CGFloat(data[pixelInfo]) / CGFloat(255.0)
-        var g = CGFloat(data[pixelInfo+1]) / CGFloat(255.0)
-        var b = CGFloat(data[pixelInfo+2]) / CGFloat(255.0)
-        var a = CGFloat(data[pixelInfo+3]) / CGFloat(255.0)
-        
-        return UIColor(red: r, green: g, blue: b, alpha: a)
-    }*/
 }
 
 func calcAvghash(image: NSImage) -> UInt64 {
@@ -91,13 +76,6 @@ func calcPhash(image: NSImage) -> UInt64 {
     var imageDTC = dtc(workingImage)
     
     /// 4. Reduce the DCT.
-    /*var reducedDTC = [[Double]](count: 8, repeatedValue: [Double](count: 8, repeatedValue: Double(0.0)))
-    for i in 0...7 {
-        for j in 0...7 {
-            reducedDTC[i][j] = imageDTC[i][j]
-        }
-    }*/
-    
     /// 5. Compute the average value of a reduced DTC (upper left 8x8).
     var avg = 0.0
     for i in 0...7 {
@@ -177,24 +155,67 @@ func hammingDistance(a: UInt64, b: UInt64) -> Int {
     return c
 }
 
-private func imageToGreyImage(image: NSImage, size: CGSize) -> NSImage {
-    var width = image.size.width
-    var height = image.size.height
+func scaleImage(image: NSImage, size: CGSize) -> NSImage {
+    let width = image.size.width
+    let height = image.size.height
     
-    var imageRect = CGRectMake(0, 0, CGFloat(width), CGFloat(height))
-    var colorSpace = CGColorSpaceCreateDeviceGray()
+    var minDimension: CGFloat
+    var maxDimensionOffset: CGFloat
+    var imageRect: CGRect
     
-    var context = CGBitmapContextCreate(nil, UInt(width), UInt(height), 8, 0, colorSpace, CGBitmapInfo(CGImageAlphaInfo.None.rawValue))
-    CGContextDrawImage(context, imageRect, image.CGImage)
+    var croppedImage: CGImage
+    
+    if width > height {
+        minDimension = height
+        maxDimensionOffset = (width - height) / 2
+        imageRect = CGRectMake(0, 0, minDimension, minDimension)
+        croppedImage = CGImageCreateWithImageInRect(image.CGImage, CGRectMake(maxDimensionOffset, 0, minDimension, minDimension))
+    } else {
+        minDimension = width
+        maxDimensionOffset = (height - width) / 2
+        imageRect = CGRectMake(0, 0, minDimension, minDimension)
+        croppedImage = CGImageCreateWithImageInRect(image.CGImage, CGRectMake(0, maxDimensionOffset, minDimension, minDimension))
+    }
+    
+    let colorSpace = CGColorSpaceCreateDeviceRGB()
+    var context = CGBitmapContextCreate(nil, UInt(minDimension), UInt(minDimension), 8, 0, colorSpace, CGBitmapInfo(CGImageAlphaInfo.NoneSkipLast.rawValue))
+    CGContextDrawImage(context, imageRect, croppedImage)
+    
+    croppedImage = CGBitmapContextCreateImage(context)
+    
+    return NSImage(CGImage: croppedImage, size: NSSize(width: size.width, height: size.height))
+}
+
+func imageToGreyImage(image: NSImage, size: CGSize) -> NSImage {
+    // let cgiVersion: CGImage = image.CGImageForProposedRect(&imageRect, context: context, hints: [])!.takeUnretainedValue()
+    
+    let width = image.size.width
+    let height = image.size.height
+    
+    var minDimension: CGFloat
+    var maxDimensionOffset: CGFloat
+    var imageRect: CGRect
+    
+    var croppedImage: CGImage
+    
+    if width > height {
+        minDimension = height
+        maxDimensionOffset = (width - height) / 2
+        imageRect = CGRectMake(0, 0, minDimension, minDimension)
+        croppedImage = CGImageCreateWithImageInRect(image.CGImage, CGRectMake(maxDimensionOffset, 0, minDimension, minDimension))
+    } else  {
+        minDimension = width
+        maxDimensionOffset = (height - width) / 2
+        imageRect = CGRectMake(0, 0, minDimension, minDimension)
+        croppedImage = CGImageCreateWithImageInRect(image.CGImage, CGRectMake(0, maxDimensionOffset, minDimension, minDimension))
+    }
+    
+    let colorSpace = CGColorSpaceCreateDeviceGray()
+    var context = CGBitmapContextCreate(nil, UInt(minDimension), UInt(minDimension), 8, 0, colorSpace, CGBitmapInfo(CGImageAlphaInfo.None.rawValue))
+    CGContextDrawImage(context, imageRect, croppedImage)
     
     var greyImage = CGBitmapContextCreateImage(context)
-    
-    context = CGBitmapContextCreate(nil, UInt(width), UInt(height), 8, 0, nil, CGBitmapInfo(CGImageAlphaInfo.Only.rawValue))
-    CGContextDrawImage(context, imageRect, image.CGImage)
-    var mask = CGBitmapContextCreateImage(context)
-    
-    var finalImage = CGImageCreateWithMask(greyImage, mask)
-    return NSImage(CGImage: finalImage, size: NSSize(width: size.width, height: size.height))
+    return NSImage(CGImage: greyImage, size: NSSize(width: size.width, height: size.height))
 }
 
 

@@ -10,7 +10,12 @@
     </entity>
     <entity name="Photo" representedClassName="SwiftPhotos.Photo" syncable="YES">
         <attribute name="ahash" optional="YES" attributeType="Integer 64" syncable="YES"/>
+        <attribute name="color" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="colorBlue" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="colorGreen" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="colorRed" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="created" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="exposure" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="fhash" optional="YES" attributeType="Integer 64" syncable="YES"/>
         <attribute name="filepath" attributeType="String" syncable="YES"/>
         <attribute name="height" optional="YES" attributeType="Integer 64" defaultValueString="-1" syncable="YES"/>
@@ -25,7 +30,7 @@
     <elements>
         <element name="Folder" positionX="-126" positionY="144" width="128" height="58"/>
         <element name="Library" positionX="-425" positionY="-151" width="128" height="88"/>
-        <element name="Photo" positionX="-144" positionY="-153" width="128" height="165"/>
+        <element name="Photo" positionX="-144" positionY="-153" width="128" height="240"/>
         <element name="Settings" positionX="-299" positionY="53" width="128" height="75"/>
     </elements>
 </model>

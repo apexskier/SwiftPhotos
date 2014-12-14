@@ -205,6 +205,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                     if !self.managedObjectContext.save(&error) {
                         fatalError("Error saving: \(error)")
                     }
+                    self.qualityPhoto(photo)
                     return
                 })
             }
@@ -212,6 +213,32 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             taskManager.pendingHashes.inProgress[photo.filepath] = op
             taskManager.pendingHashes.queue.addOperation(op)
         }
+    }
+    
+    func qualityPhoto(photo: Photo) {
+        NSNotificationCenter.defaultCenter().postNotificationName("startedTask", object: nil)
+        
+        if let currentOperation = taskManager.pendingQuality.inProgress[photo.filepath] {
+            return
+        }
+        
+        let op = PhotoQualityGenerator(photo: photo)
+        op.completionBlock = {
+            if op.cancelled {
+                return
+            }
+            dispatch_async(dispatch_get_main_queue(), {
+                self.taskManager.pendingQuality.inProgress.removeValueForKey(photo.filepath)
+                var error: NSError?
+                if !self.managedObjectContext.save(&error) {
+                    fatalError("Error saving: \(error)")
+                }
+                return
+            })
+        }
+        
+        taskManager.pendingQuality.inProgress[photo.filepath] = op
+        taskManager.pendingQuality.queue.addOperation(op)
     }
 }
 

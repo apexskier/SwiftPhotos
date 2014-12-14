@@ -24,6 +24,7 @@ class TaskManager {
 
     var pendingDiscoveries = PhotoOperations("discoveryQueue")
     var pendingHashes = PhotoOperations("hashQueue")
+    var pendingQuality = PhotoOperations("qualityQueue")
 }
 
 // http://www.raywenderlich.com/76341/use-nsoperation-nsoperationqueue-swift
@@ -74,6 +75,24 @@ class PhotoDiscoverer: NSOperation {
             
             self.photo.genFhash()
             self.photo.readData()
+        }
+    }
+}
+
+class PhotoQualityGenerator: NSOperation {
+    let photo: Photo
+    
+    init(photo: Photo) {
+        self.photo = photo
+    }
+    
+    override func main() {
+        autoreleasepool {
+            if self.cancelled {
+                return
+            }
+            
+            self.photo.genQualityMeasures()
         }
     }
 }

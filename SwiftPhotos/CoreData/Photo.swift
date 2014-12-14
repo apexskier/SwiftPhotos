@@ -28,6 +28,12 @@ class Photo: NSManagedObject/*, IKImageBrowserItem*/ {
     @NSManaged var created: NSDate?
     @NSManaged var filepath: String
     
+    @NSManaged var exposure: NSNumber?
+    @NSManaged var colorRed: NSNumber?
+    @NSManaged var colorGreen: NSNumber?
+    @NSManaged var colorBlue: NSNumber?
+    @NSManaged var color: NSNumber?
+    
     @NSManaged var height: NSNumber?
     @NSManaged var width: NSNumber?
     
@@ -52,6 +58,9 @@ class Photo: NSManagedObject/*, IKImageBrowserItem*/ {
     }()
     
     func genPhash() {
+        if phash != nil {
+            return
+        }
         phash = NSNumber(unsignedLongLong: calcPhash(self.getImage()))
         stateEnum = .Known
     }
@@ -62,8 +71,136 @@ class Photo: NSManagedObject/*, IKImageBrowserItem*/ {
         var hash = NSNumber(unsignedLongLong: CRCHash(data))
         if hash != fhash {
             stateEnum = .New
+            phash = nil
+            color = nil
+            exposure = nil
         }
         fhash = hash
+    }
+    
+    func genQualityMeasures() {
+        genExposure()
+        genColorRange()
+    }
+    func genExposure() {
+        if exposure != nil {
+            return
+        }
+        let sampleSize = 128
+        
+        let scaledImage = scaleImage(getImage(), CGSize(width: sampleSize, height: sampleSize))
+        
+        //http://stackoverflow.com/questions/25146557/how-do-i-get-the-color-of-a-pixel-in-a-uiimage-with-swift
+        
+        var pixelData = CGDataProviderCopyData(CGImageGetDataProvider(scaledImage.CGImage))
+        var data: UnsafePointer<UInt8> = CFDataGetBytePtr(pixelData)
+        
+        var exposureHistogram: [Double] = [Double](count: 256, repeatedValue: 0.0)
+            
+        for x in 0...(sampleSize - 1) {
+            for y in 0...(sampleSize - 1) {
+                var pixelInfo: Int = ((128 * x) + y) * 4
+                
+                var r: Double = Double(data[pixelInfo])
+                var g: Double = Double(data[pixelInfo+1])
+                var b: Double = Double(data[pixelInfo+2])
+                var intensity = Int(((r + g + b) / 3.0))
+                
+                exposureHistogram[intensity]++
+            }
+        }
+        
+        var max: Double = 0
+        var min: Double = 128 * 128
+        for i in 0...255 {
+            if exposureHistogram[i] < min {
+                min = exposureHistogram[i]
+            } else if exposureHistogram[i] > max {
+                max = exposureHistogram[i]
+            }
+        }
+        
+        // sampleSize^2 points distributed over 256 slots
+        // exactly even would be 64 in each slot
+        exposure = max - min
+    }
+    func genColorRange() {
+        if color != nil {
+            return
+        }
+        let sampleSize = 128
+        
+        let scaledImage = scaleImage(getImage(), CGSize(width: sampleSize, height: sampleSize))
+        
+        //http://stackoverflow.com/questions/25146557/how-do-i-get-the-color-of-a-pixel-in-a-uiimage-with-swift
+        
+        var pixelData = CGDataProviderCopyData(CGImageGetDataProvider(scaledImage.CGImage))
+        var data: UnsafePointer<UInt8> = CFDataGetBytePtr(pixelData)
+        
+        var histogramRed = [Double](count: 256, repeatedValue: 0.0)
+        var histogramGreen = [Double](count: 256, repeatedValue: 0.0)
+        var histogramBlue = [Double](count: 256, repeatedValue: 0.0)
+        
+        for x in 0...(sampleSize - 1) {
+            for y in 0...(sampleSize - 1) {
+                var pixelInfo: Int = ((128 * x) + y) * 4
+                
+                var r = Int(data[pixelInfo])
+                var g = Int(data[pixelInfo+1])
+                var b = Int(data[pixelInfo+2])
+                
+                histogramRed[r]++
+                histogramGreen[g]++
+                histogramBlue[b]++
+            }
+        }
+        
+        var maxRed: Double = 0
+        var minRed: Double = 128 * 128
+        var maxGreen: Double = 0
+        var minGreen: Double = 128 * 128
+        var maxBlue: Double = 0
+        var minBlue: Double = 128 * 128
+        for i in 0...255 {
+            if histogramRed[i] < minRed {
+                minRed = histogramRed[i]
+            } else if histogramRed[i] > maxRed {
+                maxRed = histogramRed[i]
+            }
+            if histogramGreen[i] < minGreen {
+                minGreen = histogramGreen[i]
+            } else if histogramGreen[i] > maxGreen {
+                maxGreen = histogramGreen[i]
+            }
+            if histogramBlue[i] < minBlue {
+                minBlue = histogramBlue[i]
+            } else if histogramBlue[i] > maxBlue {
+                maxBlue = histogramBlue[i]
+            }
+        }
+        
+        // sampleSize^2 points distributed over 256 slots
+        // exactly even would be 64 in each slot
+        
+        // Small is better
+        var diversityRed = maxRed - minRed
+        var diversityGreen = maxGreen - minGreen
+        var diversityBlue = maxBlue - minBlue
+        color = NSNumber(double: diversityRed + diversityGreen + diversityBlue)
+        
+        // Higher means more of that color
+        (colorRed, colorGreen, colorBlue) = {
+            var r: Double = 0
+            var g: Double = 0
+            var b: Double = 0
+            for i in 1...255 {
+                var di = Double(i)
+                r += di * histogramRed[i]
+                g += di * histogramGreen[i]
+                b += di * histogramBlue[i]
+            }
+            return (r, g, b)
+        }()
     }
     
     func move(newpath: String) {

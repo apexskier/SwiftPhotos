@@ -82,6 +82,8 @@
                                                 </items>
                                             </menu>
                                         </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="tYD-Fj-kuZ"/>
+                                        <menuItem title="Get Info" enabled="NO" keyEquivalent="i" id="Fid-4t-zpz"/>
                                         <menuItem isSeparatorItem="YES" id="lPF-bR-SBw"/>
                                         <menuItem title="Close" keyEquivalent="w" id="vjq-9b-qAa">
                                             <connections>
@@ -255,7 +257,7 @@
                                     <rect key="frame" x="1" y="112.9609255194664" width="227" height="16"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
-                                <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="xWW-CT-LQI">
+                                <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="0.91038329965340381" horizontal="NO" id="xWW-CT-LQI">
                                     <rect key="frame" x="224" y="17" width="15" height="102"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
@@ -342,10 +344,10 @@
             </objects>
             <point key="canvasLocation" x="53" y="741"/>
         </scene>
-        <!--Image Browser Window Controller-->
+        <!--Image Browser View Controller-->
         <scene sceneID="c0x-Aq-qBa">
             <objects>
-                <viewController id="0vp-VM-WNX" customClass="ImageBrowserWindowController" customModule="SwiftPhotos" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="0vp-VM-WNX" customClass="ImageBrowserViewController" customModule="SwiftPhotos" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="TUB-pw-Ewc">
                         <rect key="frame" x="0.0" y="0.0" width="804" height="530"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -361,16 +363,16 @@
                                     <action selector="zoomSliderChanged:" target="0vp-VM-WNX" id="WzK-WJ-JiG"/>
                                 </connections>
                             </slider>
-                            <scrollView autohidesScrollers="YES" horizontalLineScroll="113" horizontalPageScroll="10" verticalLineScroll="113" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8V7-vk-8iV">
+                            <scrollView autohidesScrollers="YES" horizontalLineScroll="264" horizontalPageScroll="10" verticalLineScroll="264" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8V7-vk-8iV">
                                 <rect key="frame" x="20" y="45" width="554" height="465"/>
                                 <clipView key="contentView" copiesOnScroll="NO" id="eZw-uP-Jfm">
                                     <rect key="frame" x="1" y="1" width="166" height="79"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <ikImageBrowserView autoresizesSubviews="NO" fixedFrame="YES" zoomValue="0.84435403347015381" animates="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wVE-bI-VXR">
+                                        <ikImageBrowserView autoresizesSubviews="NO" fixedFrame="YES" zoomValue="0.77732211351394653" animates="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wVE-bI-VXR">
                                             <rect key="frame" x="0.0" y="384" width="537" height="463"/>
                                             <autoresizingMask key="contentResizingMask" heightSizable="YES"/>
-                                            <size key="cellSize" width="270" height="270"/>
+                                            <size key="cellSize" width="244" height="244"/>
                                         </ikImageBrowserView>
                                     </subviews>
                                 </clipView>
@@ -387,30 +389,8 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                             </scrollView>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nrl-gf-Day">
-                                <rect key="frame" x="582" y="493" width="204" height="17"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="200" id="jLQ-0m-Bes"/>
-                                </constraints>
-                                <textFieldCell key="cell" sendsActionOnEndEditing="YES" placeholderString="Select a photo" usesSingleLineMode="YES" id="Mmt-Om-3np">
-                                    <font key="font" metaFont="system"/>
-                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                            </textField>
-                            <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YT8-RM-DpJ">
-                                <rect key="frame" x="582" y="471" width="204" height="14"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="200" id="rQp-sf-5aR"/>
-                                </constraints>
-                                <textFieldCell key="cell" controlSize="small" sendsActionOnEndEditing="YES" id="FVI-fu-xQn">
-                                    <font key="font" metaFont="smallSystem"/>
-                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                            </textField>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="O9U-zt-j8M">
-                                <rect key="frame" x="578" y="38" width="121" height="32"/>
+                                <rect key="frame" x="578" y="419" width="121" height="32"/>
                                 <buttonCell key="cell" type="push" title="Show Similar" bezelStyle="rounded" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="tK3-aM-JDE">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
                                     <font key="font" metaFont="system"/>
@@ -426,25 +406,8 @@
                                     <constraint firstAttribute="height" constant="16" id="Uhk-rz-jRf"/>
                                 </constraints>
                             </progressIndicator>
-                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="h93-OR-6Ma">
-                                <rect key="frame" x="578" y="71" width="133" height="32"/>
-                                <buttonCell key="cell" type="push" title="Show in Finder" bezelStyle="rounded" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="T19-Tc-cDF">
-                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="system"/>
-                                </buttonCell>
-                                <connections>
-                                    <action selector="showInFinder:" target="0vp-VM-WNX" id="4Yp-fL-xHE"/>
-                                </connections>
-                            </button>
-                            <slider verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="gar-aL-FCd">
-                                <rect key="frame" x="699" y="45" width="87" height="21"/>
-                                <sliderCell key="cell" state="on" alignment="left" maxValue="30" doubleValue="15" tickMarkPosition="above" sliderType="linear" id="jR9-T3-mEw"/>
-                                <connections>
-                                    <action selector="similarSliderChange:" target="0vp-VM-WNX" id="ZVb-hQ-VUW"/>
-                                </connections>
-                            </slider>
                             <button translatesAutoresizingMaskIntoConstraints="NO" id="o7V-9j-I4l">
-                                <rect key="frame" x="582" y="117" width="135" height="18"/>
+                                <rect key="frame" x="582" y="494" width="135" height="18"/>
                                 <buttonCell key="cell" type="check" title="Show only hashed" bezelStyle="regularSquare" imagePosition="left" inset="2" id="hm1-tx-ORQ">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                     <font key="font" metaFont="system"/>
@@ -465,7 +428,7 @@
                                 </textFieldCell>
                             </textField>
                             <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="gON-Ll-1JJ">
-                                <rect key="frame" x="582" y="150" width="124" height="26"/>
+                                <rect key="frame" x="582" y="464" width="124" height="26"/>
                                 <popUpButtonCell key="cell" type="push" title="Blue" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" tag="5" imageScaling="proportionallyDown" inset="2" selectedItem="2Ah-9x-fwp" id="uEx-KB-95q">
                                     <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="menu"/>
@@ -496,36 +459,59 @@
                                     <action selector="orderButtonChange:" target="0vp-VM-WNX" id="6u0-Sk-18V"/>
                                 </connections>
                             </popUpButton>
+                            <slider verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="gar-aL-FCd">
+                                <rect key="frame" x="699" y="426" width="87" height="21"/>
+                                <sliderCell key="cell" state="on" alignment="left" maxValue="30" doubleValue="15" tickMarkPosition="above" sliderType="linear" id="jR9-T3-mEw"/>
+                                <connections>
+                                    <action selector="similarSliderChange:" target="0vp-VM-WNX" id="ZVb-hQ-VUW"/>
+                                </connections>
+                            </slider>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="AJd-Uc-i35">
+                                <rect key="frame" x="578" y="347" width="91" height="32"/>
+                                <buttonCell key="cell" type="push" title="Remove" bezelStyle="rounded" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Op6-3n-7en">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="removeButtonPushed:" target="0vp-VM-WNX" id="pqa-E9-fon"/>
+                                </connections>
+                            </button>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="h93-OR-6Ma">
+                                <rect key="frame" x="578" y="380" width="133" height="32"/>
+                                <buttonCell key="cell" type="push" title="Show in Finder" bezelStyle="rounded" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="T19-Tc-cDF">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="showInFinder:" target="0vp-VM-WNX" id="4Yp-fL-xHE"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <constraints>
                             <constraint firstItem="8V7-vk-8iV" firstAttribute="leading" secondItem="TUB-pw-Ewc" secondAttribute="leading" constant="20" id="12f-DO-AsP"/>
+                            <constraint firstItem="o7V-9j-I4l" firstAttribute="top" secondItem="TUB-pw-Ewc" secondAttribute="top" constant="20" id="4TF-qe-bet"/>
                             <constraint firstAttribute="trailing" secondItem="o7V-9j-I4l" secondAttribute="trailing" constant="89" id="76s-RI-JMh"/>
-                            <constraint firstItem="O9U-zt-j8M" firstAttribute="top" secondItem="h93-OR-6Ma" secondAttribute="bottom" constant="12" id="7V4-mE-vCK"/>
-                            <constraint firstAttribute="bottom" secondItem="O9U-zt-j8M" secondAttribute="bottom" constant="45" id="8LN-m1-LrX"/>
-                            <constraint firstItem="YT8-RM-DpJ" firstAttribute="leading" secondItem="8V7-vk-8iV" secondAttribute="trailing" constant="10" id="AQf-uu-AQA"/>
-                            <constraint firstItem="nrl-gf-Day" firstAttribute="top" secondItem="TUB-pw-Ewc" secondAttribute="top" constant="20" id="DIN-ub-ciV"/>
+                            <constraint firstItem="gar-aL-FCd" firstAttribute="top" secondItem="o7V-9j-I4l" secondAttribute="bottom" constant="51" id="7Q3-mb-YAh"/>
+                            <constraint firstItem="AJd-Uc-i35" firstAttribute="leading" secondItem="8V7-vk-8iV" secondAttribute="trailing" constant="10" id="AZX-rv-OKy"/>
+                            <constraint firstItem="O9U-zt-j8M" firstAttribute="top" secondItem="gON-Ll-1JJ" secondAttribute="bottom" constant="20" id="EzW-h1-kis"/>
                             <constraint firstItem="h93-OR-6Ma" firstAttribute="leading" secondItem="8V7-vk-8iV" secondAttribute="trailing" constant="10" id="Fmd-Mu-mDf"/>
-                            <constraint firstItem="nrl-gf-Day" firstAttribute="leading" secondItem="8V7-vk-8iV" secondAttribute="trailing" constant="10" id="HZo-GK-IFV"/>
                             <constraint firstItem="Hdm-fa-VH5" firstAttribute="top" secondItem="8V7-vk-8iV" secondAttribute="bottom" constant="8" id="IHO-hi-8MS"/>
+                            <constraint firstItem="AJd-Uc-i35" firstAttribute="top" secondItem="h93-OR-6Ma" secondAttribute="bottom" constant="12" id="K3c-Qh-dpE"/>
                             <constraint firstItem="Iv0-yf-DIP" firstAttribute="top" secondItem="8V7-vk-8iV" secondAttribute="bottom" constant="9" id="KiS-md-ASr"/>
                             <constraint firstItem="8V7-vk-8iV" firstAttribute="top" secondItem="TUB-pw-Ewc" secondAttribute="top" constant="20" id="PhD-CP-slJ"/>
                             <constraint firstAttribute="trailing" secondItem="gar-aL-FCd" secondAttribute="trailing" constant="20" id="Q1Y-FT-26C"/>
                             <constraint firstItem="gON-Ll-1JJ" firstAttribute="leading" secondItem="8V7-vk-8iV" secondAttribute="trailing" constant="10" id="Q9y-pI-ITu"/>
                             <constraint firstItem="o7V-9j-I4l" firstAttribute="leading" secondItem="8V7-vk-8iV" secondAttribute="trailing" constant="10" id="RJE-fs-4wD"/>
-                            <constraint firstItem="o7V-9j-I4l" firstAttribute="top" secondItem="gON-Ll-1JJ" secondAttribute="bottom" constant="20" id="YFh-Gd-dvh"/>
                             <constraint firstItem="Iv0-yf-DIP" firstAttribute="leading" secondItem="TUB-pw-Ewc" secondAttribute="leading" constant="20" id="abs-UG-eyu"/>
-                            <constraint firstItem="h93-OR-6Ma" firstAttribute="top" secondItem="o7V-9j-I4l" secondAttribute="bottom" constant="20" id="ach-Yq-RqK"/>
-                            <constraint firstAttribute="trailing" secondItem="nrl-gf-Day" secondAttribute="trailing" constant="20" id="dQM-iG-vch"/>
                             <constraint firstAttribute="trailing" secondItem="Hdm-fa-VH5" secondAttribute="trailing" constant="230" id="eCs-AC-eWl"/>
+                            <constraint firstItem="gON-Ll-1JJ" firstAttribute="top" secondItem="o7V-9j-I4l" secondAttribute="bottom" constant="8" id="eo3-GG-eKP"/>
                             <constraint firstItem="MZx-OW-3Pc" firstAttribute="top" secondItem="8V7-vk-8iV" secondAttribute="bottom" constant="8" id="hkb-tG-s8C"/>
-                            <constraint firstAttribute="trailing" secondItem="YT8-RM-DpJ" secondAttribute="trailing" constant="20" id="n4k-2g-jnA"/>
+                            <constraint firstItem="h93-OR-6Ma" firstAttribute="top" secondItem="O9U-zt-j8M" secondAttribute="bottom" constant="18" id="l1k-mQ-LAm"/>
                             <constraint firstItem="MZx-OW-3Pc" firstAttribute="leading" secondItem="Iv0-yf-DIP" secondAttribute="trailing" constant="8" id="nZ8-fH-GGh"/>
-                            <constraint firstAttribute="bottom" secondItem="gar-aL-FCd" secondAttribute="bottom" constant="47" id="njF-gc-HGN"/>
                             <constraint firstAttribute="bottom" secondItem="Hdm-fa-VH5" secondAttribute="bottom" constant="20" id="oqC-Tt-TuC"/>
                             <constraint firstItem="O9U-zt-j8M" firstAttribute="leading" secondItem="8V7-vk-8iV" secondAttribute="trailing" constant="10" id="ox7-CE-bGO"/>
                             <constraint firstAttribute="bottom" secondItem="Iv0-yf-DIP" secondAttribute="bottom" constant="20" id="pyj-wc-2Hv"/>
                             <constraint firstItem="gar-aL-FCd" firstAttribute="leading" secondItem="O9U-zt-j8M" secondAttribute="trailing" constant="8" id="uqP-Bd-gRs"/>
-                            <constraint firstItem="YT8-RM-DpJ" firstAttribute="top" secondItem="nrl-gf-Day" secondAttribute="bottom" constant="8" id="wUR-KZ-zOb"/>
                             <constraint firstAttribute="bottom" secondItem="MZx-OW-3Pc" secondAttribute="bottom" constant="20" id="woA-MM-jRE"/>
                         </constraints>
                     </view>
@@ -535,9 +521,8 @@
                         <outlet property="imageSizeSlider" destination="Hdm-fa-VH5" id="2t7-Wv-F2Z"/>
                         <outlet property="onlyHashedCheckbox" destination="o7V-9j-I4l" id="gRv-UU-HAf"/>
                         <outlet property="orderSelectBox" destination="uEx-KB-95q" id="fYR-IO-ztJ"/>
-                        <outlet property="photoInfoText" destination="YT8-RM-DpJ" id="8DP-Wr-fns"/>
-                        <outlet property="photoLabel" destination="nrl-gf-Day" id="CFk-r6-mEu"/>
                         <outlet property="progressIndicator" destination="Iv0-yf-DIP" id="ujj-MZ-g9u"/>
+                        <outlet property="removeButton" destination="AJd-Uc-i35" id="Kmh-Yz-TzH"/>
                         <outlet property="showInFinderButton" destination="h93-OR-6Ma" id="lOS-mU-RZU"/>
                         <outlet property="similarButton" destination="O9U-zt-j8M" id="QC5-mv-1Om"/>
                         <outlet property="similarityThreshold" destination="gar-aL-FCd" id="Zn4-SY-svQ"/>
@@ -567,6 +552,47 @@
                 <customObject id="HMm-92-bsW" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="706" y="300"/>
+        </scene>
+        <!--Window Controller-->
+        <scene sceneID="Ud2-j7-Q7a">
+            <objects>
+                <windowController id="pBv-ne-5Oc" sceneMemberID="viewController">
+                    <window key="window" title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" animationBehavior="default" id="7yR-el-mPP" customClass="NSPanel">
+                        <windowStyleMask key="styleMask" titled="YES" closable="YES" utility="YES" HUD="YES" fullSizeContentView="YES"/>
+                        <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+                        <rect key="contentRect" x="294" y="313" width="234" height="396"/>
+                        <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1057"/>
+                    </window>
+                    <connections>
+                        <segue destination="8Cf-9r-dZr" kind="relationship" relationship="window.shadowedContentViewController" id="SaZ-rD-qs9"/>
+                    </connections>
+                </windowController>
+                <customObject id="r2n-h2-a66" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1507" y="363"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="J0E-ox-EBV">
+            <objects>
+                <viewController id="8Cf-9r-dZr" sceneMemberID="viewController">
+                    <view key="view" id="Yle-01-6Cy">
+                        <rect key="frame" x="0.0" y="0.0" width="247" height="355"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wAB-RF-G9n">
+                                <rect key="frame" x="18" y="318" width="211" height="17"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" placeholderString="No Image Selected" id="FVP-e6-pBQ">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                        </subviews>
+                    </view>
+                </viewController>
+                <customObject id="Rdb-EN-OC2" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1842.5" y="342.5"/>
         </scene>
     </scenes>
     <resources>

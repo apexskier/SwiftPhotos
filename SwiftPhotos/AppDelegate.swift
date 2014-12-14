@@ -13,12 +13,12 @@ import Quartz
 
 class AppDelegate: NSObject, NSApplicationDelegate {
     
+    
+    
     /// Mark: Constants
     struct Constants {
         static let allowedExtentions: [String] = ["jpeg", "jpg", "png", "tiff", "gif"]
     }
-    
-    //@IBOutlet var imageBrowserView: ImageBrowserWindowController!
     
     /// Managed object context for the view controller (which is bound to the persistent store coordinator for the application).
     lazy var managedObjectContext: NSManagedObjectContext = {
@@ -239,6 +239,33 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         taskManager.pendingQuality.inProgress[photo.filepath] = op
         taskManager.pendingQuality.queue.addOperation(op)
+    }
+    
+    func deletePhoto(photo: Photo, error: NSErrorPointer) {
+        var fileURL = photo.fileURL
+        var filePath = photo.filepath
+        
+        var removed = NSFileManager.defaultManager().removeItemAtURL(fileURL, error: error)
+        if !removed {
+            println("Didn't remove file: \(fileURL.relativePath!)")
+            return
+        }
+        
+        if let task = taskManager.pendingDiscoveries.inProgress.removeValueForKey(filePath) {
+            task.cancel()
+        }
+        if let task = taskManager.pendingHashes.inProgress.removeValueForKey(filePath) {
+            task.cancel()
+        }
+        if let task = taskManager.pendingQuality.inProgress.removeValueForKey(filePath) {
+            task.cancel()
+        }
+        
+        managedObjectContext.deleteObject(photo)
+        var err: NSError?
+        if !self.managedObjectContext.save(&err) {
+            fatalError("Error saving: \(err)")
+        }
     }
 }
 

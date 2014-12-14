@@ -122,7 +122,11 @@ class Photo: NSManagedObject/*, IKImageBrowserItem*/ {
         
         // sampleSize^2 points distributed over 256 slots
         // exactly even would be 64 in each slot
-        exposure = max - min
+        var offset: Double = 0
+        for i in 0...255 {
+            offset += abs(exposureHistogram[i] - 64)
+        }
+        exposure = offset
     }
     func genColorRange() {
         if color != nil {
@@ -199,7 +203,10 @@ class Photo: NSManagedObject/*, IKImageBrowserItem*/ {
                 g += di * histogramGreen[i]
                 b += di * histogramBlue[i]
             }
-            return (r, g, b)
+            
+            var m = max(r, g, b)
+            
+            return (r/m, g/m, b/m)
         }()
     }
     

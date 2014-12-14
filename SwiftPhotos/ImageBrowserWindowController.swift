@@ -10,21 +10,22 @@ import Foundation
 import AppKit
 import Quartz
 
-class ImageBrowserWindowController: NSViewController {
+class ImageBrowserViewController: NSViewController {
     
     private var appDelegate = NSApplication.sharedApplication().delegate as AppDelegate
     
     //@IBOutlet weak var window: NSWindow!
     @IBOutlet weak var imageBrowser: IKImageBrowserView!
-    @IBOutlet weak var imageSizeSlider: NSSlider!
+    
+    @IBOutlet weak var countTextField: NSTextField!
     @IBOutlet weak var progressIndicator: NSProgressIndicator!
-    @IBOutlet weak var photoLabel: NSTextField!
-    @IBOutlet weak var photoInfoText: NSTextField!
+    
+    @IBOutlet weak var imageSizeSlider: NSSlider!
     @IBOutlet weak var showInFinderButton: NSButton!
+    @IBOutlet weak var removeButton: NSButton!
     @IBOutlet weak var similarButton: NSButton!
     @IBOutlet weak var similarityThreshold: NSSlider!
     @IBOutlet weak var onlyHashedCheckbox: NSButton!
-    @IBOutlet weak var countTextField: NSTextField!
     @IBOutlet weak var orderSelectBox: NSPopUpButtonCell!
     
     @IBAction func zoomSliderChanged(sender: AnyObject) {
@@ -50,8 +51,6 @@ class ImageBrowserWindowController: NSViewController {
     
     override func viewDidLoad() {
         imageBrowser.setCanControlQuickLookPanel(false)
-        
-        photoLabel.stringValue = ""
         
         orderSelectBox.selectItemAtIndex(0)
         
@@ -89,9 +88,40 @@ class ImageBrowserWindowController: NSViewController {
         NSWorkspace.sharedWorkspace().activateFileViewerSelectingURLs(urls)
     }
     
-    @IBAction func hasDateSelectChange(sender: AnyObject) {
-        updateImages()
+    @IBAction func removeButtonPushed(sender: AnyObject) {
+        let selections = imageBrowser.selectionIndexes()
+        if selections.count == 0 {
+            return
+        }
+        
+        var areYouSure: NSAlert = NSAlert()
+        areYouSure.addButtonWithTitle("OK")
+        areYouSure.addButtonWithTitle("Cancel")
+        if selections.count == 1 {
+            areYouSure.messageText = "Delete this file?"
+        } else {
+            areYouSure.messageText = "Delete these files?"
+        }
+        areYouSure.informativeText = "Deleted files cannot be recovered."
+        areYouSure.alertStyle = NSAlertStyle.WarningAlertStyle
+        
+        if areYouSure.runModal() == NSAlertFirstButtonReturn {
+            // OK clicked, delete files
+            var error: NSError?
+            selections.enumerateIndexesUsingBlock({ (i: Int, stop: UnsafeMutablePointer<ObjCBool>) in
+                var photo = self.images[i]
+                self.appDelegate.deletePhoto(photo, error: &error)
+                if error != nil {
+                    println("Failed to remove file: \(error)")
+                    stop.initialize(true)
+                }
+                
+                self.images.removeAtIndex(i)
+            })
+            updateImages()
+        }
     }
+    
     @IBAction func similarSliderChange(sender: AnyObject) {
         showSimilar(sender)
     }
@@ -245,31 +275,36 @@ class ImageBrowserWindowController: NSViewController {
     
     override func imageBrowserSelectionDidChange(aBrowser: IKImageBrowserView!) {
         let selections = imageBrowser.selectionIndexes()
-        if selections.count == 1 {
-            selectedPhoto = images[selections.firstIndex]
-            photoLabel.stringValue = selectedPhoto!.fileURL.lastPathComponent!
-            photoInfoText.stringValue = "file key: "
-            if let hash = selectedPhoto!.fhash {
-                photoInfoText.stringValue += "\(hash)\n"
+        if selections.count > 0 {
+            if selections.count == 1 {
+                //selectedPhoto = images[selections.firstIndex]
+                /*photoLabel.stringValue = selectedPhoto!.fileURL.lastPathComponent!
+                photoInfoText.stringValue = "file key: "
+                if let hash = selectedPhoto!.fhash {
+                    photoInfoText.stringValue += "\(hash)\n"
+                } else {
+                    photoInfoText.stringValue += "incomplete\n"
+                }
+                photoInfoText.stringValue += "file hash: "
+                if let hash = selectedPhoto!.phash {
+                    photoInfoText.stringValue += "\(hash)\n"
+                } else {
+                    photoInfoText.stringValue += "incomplete\n"
+                }
+                if let created = selectedPhoto!.created {
+                    photoInfoText.stringValue += "\n\(dateFormatter.stringFromDate(created))\n"
+                }*/
+                showInFinderButton.enabled = true
+                similarButton.enabled = true
             } else {
-                photoInfoText.stringValue += "incomplete\n"
+                showInFinderButton.enabled = false
+                similarButton.enabled = false
             }
-            photoInfoText.stringValue += "file hash: "
-            if let hash = selectedPhoto!.phash {
-                photoInfoText.stringValue += "\(hash)\n"
-            } else {
-                photoInfoText.stringValue += "incomplete\n"
-            }
-            if let created = selectedPhoto!.created {
-                photoInfoText.stringValue += "\n\(dateFormatter.stringFromDate(created))\n"
-            }
-            showInFinderButton.enabled = true
-            similarButton.enabled = true
+            removeButton.enabled = true
         } else {
             showInFinderButton.enabled = false
             similarButton.enabled = false
-            photoLabel.stringValue = ""
-            photoInfoText.stringValue = ""
+            removeButton.enabled = false
         }
     }
 }

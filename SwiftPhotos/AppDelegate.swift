@@ -47,8 +47,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                     settings.imports = NSMutableOrderedSet(array: [])
                     
                     if !self.managedObjectContext.save(&anyError) {
-                        println("Error saving batch: \(anyError)")
-                        fatalError("Saving batch failed.")
+                        fatalError("Error saving: \(anyError)")
                     }
                     managedObjectContext.reset()
                 } else {
@@ -207,6 +206,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                     fatalError("Error saving: \(error)")
                 }
                 self.hashPhoto(photo)
+                self.qualityPhoto(photo)
                 return
             })
         }
@@ -233,7 +233,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                     if !self.managedObjectContext.save(&error) {
                         fatalError("Error saving: \(error)")
                     }
-                    self.qualityPhoto(photo)
                     return
                 })
             }

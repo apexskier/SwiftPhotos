@@ -1,0 +1,3 @@
+[submodule "SwiftPhotos/FileSystemEvents"]
+	path = SwiftPhotos/FileSystemEvents
+	url = git@github.com:Eonil/FileSystemEvents.git

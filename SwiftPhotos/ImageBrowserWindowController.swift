@@ -12,9 +12,8 @@ import Quartz
 
 class ImageBrowserViewController: NSViewController {
     
-    private var appDelegate = NSApplication.sharedApplication().delegate as AppDelegate
+    var appDelegate = NSApplication.sharedApplication().delegate as AppDelegate
     
-    //@IBOutlet weak var window: NSWindow!
     @IBOutlet weak var imageBrowser: IKImageBrowserView!
     
     @IBOutlet weak var countTextField: NSTextField!
@@ -23,23 +22,23 @@ class ImageBrowserViewController: NSViewController {
     @IBOutlet weak var imageSizeSlider: NSSlider!
     @IBOutlet weak var showInFinderButton: NSButton!
     @IBOutlet weak var removeButton: NSButton!
+    @IBOutlet weak var infoButton: NSButton!
     @IBOutlet weak var similarButton: NSButton!
     @IBOutlet weak var similarityThreshold: NSSlider!
     @IBOutlet weak var onlyHashedCheckbox: NSButton!
-    @IBOutlet weak var orderSelectBox: NSPopUpButtonCell!
+    @IBOutlet weak var onlyBrokenCheckbox: NSButton!
+    @IBOutlet weak var orderSelectBox: NSPopUpButton!
     
     @IBAction func zoomSliderChanged(sender: AnyObject) {
         imageBrowser.setZoomValue(sender.floatValue)
         imageBrowser.needsDisplay = true
     }
     
-    var dateFormatter: NSDateFormatter = {
-        var df = NSDateFormatter()
-        df.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        return df
-    }()
-    
-    var selectedPhoto: Photo?
+    var selectedPhoto: Photo? {
+        get {
+            return appDelegate.selectedPhoto
+        }
+    }
     
     var imagesFilter: (Photo -> Bool)?
     
@@ -51,6 +50,7 @@ class ImageBrowserViewController: NSViewController {
     
     override func viewDidLoad() {
         imageBrowser.setCanControlQuickLookPanel(false)
+        imageBrowser.setZoomValue(imageSizeSlider.floatValue)
         
         orderSelectBox.selectItemAtIndex(0)
         
@@ -128,6 +128,9 @@ class ImageBrowserViewController: NSViewController {
     @IBAction func showOnlyHashedChange(sender: AnyObject) {
         updateImages()
     }
+    @IBAction func showOnlyBrokenChange(sender: AnyObject) {
+        updateImages()
+    }
     @IBAction func showSimilar(sender: AnyObject) {
         var state = similarButton.state
         if state == 1 {
@@ -148,9 +151,13 @@ class ImageBrowserViewController: NSViewController {
         }
         updateImages()
     }
+    @IBAction func getInfoButtonPressed(sender: AnyObject) {
+        NSNotificationCenter.defaultCenter().postNotificationName("getInfo", object: selectedPhoto)
+        appDelegate.showInfoHUD()
+    }
     
     @IBAction func orderButtonChange(sender: AnyObject) {
-        let selectButton = sender as NSPopUpButton
+        /*let selectButton = sender as NSPopUpButton
         let selection = selectButton.indexOfSelectedItem
         switch selection {
         case 1:
@@ -209,7 +216,7 @@ class ImageBrowserViewController: NSViewController {
                 }
                 return true
             }
-        }
+        }*/
         updateImages()
     }
     
@@ -225,13 +232,63 @@ class ImageBrowserViewController: NSViewController {
         }*/
     }
     
-    var order = { (p1: Photo, p2: Photo) -> Bool in
+    /*var order: (p1: Photo, p2: Photo) -> Bool = { (p1: Photo, p2: Photo) -> Bool in
         if let c1 = p1.created {
             if let c2 = p2.created {
                 return c1.compare(c2) == NSComparisonResult.OrderedDescending
             }
         }
         return true
+    }*/
+    func order(p1: Photo, p2: Photo) -> Bool {
+        let selectButton = orderSelectBox
+        let selection = selectButton.indexOfSelectedItem
+        switch selection {
+        case 1:
+            if let e1 = p1.exposure {
+                if let e2 = p2.exposure {
+                    return Double(e1) < Double(e2)
+                }
+            }
+            return true
+        case 2:
+            if let c1 = p1.color {
+                if let c2 = p2.color {
+                    return Double(c1) < Double(c2)
+                }
+            }
+            return true
+        case 3:
+            if let c1 = p1.colorRed {
+                if let c2 = p2.colorRed {
+                    return Double(c1) > Double(c2)
+                }
+            }
+            return true
+        case 4:
+            if let c1 = p1.colorGreen {
+                if let c2 = p2.colorGreen {
+                    return Double(c1) > Double(c2)
+                }
+            }
+            return true
+        case 5:
+            if let c1 = p1.colorBlue {
+                if let c2 = p2.colorBlue {
+                    return Double(c1) > Double(c2)
+                }
+            }
+            return true
+        case 0:
+            fallthrough
+        default:
+            if let c1 = p1.created {
+                if let c2 = p2.created {
+                    return c1.compare(c2) == NSComparisonResult.OrderedDescending
+                }
+            }
+            return true
+        }
     }
 
     func updateImages() {
@@ -247,7 +304,7 @@ class ImageBrowserViewController: NSViewController {
             } else {
                 photos = self.appDelegate.photos
             }
-            photos = sorted(photos, self.order).filter({ (photo: Photo) -> Bool in
+            photos = sorted(photos.filter({ (photo: Photo) -> Bool in
                 if self.onlyHashedCheckbox.state == 1 {
                     if let phash = photo.phash {
                         // pass
@@ -255,8 +312,13 @@ class ImageBrowserViewController: NSViewController {
                         return false
                     }
                 }
+                if self.onlyBrokenCheckbox.state == 1 {
+                    if photo.stateEnum != .Broken {
+                        return false
+                    }
+                }
                 return true
-            })
+            }), self.order)
             self.images = photos
         })
         filterOperation!.completionBlock = {
@@ -275,37 +337,23 @@ class ImageBrowserViewController: NSViewController {
     
     override func imageBrowserSelectionDidChange(aBrowser: IKImageBrowserView!) {
         let selections = imageBrowser.selectionIndexes()
+        appDelegate.selectedPhoto = nil
+        showInFinderButton.enabled = false
+        similarButton.enabled = false
+        removeButton.enabled = false
+        appDelegate.getInfoMenuItem.enabled = false
+        infoButton.enabled = false
         if selections.count > 0 {
             if selections.count == 1 {
-                //selectedPhoto = images[selections.firstIndex]
-                /*photoLabel.stringValue = selectedPhoto!.fileURL.lastPathComponent!
-                photoInfoText.stringValue = "file key: "
-                if let hash = selectedPhoto!.fhash {
-                    photoInfoText.stringValue += "\(hash)\n"
-                } else {
-                    photoInfoText.stringValue += "incomplete\n"
-                }
-                photoInfoText.stringValue += "file hash: "
-                if let hash = selectedPhoto!.phash {
-                    photoInfoText.stringValue += "\(hash)\n"
-                } else {
-                    photoInfoText.stringValue += "incomplete\n"
-                }
-                if let created = selectedPhoto!.created {
-                    photoInfoText.stringValue += "\n\(dateFormatter.stringFromDate(created))\n"
-                }*/
+                appDelegate.selectedPhoto = images[selections.firstIndex]
                 showInFinderButton.enabled = true
                 similarButton.enabled = true
-            } else {
-                showInFinderButton.enabled = false
-                similarButton.enabled = false
+                appDelegate.getInfoMenuItem.enabled = true
+                //infoButton.enabled = true
             }
             removeButton.enabled = true
-        } else {
-            showInFinderButton.enabled = false
-            similarButton.enabled = false
-            removeButton.enabled = false
         }
+        NSNotificationCenter.defaultCenter().postNotificationName("selectionChanged", object: nil)
     }
 }
 

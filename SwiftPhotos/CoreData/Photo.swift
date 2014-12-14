@@ -191,7 +191,7 @@ class Photo: NSManagedObject/*, IKImageBrowserItem*/ {
         var diversityGreen = maxGreen - minGreen
         var diversityBlue = maxBlue - minBlue
         color = NSNumber(double: diversityRed + diversityGreen + diversityBlue)
-        
+        /*
         // Higher means more of that color
         (colorRed, colorGreen, colorBlue) = {
             var r: Double = 0
@@ -205,9 +205,11 @@ class Photo: NSManagedObject/*, IKImageBrowserItem*/ {
             }
             
             var m = max(r, g, b)
-            
-            return (r/m, g/m, b/m)
-        }()
+            var double_max = Double(UINT64_MAX)
+            return (UInt64((r * double_max) / m),
+                    UInt64((g * double_max) / m),
+                    UInt64((b * double_max) / m))
+        }()*/
     }
     
     func move(newpath: String) {

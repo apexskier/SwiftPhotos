@@ -19,8 +19,8 @@
 		C5A1E87D1A215C6F00BA0A3C /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A1E87C1A215C6F00BA0A3C /* main.swift */; };
 		C5A1E87F1A215F2400BA0A3C /* PhotoHashingUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A1E87E1A215F2400BA0A3C /* PhotoHashingUtils.swift */; };
 		C5EB25971A390B27006C7019 /* Tasks.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5EB25961A390B27006C7019 /* Tasks.swift */; };
-		C5F36B4B1A3D309E002D1789 /* PhotoHUDController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5F36B4A1A3D309E002D1789 /* PhotoHUDController.swift */; };
-		FE5DDB1B193EC4F800D083E0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE5DDB1A193EC4F800D083E0 /* AppDelegate.swift */; };
+		C5F36B4B1A3D309E002D1789 /* PhotoHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5F36B4A1A3D309E002D1789 /* PhotoHUD.swift */; };
+		C5F36B4D1A3D32BA002D1789 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5F36B4C1A3D32BA002D1789 /* AppDelegate.swift */; };
 		FE5DDB1D193EC4F800D083E0 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FE5DDB1C193EC4F800D083E0 /* Images.xcassets */; };
 		FE5DDB2C193EC4F800D083E0 /* SwiftPhotosTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE5DDB2B193EC4F800D083E0 /* SwiftPhotosTests.swift */; };
 /* End PBXBuildFile section */
@@ -59,10 +59,10 @@
 		C5A1E87C1A215C6F00BA0A3C /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		C5A1E87E1A215F2400BA0A3C /* PhotoHashingUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoHashingUtils.swift; sourceTree = "<group>"; };
 		C5EB25961A390B27006C7019 /* Tasks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tasks.swift; sourceTree = "<group>"; };
-		C5F36B4A1A3D309E002D1789 /* PhotoHUDController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoHUDController.swift; sourceTree = "<group>"; };
+		C5F36B4A1A3D309E002D1789 /* PhotoHUD.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoHUD.swift; sourceTree = "<group>"; };
+		C5F36B4C1A3D32BA002D1789 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FE5DDB13193EC4F800D083E0 /* SwiftPhotos.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftPhotos.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE5DDB17193EC4F800D083E0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		FE5DDB1A193EC4F800D083E0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FE5DDB1C193EC4F800D083E0 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		FE5DDB25193EC4F800D083E0 /* SwiftPhotosTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftPhotosTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE5DDB2A193EC4F800D083E0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -120,11 +120,11 @@
 		FE5DDB15193EC4F800D083E0 /* SwiftPhotos */ = {
 			isa = PBXGroup;
 			children = (
-				FE5DDB1A193EC4F800D083E0 /* AppDelegate.swift */,
+				C5F36B4C1A3D32BA002D1789 /* AppDelegate.swift */,
 				C5EB25961A390B27006C7019 /* Tasks.swift */,
 				C54814B21A376B3E0030D931 /* ImageBrowserWindowController.swift */,
 				C51697151A32AFAB00026B77 /* Main.storyboard */,
-				C5F36B4A1A3D309E002D1789 /* PhotoHUDController.swift */,
+				C5F36B4A1A3D309E002D1789 /* PhotoHUD.swift */,
 				C516970F1A32A14700026B77 /* CoreDataStackManager.swift */,
 				FE5DDB1C193EC4F800D083E0 /* Images.xcassets */,
 				C51697131A32ACFD00026B77 /* PreferencesViewController.swift */,
@@ -263,13 +263,13 @@
 			files = (
 				C5A1E87D1A215C6F00BA0A3C /* main.swift in Sources */,
 				C51697101A32A14700026B77 /* CoreDataStackManager.swift in Sources */,
-				C5F36B4B1A3D309E002D1789 /* PhotoHUDController.swift in Sources */,
+				C5F36B4B1A3D309E002D1789 /* PhotoHUD.swift in Sources */,
 				C5A1E87F1A215F2400BA0A3C /* PhotoHashingUtils.swift in Sources */,
 				C51697141A32ACFD00026B77 /* PreferencesViewController.swift in Sources */,
 				C595EE201A24E46900875B82 /* Folder.swift in Sources */,
 				C54814B31A376B3E0030D931 /* ImageBrowserWindowController.swift in Sources */,
 				C595EE1C1A24E46900875B82 /* Settings.swift in Sources */,
-				FE5DDB1B193EC4F800D083E0 /* AppDelegate.swift in Sources */,
+				C5F36B4D1A3D32BA002D1789 /* AppDelegate.swift in Sources */,
 				C595EE1E1A24E46900875B82 /* Photo.swift in Sources */,
 				C5EB25971A390B27006C7019 /* Tasks.swift in Sources */,
 				C573A6011A22684000FABE7F /* Library.xcdatamodeld in Sources */,

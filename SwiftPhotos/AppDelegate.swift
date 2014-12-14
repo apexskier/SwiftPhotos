@@ -12,8 +12,10 @@ import Foundation
 import Quartz
 
 class AppDelegate: NSObject, NSApplicationDelegate {
+
+    var selectedPhoto: Photo?
     
-    
+    @IBOutlet weak var getInfoMenuItem: NSMenuItem!
     
     /// Mark: Constants
     struct Constants {
@@ -75,6 +77,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
     
+    func showInfoHUD() {()
+        // TODO
+    }
+    
     func applicationDidFinishLaunching(aNotification: NSNotification?) {
         // Insert code here to initialize your application
         if settings.imports.count > 0 {
@@ -91,6 +97,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             fatalError("Error saving: \(error)")
         }
         self.managedObjectContext.reset()
+    }
+    
+    func applicationShouldHandleReopen(sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
+        if !flag {
+            // TODO: Open up main window
+        }
+        return true
     }
     
     func startProcessingFolder(path: String) {
@@ -174,6 +187,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             dispatch_async(dispatch_get_main_queue(), {
                 self.taskManager.pendingDiscoveries.inProgress.removeValueForKey(photo.filepath)
                 var error: NSError?
+                
+                if photo.stateEnum == .Broken {
+                    println("Found broken photo")
+                    //self.managedObjectContext.deleteObject(photo)
+                }
+                
                 if !self.managedObjectContext.save(&error) {
                     fatalError("Error saving: \(error)")
                 }
@@ -245,10 +264,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         var fileURL = photo.fileURL
         var filePath = photo.filepath
         
-        var removed = NSFileManager.defaultManager().removeItemAtURL(fileURL, error: error)
-        if !removed {
-            println("Didn't remove file: \(fileURL.relativePath!)")
-            return
+        if photo.stateEnum != .Broken {
+            var removed = NSFileManager.defaultManager().removeItemAtURL(fileURL, error: error)
+            if !removed {
+                println("Didn't remove file: \(fileURL.relativePath!)")
+                return
+            }
         }
         
         if let task = taskManager.pendingDiscoveries.inProgress.removeValueForKey(filePath) {

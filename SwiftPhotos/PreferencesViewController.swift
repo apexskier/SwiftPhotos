@@ -133,7 +133,7 @@ class PreferencesViewController: NSViewController, NSTableViewDataSource, NSTabl
         // TODO: reload settings object ?
         
         if let output = settings.output {
-            self.outputTextField.stringValue = output.path
+            self.outputTextField.stringValue = NSURL(string: output.path)!.relativePath!
         }
         
         tableView.reloadData()

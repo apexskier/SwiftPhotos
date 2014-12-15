@@ -256,7 +256,7 @@ class Photo: NSManagedObject/*, IKImageBrowserItem*/ {
     }
     
     func readData() {
-        if stateEnum != .New {
+        if stateEnum == .Broken {
             return
         }
         let imageSource = CGImageSourceCreateWithURL(fileURL, nil)

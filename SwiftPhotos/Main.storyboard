@@ -719,7 +719,7 @@
                                     <constraint firstAttribute="width" constant="96" id="lsY-r6-w6M"/>
                                 </constraints>
                             </progressIndicator>
-                            <progressIndicator minValue="-1" maxValue="1" doubleValue="-1" style="bar" translatesAutoresizingMaskIntoConstraints="NO" id="TG8-cg-x8w">
+                            <progressIndicator maxValue="1" style="bar" translatesAutoresizingMaskIntoConstraints="NO" id="TG8-cg-x8w">
                                 <rect key="frame" x="188" y="68" width="96" height="20"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="18" id="Ckw-Qq-Iau"/>

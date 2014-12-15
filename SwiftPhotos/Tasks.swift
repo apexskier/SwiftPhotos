@@ -22,7 +22,7 @@ class TaskManager {
         return Singleton.taskManager
     }
 
-    var pendingDiscoveries =  OperationQueue("discoveryQueue")
+    var pendingDiscoveries = OperationQueue("discoveryQueue")
     var pendingHashes =  OperationQueue("hashQueue")
     var pendingQuality =  OperationQueue("qualityQueue")
 }
@@ -35,6 +35,7 @@ class OperationQueue {
         var q = NSOperationQueue()
         q.name = self.name
         q.maxConcurrentOperationCount = 1
+        //q.suspended = true
         return q
     }()
     init(_ name: String) {

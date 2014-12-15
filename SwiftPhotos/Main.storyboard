@@ -361,7 +361,7 @@
         <!--Image Browser View Controller-->
         <scene sceneID="c0x-Aq-qBa">
             <objects>
-                <viewController id="0vp-VM-WNX" customClass="ImageBrowserViewController" customModule="SwiftPhotos" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="0vp-VM-WNX" customClass="MainViewController" customModule="SwiftPhotos" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="TUB-pw-Ewc">
                         <rect key="frame" x="0.0" y="0.0" width="804" height="530"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -629,10 +629,10 @@
             </objects>
             <point key="canvasLocation" x="1210" y="106.5"/>
         </scene>
-        <!--PhotoHUD Controller-->
+        <!--InfoView Controller-->
         <scene sceneID="Acl-cU-PuT">
             <objects>
-                <viewController id="HqY-8e-BBv" customClass="PhotoHUDController" customModule="SwiftPhotos" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="HqY-8e-BBv" customClass="InfoViewController" customModule="SwiftPhotos" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="yC5-ja-SFS">
                         <rect key="frame" x="0.0" y="0.0" width="191" height="291"/>
                         <autoresizingMask key="autoresizingMask"/>

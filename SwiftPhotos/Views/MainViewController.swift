@@ -10,7 +10,7 @@ import Foundation
 import AppKit
 import Quartz
 
-class ImageBrowserViewController: NSViewController {
+class MainViewController: NSViewController {
     
     private var appDelegate = NSApplication.sharedApplication().delegate as AppDelegate
     

@@ -1,5 +1,5 @@
 //
-//  PhotoHUDController.swift
+//  InfoViewController.swift
 //  SwiftPhotos
 //
 //  Created by Cameron Little on 12/13/14.
@@ -9,7 +9,7 @@
 import Foundation
 import AppKit
 
-class PhotoHUDController: NSViewController {
+class InfoViewController: NSViewController {
     
     var appDelegate = NSApplication.sharedApplication().delegate as AppDelegate
     

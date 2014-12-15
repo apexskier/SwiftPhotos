@@ -13,10 +13,9 @@
 		C54215201A3D777E009852EA /* TaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C542151F1A3D777E009852EA /* TaskViewController.swift */; };
 		C54215231A3E08B0009852EA /* FileSystemMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54215221A3E08B0009852EA /* FileSystemMonitor.swift */; };
 		C54215461A3E16E9009852EA /* FileSystemEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54215451A3E16E9009852EA /* FileSystemEvents.swift */; };
-		C54215831A3E29DC009852EA /* EonilFileSystemEvents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C542157E1A3E29B5009852EA /* EonilFileSystemEvents.framework */; };
 		C54215851A3E5652009852EA /* WaitSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = C54215841A3E5652009852EA /* WaitSheet.xib */; };
 		C54215871A3E56BF009852EA /* WaitSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54215861A3E56BF009852EA /* WaitSheet.swift */; };
-		C54814B31A376B3E0030D931 /* ImageBrowserWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54814B21A376B3E0030D931 /* ImageBrowserWindowController.swift */; };
+		C54814B31A376B3E0030D931 /* InfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54814B21A376B3E0030D931 /* InfoViewController.swift */; };
 		C573A6011A22684000FABE7F /* Library.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C573A5FF1A22684000FABE7F /* Library.xcdatamodeld */; };
 		C595EE1A1A24E46900875B82 /* Library.swift in Sources */ = {isa = PBXBuildFile; fileRef = C595EE191A24E46900875B82 /* Library.swift */; };
 		C595EE1C1A24E46900875B82 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = C595EE1B1A24E46900875B82 /* Settings.swift */; };
@@ -25,7 +24,7 @@
 		C5A1E87D1A215C6F00BA0A3C /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A1E87C1A215C6F00BA0A3C /* main.swift */; };
 		C5A1E87F1A215F2400BA0A3C /* PhotoHashingUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A1E87E1A215F2400BA0A3C /* PhotoHashingUtils.swift */; };
 		C5EB25971A390B27006C7019 /* Tasks.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5EB25961A390B27006C7019 /* Tasks.swift */; };
-		C5F36B4B1A3D309E002D1789 /* PhotoHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5F36B4A1A3D309E002D1789 /* PhotoHUD.swift */; };
+		C5F36B4B1A3D309E002D1789 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5F36B4A1A3D309E002D1789 /* MainViewController.swift */; };
 		C5F36B4D1A3D32BA002D1789 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5F36B4C1A3D32BA002D1789 /* AppDelegate.swift */; };
 		FE5DDB1D193EC4F800D083E0 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FE5DDB1C193EC4F800D083E0 /* Images.xcassets */; };
 		FE5DDB2C193EC4F800D083E0 /* SwiftPhotosTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE5DDB2B193EC4F800D083E0 /* SwiftPhotosTests.swift */; };
@@ -43,21 +42,21 @@
 /* End PBXBuildRule section */
 
 /* Begin PBXContainerItemProxy section */
-		C542157D1A3E29B5009852EA /* PBXContainerItemProxy */ = {
+		C5C04C861A3EA60D00970614 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C54215771A3E29B5009852EA /* EonilFileSystemEvents.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 45D970A61A1569090037649F;
 			remoteInfo = EonilFileSystemEvents;
 		};
-		C542157F1A3E29B5009852EA /* PBXContainerItemProxy */ = {
+		C5C04C881A3EA60D00970614 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C54215771A3E29B5009852EA /* EonilFileSystemEvents.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 45D970961A155DD50037649F;
 			remoteInfo = InternalTester;
 		};
-		C54215811A3E29B5009852EA /* PBXContainerItemProxy */ = {
+		C5C04C8A1A3EA60D00970614 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C54215771A3E29B5009852EA /* EonilFileSystemEvents.xcodeproj */;
 			proxyType = 2;
@@ -74,27 +73,27 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		C516970F1A32A14700026B77 /* CoreDataStackManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStackManager.swift; sourceTree = "<group>"; };
-		C51697131A32ACFD00026B77 /* PreferencesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreferencesViewController.swift; sourceTree = "<group>"; };
+		C516970F1A32A14700026B77 /* CoreDataStackManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CoreDataStackManager.swift; path = CoreData/CoreDataStackManager.swift; sourceTree = "<group>"; };
+		C51697131A32ACFD00026B77 /* PreferencesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PreferencesViewController.swift; path = Views/PreferencesViewController.swift; sourceTree = "<group>"; };
 		C51697151A32AFAB00026B77 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
-		C542151F1A3D777E009852EA /* TaskViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskViewController.swift; sourceTree = "<group>"; };
+		C542151F1A3D777E009852EA /* TaskViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TaskViewController.swift; path = Views/TaskViewController.swift; sourceTree = "<group>"; };
 		C54215211A3E0176009852EA /* Library 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Library 2.xcdatamodel"; sourceTree = "<group>"; };
 		C54215221A3E08B0009852EA /* FileSystemMonitor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileSystemMonitor.swift; sourceTree = "<group>"; };
-		C542153D1A3E0D88009852EA /* SwiftPhotos-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SwiftPhotos-Bridging-Header.h"; sourceTree = "<group>"; };
-		C54215451A3E16E9009852EA /* FileSystemEvents.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileSystemEvents.swift; sourceTree = "<group>"; };
-		C54215771A3E29B5009852EA /* EonilFileSystemEvents.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = EonilFileSystemEvents.xcodeproj; path = FileSystemEvents/Project/EonilFileSystemEvents.xcodeproj; sourceTree = "<group>"; };
+		C542153D1A3E0D88009852EA /* SwiftPhotos-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "SwiftPhotos-Bridging-Header.h"; path = "FileSystemEvents/SwiftPhotos-Bridging-Header.h"; sourceTree = "<group>"; };
+		C54215451A3E16E9009852EA /* FileSystemEvents.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FileSystemEvents.swift; path = FileSystemEvents/FileSystemEvents.swift; sourceTree = "<group>"; };
+		C54215771A3E29B5009852EA /* EonilFileSystemEvents.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = EonilFileSystemEvents.xcodeproj; path = FileSystemEvents/FileSystemEvents/Project/EonilFileSystemEvents.xcodeproj; sourceTree = "<group>"; };
 		C54215841A3E5652009852EA /* WaitSheet.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WaitSheet.xib; sourceTree = "<group>"; };
 		C54215861A3E56BF009852EA /* WaitSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WaitSheet.swift; sourceTree = "<group>"; };
-		C54814B21A376B3E0030D931 /* ImageBrowserWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageBrowserWindowController.swift; sourceTree = "<group>"; };
+		C54814B21A376B3E0030D931 /* InfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InfoViewController.swift; path = Views/InfoViewController.swift; sourceTree = "<group>"; };
 		C573A6001A22684000FABE7F /* Library.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Library.xcdatamodel; sourceTree = "<group>"; };
 		C595EE191A24E46900875B82 /* Library.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Library.swift; path = CoreData/Library.swift; sourceTree = "<group>"; };
 		C595EE1B1A24E46900875B82 /* Settings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Settings.swift; path = CoreData/Settings.swift; sourceTree = "<group>"; };
 		C595EE1D1A24E46900875B82 /* Photo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Photo.swift; path = CoreData/Photo.swift; sourceTree = "<group>"; };
-		C595EE1F1A24E46900875B82 /* Folder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Folder.swift; sourceTree = "<group>"; };
+		C595EE1F1A24E46900875B82 /* Folder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Folder.swift; path = CoreData/Folder.swift; sourceTree = "<group>"; };
 		C5A1E87C1A215C6F00BA0A3C /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		C5A1E87E1A215F2400BA0A3C /* PhotoHashingUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoHashingUtils.swift; sourceTree = "<group>"; };
 		C5EB25961A390B27006C7019 /* Tasks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tasks.swift; sourceTree = "<group>"; };
-		C5F36B4A1A3D309E002D1789 /* PhotoHUD.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoHUD.swift; sourceTree = "<group>"; };
+		C5F36B4A1A3D309E002D1789 /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MainViewController.swift; path = Views/MainViewController.swift; sourceTree = "<group>"; };
 		C5F36B4C1A3D32BA002D1789 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FE5DDB13193EC4F800D083E0 /* SwiftPhotos.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftPhotos.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE5DDB17193EC4F800D083E0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -109,7 +108,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C54215831A3E29DC009852EA /* EonilFileSystemEvents.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -133,26 +131,38 @@
 			name = FileSystemEvents;
 			sourceTree = "<group>";
 		};
-		C54215781A3E29B5009852EA /* Products */ = {
+		C595EE101A24E23C00875B82 /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
-				C542157E1A3E29B5009852EA /* EonilFileSystemEvents.framework */,
-				C54215801A3E29B5009852EA /* Tester2 */,
-				C54215821A3E29B5009852EA /* TestdriveApp.app */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		C595EE101A24E23C00875B82 /* Models */ = {
-			isa = PBXGroup;
-			children = (
+				C516970F1A32A14700026B77 /* CoreDataStackManager.swift */,
 				C573A5FF1A22684000FABE7F /* Library.xcdatamodeld */,
 				C595EE1F1A24E46900875B82 /* Folder.swift */,
 				C595EE1D1A24E46900875B82 /* Photo.swift */,
 				C595EE1B1A24E46900875B82 /* Settings.swift */,
 				C595EE191A24E46900875B82 /* Library.swift */,
 			);
-			name = Models;
+			name = CoreData;
+			sourceTree = "<group>";
+		};
+		C5C04C7E1A3EA50B00970614 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				C54814B21A376B3E0030D931 /* InfoViewController.swift */,
+				C5F36B4A1A3D309E002D1789 /* MainViewController.swift */,
+				C51697131A32ACFD00026B77 /* PreferencesViewController.swift */,
+				C542151F1A3D777E009852EA /* TaskViewController.swift */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
+		C5C04C811A3EA60D00970614 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C5C04C871A3EA60D00970614 /* EonilFileSystemEvents.framework */,
+				C5C04C891A3EA60D00970614 /* InternalTester */,
+				C5C04C8B1A3EA60D00970614 /* TestdriveApp.app */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		FE5DDB0A193EC4F800D083E0 = {
@@ -180,17 +190,13 @@
 				C54215841A3E5652009852EA /* WaitSheet.xib */,
 				C54215861A3E56BF009852EA /* WaitSheet.swift */,
 				C5EB25961A390B27006C7019 /* Tasks.swift */,
-				C54814B21A376B3E0030D931 /* ImageBrowserWindowController.swift */,
+				C5C04C7E1A3EA50B00970614 /* Views */,
 				C51697151A32AFAB00026B77 /* Main.storyboard */,
-				C5F36B4A1A3D309E002D1789 /* PhotoHUD.swift */,
-				C516970F1A32A14700026B77 /* CoreDataStackManager.swift */,
 				C542153C1A3E0D51009852EA /* FileSystemEvents */,
 				C54215221A3E08B0009852EA /* FileSystemMonitor.swift */,
 				FE5DDB1C193EC4F800D083E0 /* Images.xcassets */,
-				C51697131A32ACFD00026B77 /* PreferencesViewController.swift */,
-				C542151F1A3D777E009852EA /* TaskViewController.swift */,
 				C5A1E87E1A215F2400BA0A3C /* PhotoHashingUtils.swift */,
-				C595EE101A24E23C00875B82 /* Models */,
+				C595EE101A24E23C00875B82 /* CoreData */,
 				FE5DDB16193EC4F800D083E0 /* Supporting Files */,
 			);
 			path = SwiftPhotos;
@@ -292,7 +298,7 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = C54215781A3E29B5009852EA /* Products */;
+					ProductGroup = C5C04C811A3EA60D00970614 /* Products */;
 					ProjectRef = C54215771A3E29B5009852EA /* EonilFileSystemEvents.xcodeproj */;
 				},
 			);
@@ -305,26 +311,25 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		C542157E1A3E29B5009852EA /* EonilFileSystemEvents.framework */ = {
+		C5C04C871A3EA60D00970614 /* EonilFileSystemEvents.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			path = EonilFileSystemEvents.framework;
-			remoteRef = C542157D1A3E29B5009852EA /* PBXContainerItemProxy */;
+			remoteRef = C5C04C861A3EA60D00970614 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		C54215801A3E29B5009852EA /* Tester2 */ = {
+		C5C04C891A3EA60D00970614 /* InternalTester */ = {
 			isa = PBXReferenceProxy;
 			fileType = "compiled.mach-o.executable";
-			name = Tester2;
 			path = InternalTester;
-			remoteRef = C542157F1A3E29B5009852EA /* PBXContainerItemProxy */;
+			remoteRef = C5C04C881A3EA60D00970614 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		C54215821A3E29B5009852EA /* TestdriveApp.app */ = {
+		C5C04C8B1A3EA60D00970614 /* TestdriveApp.app */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.application;
 			path = TestdriveApp.app;
-			remoteRef = C54215811A3E29B5009852EA /* PBXContainerItemProxy */;
+			remoteRef = C5C04C8A1A3EA60D00970614 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -358,12 +363,12 @@
 				C54215201A3D777E009852EA /* TaskViewController.swift in Sources */,
 				C54215871A3E56BF009852EA /* WaitSheet.swift in Sources */,
 				C51697101A32A14700026B77 /* CoreDataStackManager.swift in Sources */,
-				C5F36B4B1A3D309E002D1789 /* PhotoHUD.swift in Sources */,
+				C5F36B4B1A3D309E002D1789 /* MainViewController.swift in Sources */,
 				C54215461A3E16E9009852EA /* FileSystemEvents.swift in Sources */,
 				C5A1E87F1A215F2400BA0A3C /* PhotoHashingUtils.swift in Sources */,
 				C51697141A32ACFD00026B77 /* PreferencesViewController.swift in Sources */,
 				C595EE201A24E46900875B82 /* Folder.swift in Sources */,
-				C54814B31A376B3E0030D931 /* ImageBrowserWindowController.swift in Sources */,
+				C54814B31A376B3E0030D931 /* InfoViewController.swift in Sources */,
 				C595EE1C1A24E46900875B82 /* Settings.swift in Sources */,
 				C5F36B4D1A3D32BA002D1789 /* AppDelegate.swift in Sources */,
 				C595EE1E1A24E46900875B82 /* Photo.swift in Sources */,
@@ -480,7 +485,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_NAME = SwiftPhotos;
 				SWIFT_INSTALL_OBJC_HEADER = NO;
-				SWIFT_OBJC_BRIDGING_HEADER = "SwiftPhotos/SwiftPhotos-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "SwiftPhotos/FileSystemEvents/SwiftPhotos-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -495,7 +500,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_NAME = SwiftPhotos;
 				SWIFT_INSTALL_OBJC_HEADER = NO;
-				SWIFT_OBJC_BRIDGING_HEADER = "SwiftPhotos/SwiftPhotos-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "SwiftPhotos/FileSystemEvents/SwiftPhotos-Bridging-Header.h";
 			};
 			name = Release;
 		};

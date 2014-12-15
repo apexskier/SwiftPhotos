@@ -13,14 +13,58 @@ import Quartz
 class ImageBrowserViewController: NSViewController {
     
     private var appDelegate = NSApplication.sharedApplication().delegate as AppDelegate
-    private var settings: Settings {
+    
+    /// Managed object context for the view controller (which is bound to the persistent store coordinator for the application).
+    lazy var managedObjectContext: NSManagedObjectContext = {
+        let moc = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
+        moc.persistentStoreCoordinator = CoreDataStackManager.sharedManager.persistentStoreCoordinator
+        return moc
+    }()
+    
+    var fileManager = NSFileManager()
+    
+    var settings: Settings {
         get {
-            return appDelegate.settings
+            var settings: Settings
+            var anyError: NSError?
+            
+            let request = NSFetchRequest(entityName: "Settings")
+            let fetchedSources = self.managedObjectContext.executeFetchRequest(request, error: &anyError)
+            if let sources = fetchedSources {
+                if sources.count == 0 {
+                    settings = NSEntityDescription.insertNewObjectForEntityForName("Settings", inManagedObjectContext: self.managedObjectContext) as Settings
+                    var folder = NSEntityDescription.insertNewObjectForEntityForName("Folder", inManagedObjectContext: self.managedObjectContext) as Folder
+                    folder.path = ""
+                    settings.output = folder
+                    settings.imports = NSMutableOrderedSet(array: [])
+                    
+                    if !self.managedObjectContext.save(&anyError) {
+                        fatalError("Error saving: \(anyError)")
+                    }
+                    managedObjectContext.reset()
+                } else {
+                    settings = sources[0] as Settings
+                }
+            } else {
+                println("Error fetching: \(anyError)")
+                fatalError("Fetch failed.")
+            }
+            return settings
         }
     }
-    private var managedObjectContext: NSManagedObjectContext {
+    
+    private var photos: [Photo] {
         get {
-            return appDelegate.managedObjectContext
+            var error: NSError?
+            let request = NSFetchRequest(entityName: "Photo")
+            let sortDescriptor = NSSortDescriptor(key: "created", ascending: true)
+            request.sortDescriptors = NSArray(array: [sortDescriptor])
+            
+            if let results = self.managedObjectContext.executeFetchRequest(request, error: &error) {
+                return results as [Photo]
+            } else {
+                return []
+            }
         }
     }
     
@@ -92,7 +136,7 @@ class ImageBrowserViewController: NSViewController {
         }))
         observers.append(NSNotificationCenter.defaultCenter().addObserverForName("updatePhotos", object: nil, queue: NSOperationQueue.mainQueue(), usingBlock: { (notification: NSNotification!) in
             self.imageBrowser.reloadData()
-            self.countTextField.stringValue = "\(self.images.count)/\(self.appDelegate.photos.count)"
+            self.countTextField.stringValue = "\(self.images.count)/\(self.photos.count)"
             self.progressIndicator.stopAnimation(self)
         }))
         
@@ -359,9 +403,9 @@ class ImageBrowserViewController: NSViewController {
             
             var photos: [Photo]
             if let filter = self.imagesFilter {
-                photos = self.appDelegate.photos.filter(filter)
+                photos = self.photos.filter(filter)
             } else {
-                photos = self.appDelegate.photos
+                photos = self.photos
             }
             photos = sorted(photos.filter({ (photo: Photo) -> Bool in
                 if self.onlyHashedCheckbox.state == 1 {

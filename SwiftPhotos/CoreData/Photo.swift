@@ -267,8 +267,12 @@ class Photo: NSManagedObject/*, IKImageBrowserItem*/ {
         if imageProperties != nil {
             var dictionary = imageProperties as NSDictionary
             
-            height = Int(dictionary.objectForKey("PixelHeight") as NSNumber!)
-            width = Int(dictionary.objectForKey("PixelWidth") as NSNumber!)
+            if let h: AnyObject = dictionary.objectForKey("PixelHeight") {
+                height = h as? NSNumber
+            }
+            if let w: AnyObject = dictionary.objectForKey("PixelWidth") {
+                width = w as? NSNumber
+            }
             
             var exifTree = dictionary.objectForKey("{Exif}") as [String: NSObject]?
             if let eT = exifTree {

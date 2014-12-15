@@ -51,28 +51,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                     }
                     managedObjectContext.reset()
                 } else {
-                    settings = sources[sources.count - 1] as Settings
+                    settings = sources[0] as Settings
                 }
             } else {
                 println("Error fetching: \(anyError)")
                 fatalError("Fetch failed.")
             }
             return settings
-        }
-    }
-    
-    var photos: [Photo] {
-        get {
-            var error: NSError?
-            let request = NSFetchRequest(entityName: "Photo")
-            let sortDescriptor = NSSortDescriptor(key: "created", ascending: true)
-            request.sortDescriptors = NSArray(array: [sortDescriptor])
-            
-            if let results = self.managedObjectContext.executeFetchRequest(request, error: &error) {
-                return results as [Photo]
-            } else {
-                return []
-            }
         }
     }
     
@@ -86,7 +71,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             startProcessingFolder(output.path)
         }
         if settings.imports.count > 0 {
-            for folder in settings.imports.objectEnumerator().allObjects as [Folder] {
+            let folders: [Folder] = settings.imports.objectEnumerator().allObjects.reverse() as [Folder]
+            for folder in folders {
                 startProcessingFolder(folder.path)
             }
         }
@@ -115,6 +101,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     func startProcessingFolder(path: String) {
+        TaskManager.sharedManager.pendingDiscoveries.queue.suspended = true
+        TaskManager.sharedManager.pendingHashes.queue.suspended = true
+        TaskManager.sharedManager.pendingQuality.queue.suspended = true
         let path = NSURL(string: path)!
         if let dirEnumerator: NSDirectoryEnumerator = fileManager.enumeratorAtURL(
             path,
@@ -150,6 +139,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                     } else if let isDir = isDirObj as? NSNumber {
                         if isDir == 0 {
                             //waitWindow.contentText.stringValue = url.relativePath!
+                            println(url.relativePath!)
                             addFile(url)
                         }
                     }
@@ -160,6 +150,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         } else {
             println("Couldn't initialize NSDirectoryEnumerator for \(path)")
         }
+        TaskManager.sharedManager.pendingDiscoveries.queue.suspended = false
+        TaskManager.sharedManager.pendingHashes.queue.suspended = false
+        TaskManager.sharedManager.pendingQuality.queue.suspended = false
     }
     
     func photoFromURL(url: NSURL) -> Photo? {
@@ -203,6 +196,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
     
+    var secondary_queue = dispatch_queue_create("camlittle.SwiftPhotos.secondary_queue", nil)
+    
     func discoverPhoto(photo: Photo) {
         if let currentOperation = taskManager.pendingDiscoveries.inProgress[photo.filepath] {
             return
@@ -221,10 +216,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                     return
                 }
                 
-                var error: NSError?
-                if !self.managedObjectContext.save(&error) {
-                    fatalError("Error saving: \(error)")
-                }
                 self.hashPhoto(photo)
                 self.qualityPhoto(photo)
                 return
@@ -246,13 +237,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 if op.cancelled {
                     return
                 }
-                dispatch_async(dispatch_get_main_queue(), {
+                dispatch_async(self.secondary_queue, {
                     NSNotificationCenter.defaultCenter().postNotificationName("completedTask", object: nil)
                     self.taskManager.pendingHashes.inProgress.removeValueForKey(photo.filepath)
-                    var error: NSError?
-                    if !self.managedObjectContext.save(&error) {
-                        fatalError("Error saving: \(error)")
-                    }
                     return
                 })
             }
@@ -272,13 +259,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             if op.cancelled {
                 return
             }
-            dispatch_async(dispatch_get_main_queue(), {
+            dispatch_async(self.secondary_queue, {
                 NSNotificationCenter.defaultCenter().postNotificationName("completedTask", object: nil)
                 self.taskManager.pendingQuality.inProgress.removeValueForKey(photo.filepath)
-                var error: NSError?
-                if !self.managedObjectContext.save(&error) {
-                    fatalError("Error saving: \(error)")
-                }
                 return
             })
         }

@@ -22,24 +22,27 @@ class TaskManager {
         return Singleton.taskManager
     }
 
-    var pendingDiscoveries = OperationQueue("discoveryQueue")
-    var pendingHashes =  OperationQueue("hashQueue")
-    var pendingQuality =  OperationQueue("qualityQueue")
+    var pendingDiscoveries = OperationQueue("discoveryQueue", qualityOfService: .Utility)
+    var pendingHashes =  OperationQueue("hashQueue", qualityOfService: .Background)
+    var pendingQuality =  OperationQueue("qualityQueue", qualityOfService: .Background)
 }
 
 // http://www.raywenderlich.com/76341/use-nsoperation-nsoperationqueue-swift
 class OperationQueue {
     var name: String
+    var qualityOfService: NSQualityOfService
     lazy var inProgress = [String:NSOperation]()
     lazy var queue: NSOperationQueue = {
         var q = NSOperationQueue()
         q.name = self.name
         q.maxConcurrentOperationCount = 1
+        q.qualityOfService = self.qualityOfService
         //q.suspended = true
         return q
     }()
-    init(_ name: String) {
+    init(_ name: String, qualityOfService: NSQualityOfService) {
         self.name = name
+        self.qualityOfService = qualityOfService
     }
 }
 
@@ -48,6 +51,9 @@ class PhotoHasher: NSOperation {
     
     init(photo: Photo) {
         self.photo = photo
+        super.init()
+        self.qualityOfService = .Background
+        self.queuePriority = .Low
     }
     
     override func main() {
@@ -67,6 +73,9 @@ class PhotoDiscoverer: NSOperation {
     
     init(photo: Photo) {
         self.photo = photo
+        super.init()
+        self.qualityOfService = .Utility
+        self.queuePriority = .Low
     }
     
     override func main() {
@@ -85,6 +94,9 @@ class PhotoQualityGenerator: NSOperation {
     
     init(photo: Photo) {
         self.photo = photo
+        super.init()
+        self.qualityOfService = .Background
+        self.queuePriority = .Low
     }
     
     override func main() {

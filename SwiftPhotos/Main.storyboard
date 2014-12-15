@@ -383,10 +383,10 @@
                                     <rect key="frame" x="1" y="1" width="166" height="79"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <ikImageBrowserView autoresizesSubviews="NO" fixedFrame="YES" zoomValue="0.81933456659317017" animates="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wVE-bI-VXR">
+                                        <ikImageBrowserView autoresizesSubviews="NO" fixedFrame="YES" zoomValue="0.81802994012832642" animates="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wVE-bI-VXR">
                                             <rect key="frame" x="0.0" y="384" width="537" height="463"/>
                                             <autoresizingMask key="contentResizingMask" heightSizable="YES"/>
-                                            <size key="cellSize" width="285" height="285"/>
+                                            <size key="cellSize" width="311" height="311"/>
                                         </ikImageBrowserView>
                                     </subviews>
                                 </clipView>
@@ -685,11 +685,11 @@
             <objects>
                 <viewController id="I0T-s4-qUq" customClass="TaskViewController" customModule="SwiftPhotos" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="Na1-PT-cMx">
-                        <rect key="frame" x="0.0" y="0.0" width="304" height="108"/>
+                        <rect key="frame" x="0.0" y="0.0" width="304" height="107"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="TcW-Tg-Sxb">
-                                <rect key="frame" x="18" y="71" width="76" height="17"/>
+                                <rect key="frame" x="18" y="70" width="76" height="17"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Discoveries" id="YSm-Yl-o7m">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -697,7 +697,7 @@
                                 </textFieldCell>
                             </textField>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="tvJ-Qp-a6Q">
-                                <rect key="frame" x="18" y="46" width="50" height="17"/>
+                                <rect key="frame" x="18" y="45" width="50" height="17"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Hashes" id="jll-O1-ONG">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -705,7 +705,7 @@
                                 </textFieldCell>
                             </textField>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="lyL-UH-fhX">
-                                <rect key="frame" x="18" y="21" width="126" height="17"/>
+                                <rect key="frame" x="18" y="20" width="126" height="17"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Quality Generations" id="gIZ-h7-WfA">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -713,21 +713,21 @@
                                 </textFieldCell>
                             </textField>
                             <progressIndicator maxValue="1" style="bar" translatesAutoresizingMaskIntoConstraints="NO" id="w0W-PX-96g">
-                                <rect key="frame" x="188" y="44" width="96" height="20"/>
+                                <rect key="frame" x="188" y="43" width="96" height="20"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="18" id="IZY-0v-fVG"/>
                                     <constraint firstAttribute="width" constant="96" id="lsY-r6-w6M"/>
                                 </constraints>
                             </progressIndicator>
                             <progressIndicator minValue="-1" maxValue="1" doubleValue="-1" style="bar" translatesAutoresizingMaskIntoConstraints="NO" id="TG8-cg-x8w">
-                                <rect key="frame" x="188" y="69" width="96" height="20"/>
+                                <rect key="frame" x="188" y="68" width="96" height="20"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="18" id="Ckw-Qq-Iau"/>
                                     <constraint firstAttribute="width" constant="96" id="hBO-3D-xr0"/>
                                 </constraints>
                             </progressIndicator>
                             <progressIndicator maxValue="1" style="bar" translatesAutoresizingMaskIntoConstraints="NO" id="4gI-Cc-uaC">
-                                <rect key="frame" x="188" y="19" width="96" height="20"/>
+                                <rect key="frame" x="188" y="18" width="96" height="20"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="96" id="5EP-yU-M04"/>
                                     <constraint firstAttribute="height" constant="18" id="7aE-eC-QH9"/>
@@ -744,6 +744,7 @@
                             <constraint firstItem="4gI-Cc-uaC" firstAttribute="top" secondItem="w0W-PX-96g" secondAttribute="bottom" constant="7" id="RwM-dK-7A0"/>
                             <constraint firstItem="w0W-PX-96g" firstAttribute="top" secondItem="TG8-cg-x8w" secondAttribute="bottom" constant="7" id="WQo-4n-lxs"/>
                             <constraint firstAttribute="trailing" secondItem="4gI-Cc-uaC" secondAttribute="trailing" constant="20" id="ajo-Px-hdl"/>
+                            <constraint firstAttribute="bottom" secondItem="4gI-Cc-uaC" secondAttribute="bottom" constant="19" id="bus-mo-Nm5"/>
                             <constraint firstItem="w0W-PX-96g" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="tvJ-Qp-a6Q" secondAttribute="trailing" constant="10" id="d8r-JE-WSn"/>
                             <constraint firstAttribute="trailing" secondItem="TG8-cg-x8w" secondAttribute="trailing" constant="20" id="e34-cm-4so"/>
                             <constraint firstItem="lyL-UH-fhX" firstAttribute="top" secondItem="tvJ-Qp-a6Q" secondAttribute="bottom" constant="8" id="fo3-MY-1WZ"/>
@@ -763,7 +764,7 @@
                 </viewController>
                 <customObject id="4dG-Ta-1FK" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1871" y="179"/>
+            <point key="canvasLocation" x="1871" y="178.5"/>
         </scene>
     </scenes>
     <resources>

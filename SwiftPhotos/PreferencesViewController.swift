@@ -54,7 +54,10 @@ class PreferencesViewController: NSViewController, NSTableViewDataSource, NSTabl
                 fatalError("Error saving: \(anyError)")
             }
             
+            //appDelegate.startProcessingFolder(outputPath.absoluteString!)
+            
             reloadTableView(self)
+            FileSystemMonitor.sharedManager.start()
             
             filePicker.close()
         }
@@ -84,6 +87,7 @@ class PreferencesViewController: NSViewController, NSTableViewDataSource, NSTabl
             }
             
             reloadTableView(nil)
+            FileSystemMonitor.sharedManager.start()
             
             filePicker.close()
         }
@@ -107,6 +111,7 @@ class PreferencesViewController: NSViewController, NSTableViewDataSource, NSTabl
             fatalError("Error saving: \(anyError)")
         }
         
+        FileSystemMonitor.sharedManager.start()
         reloadTableView(self)
     }
     // Delete row on backspace.
@@ -133,7 +138,11 @@ class PreferencesViewController: NSViewController, NSTableViewDataSource, NSTabl
         // TODO: reload settings object ?
         
         if let output = settings.output {
-            self.outputTextField.stringValue = NSURL(string: output.path)!.relativePath!
+            if let path = NSURL(string: output.path) {
+                if let rel = path.relativePath {
+                    self.outputTextField.stringValue = rel
+                }
+            }
         }
         
         tableView.reloadData()

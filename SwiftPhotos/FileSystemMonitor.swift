@@ -124,28 +124,38 @@ class FileSystemMonitor {
         })
     }
     
-    var paths: [String] = {
+    var paths: [String] = []
+        
+    func loadPaths() {
         let appDelegate = NSApplication.sharedApplication().delegate as AppDelegate
         let settings = appDelegate.settings
         
-        var paths: [String] = []
-        for i in 0...(settings.imports.count - 1) {
-            let path: String = settings.imports[i].path!!
-            paths.append(NSURL(string: path)!.relativePath!)
+        paths = []
+        if settings.imports.count > 0 {
+            for i in 0...(settings.imports.count - 1) {
+                let path: String = settings.imports[i].path!!
+                paths.append(NSURL(string: path)!.relativePath!)
+            }
         }
         if let output = settings.output {
-            paths.append(NSURL(string: output.path)!.relativePath!)
+            if let url = NSURL(string: output.path) {
+                if let urlpath = url.relativePath {
+                    paths.append(urlpath)
+                }
+            }
         }
-        return paths
-    }()
+    }
     
     func start() {
-        monitor = EonilFileSystemEventStream(
-            callback: callback,
-            pathsToWatch: paths,
-            latency: latency,
-            watchRoot: false,
-            queue: queue)
+        loadPaths()
+        if paths.count > 0 {
+            monitor = EonilFileSystemEventStream(
+                callback: callback,
+                pathsToWatch: paths,
+                latency: latency,
+                watchRoot: false,
+                queue: queue)
+        }
     }
     
 }

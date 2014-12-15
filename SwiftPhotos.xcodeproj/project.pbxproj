@@ -14,6 +14,8 @@
 		C54215231A3E08B0009852EA /* FileSystemMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54215221A3E08B0009852EA /* FileSystemMonitor.swift */; };
 		C54215461A3E16E9009852EA /* FileSystemEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54215451A3E16E9009852EA /* FileSystemEvents.swift */; };
 		C54215831A3E29DC009852EA /* EonilFileSystemEvents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C542157E1A3E29B5009852EA /* EonilFileSystemEvents.framework */; };
+		C54215851A3E5652009852EA /* WaitSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = C54215841A3E5652009852EA /* WaitSheet.xib */; };
+		C54215871A3E56BF009852EA /* WaitSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54215861A3E56BF009852EA /* WaitSheet.swift */; };
 		C54814B31A376B3E0030D931 /* ImageBrowserWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54814B21A376B3E0030D931 /* ImageBrowserWindowController.swift */; };
 		C573A6011A22684000FABE7F /* Library.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C573A5FF1A22684000FABE7F /* Library.xcdatamodeld */; };
 		C595EE1A1A24E46900875B82 /* Library.swift in Sources */ = {isa = PBXBuildFile; fileRef = C595EE191A24E46900875B82 /* Library.swift */; };
@@ -81,6 +83,8 @@
 		C542153D1A3E0D88009852EA /* SwiftPhotos-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SwiftPhotos-Bridging-Header.h"; sourceTree = "<group>"; };
 		C54215451A3E16E9009852EA /* FileSystemEvents.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileSystemEvents.swift; sourceTree = "<group>"; };
 		C54215771A3E29B5009852EA /* EonilFileSystemEvents.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = EonilFileSystemEvents.xcodeproj; path = FileSystemEvents/Project/EonilFileSystemEvents.xcodeproj; sourceTree = "<group>"; };
+		C54215841A3E5652009852EA /* WaitSheet.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WaitSheet.xib; sourceTree = "<group>"; };
+		C54215861A3E56BF009852EA /* WaitSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WaitSheet.swift; sourceTree = "<group>"; };
 		C54814B21A376B3E0030D931 /* ImageBrowserWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageBrowserWindowController.swift; sourceTree = "<group>"; };
 		C573A6001A22684000FABE7F /* Library.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Library.xcdatamodel; sourceTree = "<group>"; };
 		C595EE191A24E46900875B82 /* Library.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Library.swift; path = CoreData/Library.swift; sourceTree = "<group>"; };
@@ -173,6 +177,8 @@
 			isa = PBXGroup;
 			children = (
 				C5F36B4C1A3D32BA002D1789 /* AppDelegate.swift */,
+				C54215841A3E5652009852EA /* WaitSheet.xib */,
+				C54215861A3E56BF009852EA /* WaitSheet.swift */,
 				C5EB25961A390B27006C7019 /* Tasks.swift */,
 				C54814B21A376B3E0030D931 /* ImageBrowserWindowController.swift */,
 				C51697151A32AFAB00026B77 /* Main.storyboard */,
@@ -329,6 +335,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FE5DDB1D193EC4F800D083E0 /* Images.xcassets in Resources */,
+				C54215851A3E5652009852EA /* WaitSheet.xib in Resources */,
 				C51697161A32AFAB00026B77 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -349,6 +356,7 @@
 			files = (
 				C5A1E87D1A215C6F00BA0A3C /* main.swift in Sources */,
 				C54215201A3D777E009852EA /* TaskViewController.swift in Sources */,
+				C54215871A3E56BF009852EA /* WaitSheet.swift in Sources */,
 				C51697101A32A14700026B77 /* CoreDataStackManager.swift in Sources */,
 				C5F36B4B1A3D309E002D1789 /* PhotoHUD.swift in Sources */,
 				C54215461A3E16E9009852EA /* FileSystemEvents.swift in Sources */,

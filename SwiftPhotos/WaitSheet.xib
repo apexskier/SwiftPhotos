@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6254"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="WaitSheetController" customModule="SwiftPhotos" customModuleProvider="target">
+            <connections>
+                <outlet property="window" destination="QvC-M9-y7g" id="X6w-Kq-Chg"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <window title="Please Wait" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" animationBehavior="default" id="QvC-M9-y7g" customClass="WaitSheet" customModule="SwiftPhotos" customModuleProvider="target">
+            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
+            <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+            <rect key="contentRect" x="196" y="240" width="351" height="270"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1057"/>
+            <view key="contentView" id="EiT-Mj-1SZ">
+                <rect key="frame" x="0.0" y="0.0" width="351" height="270"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="gNJ-F4-SC8">
+                        <rect key="frame" x="18" y="233" width="315" height="17"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Title" id="mab-Y1-wBv">
+                            <font key="font" metaFont="systemBold"/>
+                            <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="SnX-ex-VGS">
+                        <rect key="frame" x="18" y="208" width="315" height="17"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Content" id="MVx-aA-pwr">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="SnX-ex-VGS" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" constant="20" id="Ii0-w7-SHb"/>
+                    <constraint firstAttribute="trailing" secondItem="gNJ-F4-SC8" secondAttribute="trailing" constant="20" id="O7H-he-68r"/>
+                    <constraint firstAttribute="trailing" secondItem="SnX-ex-VGS" secondAttribute="trailing" constant="20" id="WtX-do-KpX"/>
+                    <constraint firstItem="gNJ-F4-SC8" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" constant="20" id="ZmE-Fk-1vk"/>
+                    <constraint firstItem="SnX-ex-VGS" firstAttribute="top" secondItem="gNJ-F4-SC8" secondAttribute="bottom" constant="8" id="lbl-e5-Ic2"/>
+                    <constraint firstItem="gNJ-F4-SC8" firstAttribute="top" secondItem="EiT-Mj-1SZ" secondAttribute="top" constant="20" id="pwT-vM-oEG"/>
+                </constraints>
+            </view>
+            <connections>
+                <outlet property="contentText" destination="SnX-ex-VGS" id="Lnk-fp-bhR"/>
+                <outlet property="delegate" destination="-2" id="Hjs-aj-xQU"/>
+                <outlet property="titleText" destination="gNJ-F4-SC8" id="IQX-Vw-ixO"/>
+            </connections>
+            <point key="canvasLocation" x="339.5" y="488"/>
+        </window>
+    </objects>
+</document>

@@ -22,19 +22,19 @@ class TaskManager {
         return Singleton.taskManager
     }
 
-    var pendingDiscoveries = PhotoOperations("discoveryQueue")
-    var pendingHashes = PhotoOperations("hashQueue")
-    var pendingQuality = PhotoOperations("qualityQueue")
+    var pendingDiscoveries =  OperationQueue("discoveryQueue")
+    var pendingHashes =  OperationQueue("hashQueue")
+    var pendingQuality =  OperationQueue("qualityQueue")
 }
 
 // http://www.raywenderlich.com/76341/use-nsoperation-nsoperationqueue-swift
-class PhotoOperations {
+class OperationQueue {
     var name: String
     lazy var inProgress = [String:NSOperation]()
     lazy var queue: NSOperationQueue = {
         var q = NSOperationQueue()
         q.name = self.name
-        q.maxConcurrentOperationCount = 1 // TODO: remove this line
+        q.maxConcurrentOperationCount = 1
         return q
     }()
     init(_ name: String) {
@@ -55,6 +55,7 @@ class PhotoHasher: NSOperation {
                 return
             }
             
+            self.photo.genFhash()
             self.photo.genPhash()
         }
     }
@@ -73,7 +74,6 @@ class PhotoDiscoverer: NSOperation {
                 return
             }
             
-            self.photo.genFhash()
             self.photo.readData()
         }
     }

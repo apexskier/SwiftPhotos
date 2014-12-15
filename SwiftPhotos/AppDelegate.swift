@@ -82,6 +82,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     func applicationDidFinishLaunching(aNotification: NSNotification?) {
         // Insert code here to initialize your application
+        /*if let output = settings.output {
+            startProcessingFolder(output.path)
+        }*/
         if settings.imports.count > 0 {
             for folder in settings.imports.objectEnumerator().allObjects as [Folder] {
                 startProcessingFolder(folder.path)
@@ -103,7 +106,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     func applicationShouldHandleReopen(sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
         if !flag {
-            // TODO: Open up main window
+            let storyboard = NSStoryboard(name: "Main", bundle: nil)
+            let initialView = storyboard?.instantiateInitialController() as NSWindowController
+            let mainWindow = initialView.window!
+            mainWindow.makeKeyAndOrderFront(self)
         }
         return true
     }
@@ -121,6 +127,19 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 println(error)
                 return true
         }) {
+            
+            /*var waitWindowController = WaitSheetController()
+            var waitWindow = waitWindowController.window! as WaitSheet
+            
+            let storyboard = NSStoryboard(name: "Main", bundle: nil)
+            let initialView = storyboard?.instantiateInitialController() as NSWindowController
+            let mainWindow = initialView.window!
+            
+            mainWindow.beginSheet(waitWindow, completionHandler: nil)
+            waitWindow.title = "Please Wait"
+            waitWindow.contentText.stringValue = "Adding folder contents"
+            waitWindow.titleText.stringValue = "Please wait."*/
+            
             for url: NSURL in dirEnumerator.allObjects as [NSURL] {
                 var error: NSError?
                 var isDirObj: AnyObject?
@@ -130,6 +149,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                         println("Error getting resource from url '\(url)'.\n\(error)")
                     } else if let isDir = isDirObj as? NSNumber {
                         if isDir == 0 {
+                            //waitWindow.contentText.stringValue = url.relativePath!
                             addFile(url)
                         }
                     }
@@ -166,11 +186,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         if photo == nil {
             photo = NSEntityDescription.insertNewObjectForEntityForName("Photo", inManagedObjectContext: self.managedObjectContext) as? Photo
             photo!.filepath = url.absoluteString!
-        }
-        
-        photo!.stateEnum = .New
-        if !self.managedObjectContext.save(&error) {
-            fatalError("Error saving: \(error)")
+            photo!.stateEnum = .New
+            
+            if !self.managedObjectContext.save(&error) {
+                fatalError("Error saving: \(error)")
+            }
         }
         
         discoverPhoto(photo!)
@@ -295,7 +315,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             var removed = NSFileManager.defaultManager().removeItemAtURL(fileURL, error: error)
             if !removed {
                 println("Didn't remove file: \(fileURL.relativePath!)")
-                return
             }
         }
         

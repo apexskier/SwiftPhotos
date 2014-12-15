@@ -33,11 +33,14 @@ class ImageBrowserViewController: NSViewController {
     @IBOutlet weak var showInFinderButton: NSButton!
     @IBOutlet weak var removeButton: NSButton!
     @IBOutlet weak var infoButton: NSButton!
-    @IBOutlet weak var similarButton: NSButton!
     @IBOutlet weak var similarityThreshold: NSSlider!
     @IBOutlet weak var onlyHashedCheckbox: NSButton!
     @IBOutlet weak var onlyBrokenCheckbox: NSButton!
     @IBOutlet weak var orderSelectBox: NSPopUpButton!
+    
+    @IBOutlet weak var psimCheck: NSButton!
+    @IBOutlet weak var fsimCheck: NSButton!
+    
     
     @IBAction func zoomSliderChanged(sender: AnyObject) {
         imageBrowser.setZoomValue(sender.floatValue)
@@ -149,7 +152,15 @@ class ImageBrowserViewController: NSViewController {
     }
     
     @IBAction func similarSliderChange(sender: AnyObject) {
-        showSimilar(sender)
+        var state = fsimCheck.state
+        if state == 1 {
+            showSimilarF(sender)
+        } else {
+            state = psimCheck.state
+            if state == 1 {
+                showSimilarP(sender)
+            }
+        }
     }
     @IBAction func showOnlyHashedChange(sender: AnyObject) {
         updateImages()
@@ -157,9 +168,31 @@ class ImageBrowserViewController: NSViewController {
     @IBAction func showOnlyBrokenChange(sender: AnyObject) {
         updateImages()
     }
-    @IBAction func showSimilar(sender: AnyObject) {
-        var state = similarButton.state
+    @IBAction func showSimilarF(sender: AnyObject) {
+        var state = fsimCheck.state
         if state == 1 {
+            psimCheck.state = 0
+            if let Ahash = selectedPhoto!.fhash {
+                let ahash: UInt64 = Ahash.unsignedLongLongValue
+                self.imagesFilter = { (photo: Photo) -> Bool in
+                    if let bhash = photo.fhash {
+                        let dist = hammingDistance(ahash, bhash.unsignedLongLongValue)
+                        if dist <= self.similarityThreshold.integerValue {
+                            return true
+                        }
+                    }
+                    return false
+                }
+            }
+        } else {
+            imagesFilter = nil
+        }
+        updateImages()
+    }
+    @IBAction func showSimilarP(sender: AnyObject) {
+        var state = psimCheck.state
+        if state == 1 {
+            fsimCheck.state = 0
             if let Ahash = selectedPhoto!.phash {
                 let ahash: UInt64 = Ahash.unsignedLongLongValue
                 self.imagesFilter = { (photo: Photo) -> Bool in
@@ -365,7 +398,8 @@ class ImageBrowserViewController: NSViewController {
         let selections = imageBrowser.selectionIndexes()
         appDelegate.selectedPhoto = nil
         showInFinderButton.enabled = false
-        similarButton.enabled = false
+        psimCheck.enabled = false
+        fsimCheck.enabled = false
         removeButton.enabled = false
         appDelegate.getInfoMenuItem.enabled = false
         infoButton.enabled = false
@@ -373,11 +407,16 @@ class ImageBrowserViewController: NSViewController {
             if selections.count == 1 {
                 appDelegate.selectedPhoto = images[selections.firstIndex]
                 showInFinderButton.enabled = true
-                similarButton.enabled = true
+                psimCheck.enabled = true
+                fsimCheck.enabled = true
                 appDelegate.getInfoMenuItem.enabled = true
                 //infoButton.enabled = true
             }
             removeButton.enabled = true
+        } else {
+            psimCheck.state = 0
+            fsimCheck.state = 0
+            showSimilarF(fsimCheck)
         }
         NSNotificationCenter.defaultCenter().postNotificationName("selectionChanged", object: nil)
     }

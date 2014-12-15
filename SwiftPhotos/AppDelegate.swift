@@ -82,9 +82,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     func applicationDidFinishLaunching(aNotification: NSNotification?) {
         // Insert code here to initialize your application
-        /*if let output = settings.output {
+        if let output = settings.output {
             startProcessingFolder(output.path)
-        }*/
+        }
         if settings.imports.count > 0 {
             for folder in settings.imports.objectEnumerator().allObjects as [Folder] {
                 startProcessingFolder(folder.path)

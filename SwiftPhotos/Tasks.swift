@@ -6,8 +6,9 @@
 //  Copyright (c) 2014 Cameron Little. All rights reserved.
 //
 
-import Foundation
+import CoreData
 import Dispatch
+import Foundation
 
 class TaskManager {
     
@@ -25,6 +26,73 @@ class TaskManager {
     var pendingDiscoveries = OperationQueue("discoveryQueue", qualityOfService: .Utility)
     var pendingHashes =  OperationQueue("hashQueue", qualityOfService: .Background)
     var pendingQuality =  OperationQueue("qualityQueue", qualityOfService: .Background)
+
+    func cancelPhoto(path: String) {
+        if let task = pendingDiscoveries.inProgress.removeValueForKey(path) {
+            task.cancel()
+        }
+        if let task = pendingHashes.inProgress.removeValueForKey(path) {
+            task.cancel()
+        }
+        if let task = pendingQuality.inProgress.removeValueForKey(path) {
+            task.cancel()
+        }
+    }
+
+    func photoTask(photo: Photo, queue: OperationQueue, optype: String, then: () -> ()) {
+        let path = photo.filepath
+        let id = photo.objectID
+
+        if let currentOperation = queue.inProgress[path] {
+            return
+        }
+
+        var op: NSOperation
+        switch optype {
+        case "PhotoDiscoverer":
+            op = PhotoDiscoverer(photoID: id, qos: .Utility)
+        case "PhotoHasher":
+            op = PhotoHasher(photoID: id, qos: .Background)
+        case "PhotoQualityGenerator":
+            op = PhotoQualityGenerator(photoID: id, qos: .Background)
+        default:
+            fatalError("Unknown operation type: \(optype)")
+        }
+        op.completionBlock = {
+            if op.cancelled {
+                return
+            }
+            dispatch_async(dispatch_get_main_queue(), {
+                NSNotificationCenter.defaultCenter().postNotificationName("completedTask", object: nil)
+                queue.inProgress.removeValueForKey(photo.filepath)
+                then()
+                return
+            })
+        }
+
+        queue.inProgress[path] = op
+        queue.queue.addOperation(op)
+    }
+
+    func discoverPhoto(photo: Photo) {
+        photoTask(photo, queue: pendingDiscoveries, optype: "PhotoDiscoverer") {
+            if photo.stateEnum == .Broken {
+                return
+            }
+            self.hashPhoto(photo)
+            self.qualityPhoto(photo)
+        }
+    }
+
+    func hashPhoto(photo: Photo) {
+        if photo.stateEnum == .New {
+            photoTask(photo, queue: pendingHashes, optype: "PhotoHasher") {}
+        }
+    }
+
+    func qualityPhoto(photo: Photo) {
+        photoTask(photo, queue: pendingQuality, optype: "PhotoQualityGenerator") {}
+    }
 }
 
 // http://www.raywenderlich.com/76341/use-nsoperation-nsoperationqueue-swift
@@ -46,66 +114,71 @@ class OperationQueue {
     }
 }
 
-class PhotoHasher: NSOperation {
-    let photo: Photo
-    
-    init(photo: Photo) {
-        self.photo = photo
+class PhotoOperation: NSOperation {
+    let photoID: NSManagedObjectID
+
+    init(photoID: NSManagedObjectID, qos: NSQualityOfService) {
+        self.photoID = photoID
         super.init()
-        self.qualityOfService = .Background
+        self.qualityOfService = qos//.Background
         self.queuePriority = .Low
     }
-    
+}
+
+class PhotoHasher: PhotoOperation {
     override func main() {
         autoreleasepool {
             if self.cancelled {
                 return
             }
-            
-            self.photo.genFhash()
-            self.photo.genPhash()
+            let moc = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
+            moc.persistentStoreCoordinator = CoreDataStackManager.sharedManager.persistentStoreCoordinator
+            var error: NSError?
+
+            if let photo = moc.objectWithID(self.photoID) as? Photo {
+                photo.genFhash()
+                photo.genPhash()
+                if !moc.save(&error) {
+                    println("Coudn't save moc: \(error)")
+                }
+            }
         }
     }
 }
 
-class PhotoDiscoverer: NSOperation {
-    let photo: Photo
-    
-    init(photo: Photo) {
-        self.photo = photo
-        super.init()
-        self.qualityOfService = .Utility
-        self.queuePriority = .Low
-    }
-    
+class PhotoDiscoverer: PhotoOperation {
     override func main() {
         autoreleasepool {
             if self.cancelled {
                 return
             }
-            
-            self.photo.readData()
+            let moc = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
+            moc.persistentStoreCoordinator = CoreDataStackManager.sharedManager.persistentStoreCoordinator
+            var error: NSError?
+
+            if let photo = moc.objectWithID(self.photoID) as? Photo {
+                photo.readData()
+            }
         }
     }
 }
 
-class PhotoQualityGenerator: NSOperation {
-    let photo: Photo
-    
-    init(photo: Photo) {
-        self.photo = photo
-        super.init()
-        self.qualityOfService = .Background
-        self.queuePriority = .Low
-    }
-    
+class PhotoQualityGenerator: PhotoOperation {
     override func main() {
         autoreleasepool {
             if self.cancelled {
                 return
             }
-            
-            self.photo.genQualityMeasures()
+            let moc = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
+            moc.persistentStoreCoordinator = CoreDataStackManager.sharedManager.persistentStoreCoordinator
+            var error: NSError?
+
+            if let photo = moc.objectWithID(self.photoID) as? Photo {
+                photo.genQualityMeasures()
+                if !moc.save(&error) {
+                    println("Coudn't save moc: \(error)")
+                }
+            }
         }
     }
 }

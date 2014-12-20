@@ -41,7 +41,6 @@ class MainViewController: NSViewController {
                     if !self.managedObjectContext.save(&anyError) {
                         fatalError("Error saving: \(anyError)")
                     }
-                    managedObjectContext.reset()
                 } else {
                     settings = sources[0] as Settings
                 }

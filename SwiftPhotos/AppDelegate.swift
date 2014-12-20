@@ -49,7 +49,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                     if !self.managedObjectContext.save(&anyError) {
                         fatalError("Error saving: \(anyError)")
                     }
-                    managedObjectContext.reset()
                 } else {
                     settings = sources[0] as Settings
                 }
@@ -64,9 +63,25 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func showInfoHUD() {()
         // TODO
     }
+
+    func managedObjectSaved(notification: NSNotification) {
+        let sender = notification.object as NSManagedObjectContext
+        if sender !== self.managedObjectContext {
+            NSLog("******** Saved context in other thread")
+            managedObjectContext.performBlock {
+                self.managedObjectContext.mergeChangesFromContextDidSaveNotification(notification)
+            }
+        } else {
+            println("******** Saved context in main thread")
+        }
+    }
+
+    var observers: [AnyObject] = []
     
     func applicationDidFinishLaunching(aNotification: NSNotification?) {
         // Insert code here to initialize your application
+        //NSNotificationCenter.defaultCenter().addObserver(self, selector: "managedObjectSaved", name: NSManagedObjectContextDidSaveNotification, object: nil)
+
         if let output = settings.output {
             startProcessingFolder(output.path)
         }
@@ -76,18 +91,21 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 startProcessingFolder(folder.path)
             }
         }
-        
+
         // start the filesystem monitor
         FileSystemMonitor.sharedManager.start()
     }
     
     func applicationWillTerminate(aNotification: NSNotification?) {
         // Insert code here to tear down your application
+        for observer in observers {
+            NSNotificationCenter.defaultCenter().removeObserver(observer)
+        }
+        NSNotificationCenter.defaultCenter().removeObserver(self)
         var error: NSError?
         if !self.managedObjectContext.save(&error) {
             fatalError("Error saving: \(error)")
         }
-        self.managedObjectContext.reset()
     }
     
     func applicationShouldHandleReopen(sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
@@ -186,89 +204,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             }
         }
         
-        discoverPhoto(photo!)
-    }
-    
-    // Concurrent task management
-    var taskManager: TaskManager {
-        get {
-            return TaskManager.sharedManager
-        }
+        TaskManager.sharedManager.discoverPhoto(photo!)
     }
     
     var secondary_queue = dispatch_queue_create("camlittle.SwiftPhotos.secondary_queue", nil)
-    
-    func discoverPhoto(photo: Photo) {
-        if let currentOperation = taskManager.pendingDiscoveries.inProgress[photo.filepath] {
-            return
-        }
-        
-        let op = PhotoDiscoverer(photo: photo)
-        op.completionBlock = {
-            if op.cancelled {
-                return
-            }
-            dispatch_async(dispatch_get_main_queue(), {
-                NSNotificationCenter.defaultCenter().postNotificationName("completedTask", object: nil)
-                self.taskManager.pendingDiscoveries.inProgress.removeValueForKey(photo.filepath)
-                
-                if photo.stateEnum == .Broken {
-                    return
-                }
-                
-                self.hashPhoto(photo)
-                self.qualityPhoto(photo)
-                return
-            })
-        }
-        
-        taskManager.pendingDiscoveries.inProgress[photo.filepath] = op
-        taskManager.pendingDiscoveries.queue.addOperation(op)
-    }
-    
-    func hashPhoto(photo: Photo) {
-        if photo.stateEnum == .New {
-            if let currentOperation = taskManager.pendingHashes.inProgress[photo.filepath] {
-                return
-            }
-            
-            let op = PhotoHasher(photo: photo)
-            op.completionBlock = {
-                if op.cancelled {
-                    return
-                }
-                dispatch_async(self.secondary_queue, {
-                    NSNotificationCenter.defaultCenter().postNotificationName("completedTask", object: nil)
-                    self.taskManager.pendingHashes.inProgress.removeValueForKey(photo.filepath)
-                    return
-                })
-            }
-            
-            taskManager.pendingHashes.inProgress[photo.filepath] = op
-            taskManager.pendingHashes.queue.addOperation(op)
-        }
-    }
-    
-    func qualityPhoto(photo: Photo) {
-        if let currentOperation = taskManager.pendingQuality.inProgress[photo.filepath] {
-            return
-        }
-        
-        let op = PhotoQualityGenerator(photo: photo)
-        op.completionBlock = {
-            if op.cancelled {
-                return
-            }
-            dispatch_async(self.secondary_queue, {
-                NSNotificationCenter.defaultCenter().postNotificationName("completedTask", object: nil)
-                self.taskManager.pendingQuality.inProgress.removeValueForKey(photo.filepath)
-                return
-            })
-        }
-        
-        taskManager.pendingQuality.inProgress[photo.filepath] = op
-        taskManager.pendingQuality.queue.addOperation(op)
-    }
     
     func changeFound(url: NSURL, change: FileChange) {
         switch change {
@@ -300,16 +239,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 println("Didn't remove file: \(fileURL.relativePath!)")
             }
         }
-        
-        if let task = taskManager.pendingDiscoveries.inProgress.removeValueForKey(filePath) {
-            task.cancel()
-        }
-        if let task = taskManager.pendingHashes.inProgress.removeValueForKey(filePath) {
-            task.cancel()
-        }
-        if let task = taskManager.pendingQuality.inProgress.removeValueForKey(filePath) {
-            task.cancel()
-        }
+
+        TaskManager.sharedManager.cancelPhoto(filePath)
         
         managedObjectContext.deleteObject(photo)
         var err: NSError?

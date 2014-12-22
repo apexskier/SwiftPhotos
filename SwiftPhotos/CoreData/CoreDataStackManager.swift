@@ -52,12 +52,7 @@ class CoreDataStackManager {
             
             let persistentStore = persistentStoreCoordinator.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: url, options: options, error: &error)
             if persistentStore == nil {
-                println("Error adding persistent store: \(error)")
-                fatalError("Could not add the persistent store.")
-                
-                NSApplication.sharedApplication().presentError(error!)
-                
-                return nil
+                fatalError("Error adding persistent store: \(error)")
             }
             
             return persistentStoreCoordinator
@@ -90,23 +85,14 @@ class CoreDataStackManager {
                     
                     error = NSError(domain: Constants.errorDomain, code: 101, userInfo: userInfo)
                     
-                    fatalError("Could not access the application data folder.")
-                    
-                    NSApplication.sharedApplication().presentError(error!)
-                    
-                    return nil
+                    fatalError("Could not access the application data folder. \(error)")
                 }
             }
         }
         else {
             if error != nil && error!.code == NSFileReadNoSuchFileError {
-                let ok = fileManager.createDirectoryAtPath(applicationSupportDirectory.path!, withIntermediateDirectories: true, attributes: nil, error: &error)
-                if !ok {
-                    NSApplication.sharedApplication().presentError(error!)
-                    
-                    fatalError("Could not create the application data folder.")
-                    
-                    return nil
+                if !fileManager.createDirectoryAtPath(applicationSupportDirectory.path!, withIntermediateDirectories: true, attributes: nil, error: &error) {
+                    fatalError("Could not create the application data folder. \(error)")
                 }
             }
         }

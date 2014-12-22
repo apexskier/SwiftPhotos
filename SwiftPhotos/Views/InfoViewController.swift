@@ -56,7 +56,9 @@ class InfoViewController: NSViewController {
         textArea.stringValue = ""
         
         if let photo = self.selectedPhoto {
-            imageTitle.stringValue = photo.fileURL.lastPathComponent!
+            if let text = photo.fileURL.lastPathComponent {
+                imageTitle.stringValue = text
+            }
             
             if let created = photo.created {
                 textArea.stringValue += "\(dateFormatter.stringFromDate(created))\n\n"
@@ -68,6 +70,11 @@ class InfoViewController: NSViewController {
             textArea.stringValue += "\n"
             textArea.stringValue += "phash: "
             if let hash = photo.phash {
+                textArea.stringValue += "\(hash)"
+            }
+            textArea.stringValue += "\n"
+            textArea.stringValue += "ahash: "
+            if let hash = photo.ahash {
                 textArea.stringValue += "\(hash)"
             }
             textArea.stringValue += "\n\n"

@@ -1,0 +1,6 @@
+framework module EonilFileSystemEvents {
+  umbrella header "EonilFileSystemEvents.h"
+
+  export *
+  module * { export * }
+}

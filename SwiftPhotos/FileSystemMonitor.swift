@@ -132,7 +132,7 @@ class FileSystemMonitor {
         
         paths = []
         if settings.imports.count > 0 {
-            for i in (settings.imports.count - 1)...0 {
+            for i in 0...(settings.imports.count - 1) {
                 let path: String = settings.imports[i].path!!
                 paths.append(NSURL(string: path)!.relativePath!)
             }

@@ -72,8 +72,8 @@ func calcPhash(image: NSImage) -> UInt64 {
     /// 2. Reduce to grayscale.
     var workingImage = imageToGreyImage(image, CGSize(width: 32, height: 32))
 
-    /// 3. Compute the DCT (discrete cosine transform.
-    var imageDTC = dtc(workingImage)
+    /// 3. Compute the DCT (discrete cosine transform).
+    var imageDCT = dctOrig(workingImage)
     
     /// 4. Reduce the DCT.
     /// 5. Compute the average value of a reduced DTC (upper left 8x8).
@@ -81,7 +81,7 @@ func calcPhash(image: NSImage) -> UInt64 {
     for i in 0...7 {
         for j in 0...7 {
             if !(i == 0 && j == 0) {
-                avg += imageDTC[i][j]
+                avg += imageDCT[i][j]
             }
         }
     }
@@ -92,7 +92,7 @@ func calcPhash(image: NSImage) -> UInt64 {
     var hash: UInt64 = 0
     for i in 0...7 {
         for j in 0...7 {
-            if imageDTC[i][j] < avg {
+            if imageDCT[i][j] < avg {
                 hash |= 1
             }
             if !(j == 7 && i == 7) {
@@ -112,7 +112,26 @@ private func alpha(i: Int) -> Double {
     return 0.5
 }
 private let inv16 = 1.0 / 16.0
+/*private let cosineInnards = { () -> [Double] in
+    var arr = [Double](count: 32, repeatedValue: 0.0)
+    let half = 1.0 / 2.0
+    let piover32 = M_PI/32
+    for n in 0...31 {
+        arr[n] = piover32 * Double(n)+half
+    }
+    return arr
+}()
 private let cosine = { () -> [[Double]] in
+    var arr = [[Double]](count: 32, repeatedValue: [Double](count: 32, repeatedValue: 0.0))
+    for n in 0...31 {
+        for k in 0...31 {
+            let dk = Double(k)
+            arr[n][k] = cos(cosineInnards[n] * dk)
+        }
+    }
+    return arr
+}()*/
+private let oldCosine = { () -> [[Double]] in
     var arr = [[Double]](count: 32, repeatedValue: [Double](count: 32, repeatedValue: Double(0.0)))
     for i in 0...31 {
         for j in 0...31 {
@@ -120,14 +139,68 @@ private let cosine = { () -> [[Double]] in
         }
     }
     return arr
+}()/*
+private let cosineProduct: [[[[Double]]]] = { () -> [[[[Double]]]] in
+    var arr = [[[[Double]]]](count: 32, repeatedValue:
+                [[[Double]]](count: 32, repeatedValue:
+                  [[Double]](count: 32, repeatedValue:
+                    [Double](count: 32, repeatedValue: 0.0))))
+    for k1 in 0...31 {
+        for k2 in 0...31 {
+            for n1 in 0...31 {
+                for n2 in 0...31 {
+                    arr[n1][n2][k1][k2] = cosine[n1][k1] * cosine[n2][k2]
+                }
+            }
+        }
+    }
+    return arr
 }()
-private func dtc(image: NSImage) -> [[Double]] {
+private func dct(image: NSImage) -> [[Double]] {
     var A = [[Double]](count: 32, repeatedValue: [Double](count: 32, repeatedValue: 0.0))
-    
+
+    let cgimage = image.CGImage
+    let pixelBits = Int(CGImageGetBitsPerPixel(cgimage))
+    let compSize = CGImageGetBitsPerComponent(cgimage)
+
     // Get array of pixel data of working image
     var pixelData = CGDataProviderCopyData(CGImageGetDataProvider(image.CGImage))
     var data: UnsafePointer<UInt8> = CFDataGetBytePtr(pixelData)
-    
+
+    // TODO: implement fast fourier trasnform technique to speedup
+
+    // x_k = sum from n=0 to N-1 of (x_n cos[(pi/N)(n + 1/2)k]), k=0,...,N-1
+
+    // x_k1,k2 = sum from n1=0 to N1-1 of (sum from n2=0 to N2-1 of (x_n1,n2 cos[pi/N1 (n_1 + 1/2) k1] cos[pi/N2 (n_2 + 1/2) k2]
+
+    // N = 32
+    for k1 in 0...31 { // image size is 32x32
+        for k2 in 0...31 {
+            A[k1][k2] = 0.0
+            var pixelPos: Int = ((32 * k1) + k2) * pixelBits
+            var color = Double(data[pixelPos]) / 255.0
+            for n1 in 0...31 {
+                for n2 in 0...31 {
+                    let cp = cosineProduct[n1][n2][k1][k2]
+                    A[k1][k2] += color * cp //cosine[n1][k1] * cosine[n2][k2]
+                }
+            }
+        }
+    }
+    return A
+}*/
+private func dctOrig(image: NSImage) -> [[Double]] {
+    var A = [[Double]](count: 32, repeatedValue: [Double](count: 32, repeatedValue: 0.0))
+
+    // Get array of pixel data of working image
+    var pixelData = CGDataProviderCopyData(CGImageGetDataProvider(image.CGImage))
+    var data: UnsafePointer<UInt8> = CFDataGetBytePtr(pixelData)
+
+    // x_k = sum from n=0 to N-1 of (x_n cos[(pi/N)(n + 1/2)k]), k=0,...,N-1
+
+
+
+    // N = 32
     for y in 0...31 { // image size is 32x32
         for x in 0...31 {
             A[y][x] = 0
@@ -135,13 +208,14 @@ private func dtc(image: NSImage) -> [[Double]] {
             var color = Double(data[pixelPos]) / 255.0
             for u in 0...31 {
                 for v in 0...31 {
-                    A[y][x] += alpha(u) * alpha(v) * color * cosine[u][x] * cosine[v][y]
+                    A[y][x] += alpha(u) * alpha(v) * color * oldCosine[u][x] * oldCosine[v][y]
                 }
             }
         }
     }
     return A
 }
+
 
 func hammingDistance(a: UInt64, b: UInt64) -> Int {
     // Number of different bits between a and b

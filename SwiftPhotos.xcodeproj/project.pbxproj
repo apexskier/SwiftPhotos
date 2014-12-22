@@ -16,6 +16,7 @@
 		C54215851A3E5652009852EA /* WaitSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = C54215841A3E5652009852EA /* WaitSheet.xib */; };
 		C54215871A3E56BF009852EA /* WaitSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54215861A3E56BF009852EA /* WaitSheet.swift */; };
 		C54814B31A376B3E0030D931 /* InfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54814B21A376B3E0030D931 /* InfoViewController.swift */; };
+		C56FD08D1A4603E3008BAEB5 /* BKTree.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56FD08C1A4603E3008BAEB5 /* BKTree.swift */; };
 		C573A6011A22684000FABE7F /* Library.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C573A5FF1A22684000FABE7F /* Library.xcdatamodeld */; };
 		C595EE1A1A24E46900875B82 /* Library.swift in Sources */ = {isa = PBXBuildFile; fileRef = C595EE191A24E46900875B82 /* Library.swift */; };
 		C595EE1C1A24E46900875B82 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = C595EE1B1A24E46900875B82 /* Settings.swift */; };
@@ -96,6 +97,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		C50481E41A480EA900DF4801 /* Library 4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Library 4.xcdatamodel"; sourceTree = "<group>"; };
 		C516970F1A32A14700026B77 /* CoreDataStackManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CoreDataStackManager.swift; path = CoreData/CoreDataStackManager.swift; sourceTree = "<group>"; };
 		C51697131A32ACFD00026B77 /* PreferencesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PreferencesViewController.swift; path = Views/PreferencesViewController.swift; sourceTree = "<group>"; };
 		C51697151A32AFAB00026B77 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
@@ -108,7 +110,9 @@
 		C54215841A3E5652009852EA /* WaitSheet.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WaitSheet.xib; sourceTree = "<group>"; };
 		C54215861A3E56BF009852EA /* WaitSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WaitSheet.swift; sourceTree = "<group>"; };
 		C54814B21A376B3E0030D931 /* InfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InfoViewController.swift; path = Views/InfoViewController.swift; sourceTree = "<group>"; };
+		C56FD08C1A4603E3008BAEB5 /* BKTree.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BKTree.swift; sourceTree = "<group>"; };
 		C573A6001A22684000FABE7F /* Library.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Library.xcdatamodel; sourceTree = "<group>"; };
+		C5801A891A472D97008AF5B7 /* Library 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Library 3.xcdatamodel"; sourceTree = "<group>"; };
 		C595EE191A24E46900875B82 /* Library.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Library.swift; path = CoreData/Library.swift; sourceTree = "<group>"; };
 		C595EE1B1A24E46900875B82 /* Settings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Settings.swift; path = CoreData/Settings.swift; sourceTree = "<group>"; };
 		C595EE1D1A24E46900875B82 /* Photo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Photo.swift; path = CoreData/Photo.swift; sourceTree = "<group>"; };
@@ -183,7 +187,7 @@
 			isa = PBXGroup;
 			children = (
 				C5F0D4EC1A45166C008868F4 /* EonilFileSystemEvents.framework */,
-				C5F0D4EE1A45166C008868F4 /* Tester2 */,
+				C5F0D4EE1A45166C008868F4 /* InternalTester */,
 				C5F0D4F01A45166C008868F4 /* TestdriveApp.app */,
 			);
 			name = Products;
@@ -211,6 +215,7 @@
 			isa = PBXGroup;
 			children = (
 				C5F36B4C1A3D32BA002D1789 /* AppDelegate.swift */,
+				C56FD08C1A4603E3008BAEB5 /* BKTree.swift */,
 				C54215841A3E5652009852EA /* WaitSheet.xib */,
 				C54215861A3E56BF009852EA /* WaitSheet.swift */,
 				C5EB25961A390B27006C7019 /* Tasks.swift */,
@@ -344,10 +349,9 @@
 			remoteRef = C5F0D4EB1A45166C008868F4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		C5F0D4EE1A45166C008868F4 /* Tester2 */ = {
+		C5F0D4EE1A45166C008868F4 /* InternalTester */ = {
 			isa = PBXReferenceProxy;
 			fileType = "compiled.mach-o.executable";
-			name = Tester2;
 			path = InternalTester;
 			remoteRef = C5F0D4ED1A45166C008868F4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
@@ -398,6 +402,7 @@
 				C54814B31A376B3E0030D931 /* InfoViewController.swift in Sources */,
 				C595EE1C1A24E46900875B82 /* Settings.swift in Sources */,
 				C5F36B4D1A3D32BA002D1789 /* AppDelegate.swift in Sources */,
+				C56FD08D1A4603E3008BAEB5 /* BKTree.swift in Sources */,
 				C595EE1E1A24E46900875B82 /* Photo.swift in Sources */,
 				C5EB25971A390B27006C7019 /* Tasks.swift in Sources */,
 				C573A6011A22684000FABE7F /* Library.xcdatamodeld in Sources */,
@@ -610,10 +615,12 @@
 		C573A5FF1A22684000FABE7F /* Library.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				C5801A891A472D97008AF5B7 /* Library 3.xcdatamodel */,
+				C50481E41A480EA900DF4801 /* Library 4.xcdatamodel */,
 				C54215211A3E0176009852EA /* Library 2.xcdatamodel */,
 				C573A6001A22684000FABE7F /* Library.xcdatamodel */,
 			);
-			currentVersion = C54215211A3E0176009852EA /* Library 2.xcdatamodel */;
+			currentVersion = C50481E41A480EA900DF4801 /* Library 4.xcdatamodel */;
 			path = Library.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

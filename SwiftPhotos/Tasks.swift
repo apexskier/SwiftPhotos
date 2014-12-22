@@ -6,6 +6,7 @@
 //  Copyright (c) 2014 Cameron Little. All rights reserved.
 //
 
+import Cocoa
 import CoreData
 import Dispatch
 import Foundation
@@ -80,7 +81,7 @@ class TaskManager {
                 return
             }
             self.hashPhoto(photo)
-            self.qualityPhoto(photo)
+            //self.qualityPhoto(photo)
         }
     }
 
@@ -137,10 +138,29 @@ class PhotoHasher: PhotoOperation {
 
             if let photo = moc.objectWithID(self.photoID) as? Photo {
                 photo.genFhash()
-                photo.genPhash()
+                // photo.genPhash()
+                photo.genAhash()
+
+                let appDelegate = NSApplication.sharedApplication().delegate as AppDelegate
+                let dups = appDelegate.bkTree.find(photo.objectID, n: 0, moc: moc)
+                if dups.count > 0 {
+                    for p in dups {
+                        let ph = moc.objectWithID(p) as Photo
+                        let duplicates = photo.mutableSetValueForKey("duplicates")
+                        if !duplicates.containsObject(ph) {
+                            duplicates.addObject(ph)
+                        }
+                    }
+                }
+                appDelegate.bkTree.insert(photo.objectID, moc: moc)
+
+                photo.stateEnum = .Known
+
                 if !moc.save(&error) {
                     println("Coudn't save moc: \(error)")
                 }
+            } else {
+                println("missing photo \(self.photoID)")
             }
         }
     }
@@ -158,6 +178,11 @@ class PhotoDiscoverer: PhotoOperation {
 
             if let photo = moc.objectWithID(self.photoID) as? Photo {
                 photo.readData()
+                if !moc.save(&error) {
+                    println("Coudn't save moc: \(error)")
+                }
+            } else {
+                println("missing photo \(self.photoID)")
             }
         }
     }
@@ -178,6 +203,8 @@ class PhotoQualityGenerator: PhotoOperation {
                 if !moc.save(&error) {
                     println("Coudn't save moc: \(error)")
                 }
+            } else {
+                println("missing photo \(self.photoID)")
             }
         }
     }

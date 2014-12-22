@@ -59,6 +59,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             return settings
         }
     }
+
+    var bkTree = PhotoBKTree()
     
     func showInfoHUD() {()
         // TODO
@@ -82,13 +84,21 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // Insert code here to initialize your application
         //NSNotificationCenter.defaultCenter().addObserver(self, selector: "managedObjectSaved", name: NSManagedObjectContextDidSaveNotification, object: nil)
 
-        if let output = settings.output {
+        /*if let output = settings.output {
             startProcessingFolder(output.path)
         }
         if settings.imports.count > 0 {
             let folders: [Folder] = settings.imports.objectEnumerator().allObjects.reverse() as [Folder]
             for folder in folders {
                 startProcessingFolder(folder.path)
+            }
+        }*/
+        var error: NSError?
+        let request = NSFetchRequest(entityName: "Photo")
+
+        if let results = self.managedObjectContext.executeFetchRequest(request, error: &error) {
+            for photo in results as [Photo] {
+                TaskManager.sharedManager.discoverPhoto(photo)
             }
         }
 
@@ -112,61 +122,65 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         if !flag {
             let storyboard = NSStoryboard(name: "Main", bundle: nil)
             let initialView = storyboard?.instantiateInitialController() as NSWindowController
-            let mainWindow = initialView.window!
-            mainWindow.makeKeyAndOrderFront(self)
+            let mainWindow = initialView.window?
+            if mainWindow != nil {
+                mainWindow!.makeKeyAndOrderFront(self)
+            }
         }
         return true
     }
     
-    func startProcessingFolder(path: String) {
+    func startProcessingFolder(pathStr: String) {
         TaskManager.sharedManager.pendingDiscoveries.queue.suspended = true
         TaskManager.sharedManager.pendingHashes.queue.suspended = true
         TaskManager.sharedManager.pendingQuality.queue.suspended = true
-        let path = NSURL(string: path)!
-        if let dirEnumerator: NSDirectoryEnumerator = fileManager.enumeratorAtURL(
-            path,
-            includingPropertiesForKeys: [NSURLPathKey, NSURLNameKey, NSURLIsDirectoryKey],
-            options: NSDirectoryEnumerationOptions.SkipsHiddenFiles,
-            errorHandler: { (url: NSURL!, error: NSError!) -> Bool in
-                if let u = url {
-                    println("Error at \(u.relativePath!))")
-                }
-                println(error)
-                return true
-        }) {
-            
-            /*var waitWindowController = WaitSheetController()
-            var waitWindow = waitWindowController.window! as WaitSheet
-            
-            let storyboard = NSStoryboard(name: "Main", bundle: nil)
-            let initialView = storyboard?.instantiateInitialController() as NSWindowController
-            let mainWindow = initialView.window!
-            
-            mainWindow.beginSheet(waitWindow, completionHandler: nil)
-            waitWindow.title = "Please Wait"
-            waitWindow.contentText.stringValue = "Adding folder contents"
-            waitWindow.titleText.stringValue = "Please wait."*/
-            
-            for url: NSURL in dirEnumerator.allObjects as [NSURL] {
-                var error: NSError?
-                var isDirObj: AnyObject?
-                let ext: String = NSString(string: url.pathExtension!).lowercaseString as String
-                if contains(Constants.allowedExtentions, ext) {
-                    if !url.getResourceValue(&isDirObj, forKey: NSURLIsDirectoryKey, error: &error) {
-                        println("Error getting resource from url '\(url)'.\n\(error)")
-                    } else if let isDir = isDirObj as? NSNumber {
-                        if isDir == 0 {
-                            //waitWindow.contentText.stringValue = url.relativePath!
-                            println(url.relativePath!)
-                            addFile(url)
+        if let path = NSURL(string: pathStr) {
+            if let dirEnumerator: NSDirectoryEnumerator = fileManager.enumeratorAtURL(
+                path,
+                includingPropertiesForKeys: [NSURLPathKey, NSURLNameKey, NSURLIsDirectoryKey],
+                options: NSDirectoryEnumerationOptions.SkipsHiddenFiles,
+                errorHandler: { (url: NSURL!, error: NSError!) -> Bool in
+                    if let u = url {
+                        println("Error at \(u.relativePath?))")
+                    }
+                    println(error)
+                    return true
+                }) {
+                /*var waitWindowController = WaitSheetController()
+                var waitWindow = waitWindowController.window! as WaitSheet
+                
+                let storyboard = NSStoryboard(name: "Main", bundle: nil)
+                let initialView = storyboard?.instantiateInitialController() as NSWindowController
+                let mainWindow = initialView.window!
+                
+                mainWindow.beginSheet(waitWindow, completionHandler: nil)
+                waitWindow.title = "Please Wait"
+                waitWindow.contentText.stringValue = "Adding folder contents"
+                waitWindow.titleText.stringValue = "Please wait."*/
+                
+                for url: NSURL in dirEnumerator.allObjects as [NSURL] {
+                    var error: NSError?
+                    var isDirObj: AnyObject?
+                    let ext: String = NSString(string: url.pathExtension!).lowercaseString as String
+                    if contains(Constants.allowedExtentions, ext) {
+                        if !url.getResourceValue(&isDirObj, forKey: NSURLIsDirectoryKey, error: &error) {
+                            println("Error getting resource from url '\(url)'.\n\(error)")
+                        } else if let isDir = isDirObj as? NSNumber {
+                            if isDir == 0 {
+                                //waitWindow.contentText.stringValue = url.relativePath?
+                                //println(url.relativePath?)
+                                addFile(url)
+                            }
                         }
                     }
                 }
+                
+                NSNotificationCenter.defaultCenter().postNotificationName("newPhotos", object: nil)
+            } else {
+                println("Couldn't initialize NSDirectoryEnumerator for \(path)")
             }
-            
-            NSNotificationCenter.defaultCenter().postNotificationName("newPhotos", object: nil)
         } else {
-            println("Couldn't initialize NSDirectoryEnumerator for \(path)")
+            println("Couldn't create URL for \(pathStr)")
         }
         TaskManager.sharedManager.pendingDiscoveries.queue.suspended = false
         TaskManager.sharedManager.pendingHashes.queue.suspended = false
@@ -176,13 +190,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func photoFromURL(url: NSURL) -> Photo? {
         var error: NSError?
         let request = NSFetchRequest(entityName: "Photo")
-        let predicate = NSPredicate(format: "filepath == %@",
-            argumentArray: [url.absoluteString!])
-        request.predicate = predicate
-        
-        if let results = self.managedObjectContext.executeFetchRequest(request, error: &error) {
-            if results.count > 0 {
-                return results[0] as? Photo
+        if let path = url.absoluteString {
+            let predicate = NSPredicate(format: "filepath == %@",
+                argumentArray: [path])
+            request.predicate = predicate
+
+            if let results = self.managedObjectContext.executeFetchRequest(request, error: &error) {
+                if results.count > 0 {
+                    return results[0] as? Photo
+                }
             }
         }
         
@@ -195,16 +211,22 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         photo = photoFromURL(url)
         if photo == nil {
-            photo = NSEntityDescription.insertNewObjectForEntityForName("Photo", inManagedObjectContext: self.managedObjectContext) as? Photo
-            photo!.filepath = url.absoluteString!
-            photo!.stateEnum = .New
-            
-            if !self.managedObjectContext.save(&error) {
-                fatalError("Error saving: \(error)")
+            if let photo = NSEntityDescription.insertNewObjectForEntityForName("Photo", inManagedObjectContext: self.managedObjectContext) as? Photo {
+
+                photo.filepath = url.absoluteString!
+                photo.stateEnum = .New
+
+                if !self.managedObjectContext.save(&error) {
+                    fatalError("Error saving: \(error)")
+                }
             }
         }
-        
-        TaskManager.sharedManager.discoverPhoto(photo!)
+
+        if photo != nil {
+            TaskManager.sharedManager.discoverPhoto(photo!)
+        } else {
+            fatalError("No photo for url: \(url)")
+        }
     }
     
     var secondary_queue = dispatch_queue_create("camlittle.SwiftPhotos.secondary_queue", nil)
@@ -236,7 +258,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         if photo.stateEnum != .Broken {
             var removed = NSFileManager.defaultManager().removeItemAtURL(fileURL, error: error)
             if !removed {
-                println("Didn't remove file: \(fileURL.relativePath!)")
+                println("Didn't remove file: \(fileURL.relativePath?)")
             }
         }
 
@@ -247,5 +269,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         if !self.managedObjectContext.save(&err) {
             fatalError("Error saving: \(err)")
         }
+    }
+
+    func findDuplicates() {
+        /*for photo in photos {
+
+        }*/
     }
 }

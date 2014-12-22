@@ -36,6 +36,9 @@ class Photo: NSManagedObject/*, IKImageBrowserItem*/ {
     
     @NSManaged var height: NSNumber?
     @NSManaged var width: NSNumber?
+
+    @NSManaged var duplicates: NSMutableSet
+    @NSManaged var library: Library?
     
     var stateEnum: PhotoState {
         get {
@@ -70,7 +73,16 @@ class Photo: NSManagedObject/*, IKImageBrowserItem*/ {
             return
         }
         phash = NSNumber(unsignedLongLong: calcPhash(self.getImage()))
-        stateEnum = .Known
+    }
+
+    func genAhash() {
+        if stateEnum == .Broken {
+            return
+        }
+        if ahash != nil {
+            return
+        }
+        ahash = NSNumber(unsignedLongLong: calcAvghash(self.getImage()))
     }
     
     func genFhash() {
@@ -78,16 +90,19 @@ class Photo: NSManagedObject/*, IKImageBrowserItem*/ {
         if stateEnum == .Broken {
             return
         }
-        let data: NSMutableData = NSMutableData(contentsOfFile: fileURL.relativePath!)!
-        var md5: MD5 = MD5()
-        var hash = NSNumber(unsignedLongLong: CRCHash(data))
-        if hash != fhash {
-            stateEnum = .New
-            phash = nil
-            color = nil
-            exposure = nil
+        if let path = fileURL.relativePath {
+            if let data: NSMutableData = NSMutableData(contentsOfFile: path) {
+                var md5: MD5 = MD5()
+                var hash = NSNumber(unsignedLongLong: CRCHash(data))
+                if hash != fhash {
+                    stateEnum = .New
+                    phash = nil
+                    color = nil
+                    exposure = nil
+                }
+                fhash = hash
+            }
         }
-        fhash = hash
     }
     
     func genQualityMeasures() {
@@ -122,7 +137,7 @@ class Photo: NSManagedObject/*, IKImageBrowserItem*/ {
                 var r: Double = Double(data[pixelInfo])
                 var g: Double = Double(data[pixelInfo+1])
                 var b: Double = Double(data[pixelInfo+2])
-                var intensity = Int(((r + g + b) / 3.0))
+                var intensity = Int(floor((r + g + b) / 3.0))
                 
                 exposureHistogram[intensity]++
             }
@@ -130,7 +145,7 @@ class Photo: NSManagedObject/*, IKImageBrowserItem*/ {
         
         var max: Double = 0
         var min: Double = 128 * 128
-        for i in 0...255 {
+        for i in 7...247 { // trim high and low 8 to reduce frequency
             if exposureHistogram[i] < min {
                 min = exposureHistogram[i]
             } else if exposureHistogram[i] > max {
@@ -279,8 +294,10 @@ class Photo: NSManagedObject/*, IKImageBrowserItem*/ {
                 var dateFormatter = NSDateFormatter()
                 dateFormatter.dateFormat = "yyyy:MM:dd HH:mm:ss"
                 
-                if let exifDateTimeOriginal = eT["DateTimeOriginal"] {
-                    created = dateFormatter.dateFromString(exifDateTimeOriginal as String) as NSDate!
+                if let date = eT["DateTimeOriginal"] {
+                    created = dateFormatter.dateFromString(date as String) as NSDate!
+                } else if let date = eT["DateTimeDigitized"] {
+                    created = dateFormatter.dateFromString(date as String) as NSDate!
                 }
             }
         } else {

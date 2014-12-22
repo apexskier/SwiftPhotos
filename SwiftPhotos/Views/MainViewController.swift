@@ -77,13 +77,15 @@ class MainViewController: NSViewController {
     @IBOutlet weak var removeButton: NSButton!
     @IBOutlet weak var infoButton: NSButton!
     @IBOutlet weak var similarityThreshold: NSSlider!
-    @IBOutlet weak var onlyHashedCheckbox: NSButton!
+    @IBOutlet weak var onlyKnownCheckbox: NSButton!
     @IBOutlet weak var onlyBrokenCheckbox: NSButton!
     @IBOutlet weak var orderSelectBox: NSPopUpButton!
     
     @IBOutlet weak var psimCheck: NSButton!
     @IBOutlet weak var fsimCheck: NSButton!
+    @IBOutlet weak var asimCheck: NSButton!
     
+    @IBOutlet weak var dupsCheck: NSButton!
     
     @IBAction func zoomSliderChanged(sender: AnyObject) {
         imageBrowser.setZoomValue(sender.floatValue)
@@ -193,38 +195,49 @@ class MainViewController: NSViewController {
             updateImages()
         }
     }
+    @IBAction func dupsCheckChanged(sender: AnyObject) {
+
+        updateImages()
+    }
     
     @IBAction func similarSliderChange(sender: AnyObject) {
-        var state = fsimCheck.state
-        if state == 1 {
-            showSimilarF(sender)
+        if asimCheck.state == 1 {
+            showSimilarA(sender)
         } else {
-            state = psimCheck.state
-            if state == 1 {
-                showSimilarP(sender)
+            if fsimCheck.state == 1 {
+                showSimilarF(sender)
+            } else {
+                if psimCheck.state == 1 {
+                    showSimilarP(sender)
+                }
             }
         }
     }
-    @IBAction func showOnlyHashedChange(sender: AnyObject) {
+    @IBAction func showOnlyKnownChange(sender: AnyObject) {
+        onlyBrokenCheckbox.state = 0
         updateImages()
     }
     @IBAction func showOnlyBrokenChange(sender: AnyObject) {
+        onlyKnownCheckbox.state = 0
         updateImages()
     }
     @IBAction func showSimilarF(sender: AnyObject) {
         var state = fsimCheck.state
         if state == 1 {
             psimCheck.state = 0
-            if let Ahash = selectedPhoto!.fhash {
-                let ahash: UInt64 = Ahash.unsignedLongLongValue
-                self.imagesFilter = { (photo: Photo) -> Bool in
-                    if let bhash = photo.fhash {
-                        let dist = hammingDistance(ahash, bhash.unsignedLongLongValue)
-                        if dist <= self.similarityThreshold.integerValue {
-                            return true
+            asimCheck.state = 0
+            if let photo = selectedPhoto {
+                if let Ahash = photo.fhash {
+                    let ahash: UInt64 = Ahash.unsignedLongLongValue
+                    self.imagesFilter = { (photo: Photo) -> Bool in
+                        if let bhash = photo.fhash {
+                            let dist = hammingDistance(ahash, bhash.unsignedLongLongValue)
+                            if dist <= self.similarityThreshold.integerValue {
+                                return true
+                            }
                         }
+                        return false
                     }
-                    return false
                 }
             }
         } else {
@@ -236,16 +249,43 @@ class MainViewController: NSViewController {
         var state = psimCheck.state
         if state == 1 {
             fsimCheck.state = 0
-            if let Ahash = selectedPhoto!.phash {
-                let ahash: UInt64 = Ahash.unsignedLongLongValue
-                self.imagesFilter = { (photo: Photo) -> Bool in
-                    if let bhash = photo.phash {
-                        let dist = hammingDistance(ahash, bhash.unsignedLongLongValue)
-                        if dist <= self.similarityThreshold.integerValue {
-                            return true
+            asimCheck.state = 0
+            if let photo = selectedPhoto {
+                if let Ahash = photo.phash {
+                    let ahash: UInt64 = Ahash.unsignedLongLongValue
+                    self.imagesFilter = { (photo: Photo) -> Bool in
+                        if let bhash = photo.phash {
+                            let dist = hammingDistance(ahash, bhash.unsignedLongLongValue)
+                            if dist <= self.similarityThreshold.integerValue {
+                                return true
+                            }
                         }
+                        return false
                     }
-                    return false
+                }
+            }
+        } else {
+            imagesFilter = nil
+        }
+        updateImages()
+    }
+    @IBAction func showSimilarA(sender: AnyObject) {
+        var state = asimCheck.state
+        if state == 1 {
+            fsimCheck.state = 0
+            psimCheck.state = 0
+            if let photo = selectedPhoto {
+                if let Ahash = photo.ahash {
+                    let ahash: UInt64 = Ahash.unsignedLongLongValue
+                    self.imagesFilter = { (photo: Photo) -> Bool in
+                        if let bhash = photo.ahash {
+                            let dist = hammingDistance(ahash, bhash.unsignedLongLongValue)
+                            if dist <= self.similarityThreshold.integerValue {
+                                return true
+                            }
+                        }
+                        return false
+                    }
                 }
             }
         } else {
@@ -257,6 +297,8 @@ class MainViewController: NSViewController {
         NSNotificationCenter.defaultCenter().postNotificationName("getInfo", object: selectedPhoto)
         appDelegate.showInfoHUD()
     }
+
+
     
     @IBAction func orderButtonChange(sender: AnyObject) {
         /*let selectButton = sender as NSPopUpButton
@@ -343,6 +385,14 @@ class MainViewController: NSViewController {
         return true
     }*/
     func order(p1: Photo, p2: Photo) -> Bool {
+        if dupsCheck.state == 1 {
+            if let e1 = p1.ahash {
+                if let e2 = p2.ahash {
+                    return Double(e1) < Double(e2)
+                }
+            }
+            return true
+        }
         let selectButton = orderSelectBox
         let selection = selectButton.indexOfSelectedItem
         switch selection {
@@ -407,14 +457,16 @@ class MainViewController: NSViewController {
                 photos = self.photos
             }
             photos = sorted(photos.filter({ (photo: Photo) -> Bool in
-                if self.onlyHashedCheckbox.state == 1 {
-                    if let phash = photo.phash {
-                        // pass
-                    } else {
+                if self.dupsCheck.state == 1 {
+                    if photo.duplicates.count == 0 {
                         return false
                     }
                 }
-                if self.onlyBrokenCheckbox.state == 1 {
+                if self.onlyKnownCheckbox.state == 1 {
+                    if photo.stateEnum != .Known {
+                        return false
+                    }
+                } else if self.onlyBrokenCheckbox.state == 1 {
                     if photo.stateEnum != .Broken {
                         return false
                     }
@@ -443,6 +495,7 @@ class MainViewController: NSViewController {
         showInFinderButton.enabled = false
         psimCheck.enabled = false
         fsimCheck.enabled = false
+        asimCheck.enabled = false
         removeButton.enabled = false
         appDelegate.getInfoMenuItem.enabled = false
         infoButton.enabled = false
@@ -452,6 +505,7 @@ class MainViewController: NSViewController {
                 showInFinderButton.enabled = true
                 psimCheck.enabled = true
                 fsimCheck.enabled = true
+                asimCheck.enabled = true
                 appDelegate.getInfoMenuItem.enabled = true
                 //infoButton.enabled = true
             }
@@ -459,6 +513,7 @@ class MainViewController: NSViewController {
         } else {
             psimCheck.state = 0
             fsimCheck.state = 0
+            asimCheck.state = 0
             showSimilarF(fsimCheck)
         }
         NSNotificationCenter.defaultCenter().postNotificationName("selectionChanged", object: nil)

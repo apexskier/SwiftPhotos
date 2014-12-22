@@ -12,7 +12,7 @@ import CoreData
 class Library: NSManagedObject {
 
     @NSManaged var name: String
-    @NSManaged var settings: Settings
+    @NSManaged var settings: Settings?
     @NSManaged var photos: [Photo]
 
 }

@@ -22,43 +22,43 @@
 		</data>
 		<key>Resources/Main.storyboardc/0vp-VM-WNX-view-TUB-pw-Ewc.nib</key>
 		<data>
-		fORLfBf+BCBeLfAlcRiiICSbwQE=
+		r6VRdI/1bFHlJiNbXlPcAH+sigo=
 		</data>
 		<key>Resources/Main.storyboardc/HqY-8e-BBv-view-yC5-ja-SFS.nib</key>
 		<data>
-		1yioDHHpOZMBDO7JdJY1NQGNdng=
+		+6AFBqQNGpw8atn5W7xXBiM0ud0=
 		</data>
 		<key>Resources/Main.storyboardc/I0T-s4-qUq-view-Na1-PT-cMx.nib</key>
 		<data>
-		Avf/SgUzJQB5RAWXHOEPy+J0vaY=
+		Pw5J7GEdN6grLyVQjwuCFWhyQIs=
 		</data>
 		<key>Resources/Main.storyboardc/Info.plist</key>
 		<data>
-		SmIdx1AEqBACZbMZh7EdggD4Bns=
+		Zyl9hNqJHtTM4LpfeyN9gxBCaF4=
 		</data>
 		<key>Resources/Main.storyboardc/Isx-t4-DDu-view-p8X-aa-f9l.nib</key>
 		<data>
-		mGoozClvko2p6XDndlzcaHjiDc8=
+		uN9xdSt3GDdBw3kvp3mF9LOGVD0=
 		</data>
 		<key>Resources/Main.storyboardc/MainMenu.nib</key>
 		<data>
-		y7EVE92SgmFaTUvb7ExcDPWSrvQ=
+		ivaNtKz6VttUAhhNu5SbFkHyaIo=
 		</data>
 		<key>Resources/Main.storyboardc/NSWindowController-M7p-fm-YUd.nib</key>
 		<data>
-		6cIfQB2BPcR6UbSPtUxVKEImrCo=
+		KkSZWZ/s/1iWry55yWNIOKeLRks=
 		</data>
 		<key>Resources/Main.storyboardc/NSWindowController-RbV-IH-fiS.nib</key>
 		<data>
-		inmVXWCKjTBlXPO17H+eQXPyr58=
+		LNQzV87G0CQWN4DoCtbX+R9vJ1o=
 		</data>
 		<key>Resources/Main.storyboardc/NSWindowController-gme-BT-sGl.nib</key>
 		<data>
-		XXherwqWM7WB5M7o91COAsMTIt8=
+		fq9vwWC9H4ANnmCjenwHkWUZ2TE=
 		</data>
 		<key>Resources/Main.storyboardc/NSWindowController-ylS-Le-OWr.nib</key>
 		<data>
-		ECjLh5XjDzxyG28NSQ7acGyyWi4=
+		ybx3LIeDXR1MlzjTak+YVH55U5Q=
 		</data>
 		<key>Resources/SwiftPhotosAppIcon.icns</key>
 		<data>
@@ -71,6 +71,15 @@
 	</dict>
 	<key>files2</key>
 	<dict>
+		<key>Frameworks/EonilFileSystemEvents.framework</key>
+		<dict>
+			<key>cdhash</key>
+			<data>
+			EZoTN9YPFfgZItIKsjlWx4g3BYw=
+			</data>
+			<key>requirement</key>
+			<string>cdhash H"119a1337d60f15f81922d20ab23956c78837058c"</string>
+		</dict>
 		<key>Frameworks/libswiftAppKit.dylib</key>
 		<dict>
 			<key>cdhash</key>
@@ -170,43 +179,43 @@
 		</data>
 		<key>Resources/Main.storyboardc/0vp-VM-WNX-view-TUB-pw-Ewc.nib</key>
 		<data>
-		fORLfBf+BCBeLfAlcRiiICSbwQE=
+		r6VRdI/1bFHlJiNbXlPcAH+sigo=
 		</data>
 		<key>Resources/Main.storyboardc/HqY-8e-BBv-view-yC5-ja-SFS.nib</key>
 		<data>
-		1yioDHHpOZMBDO7JdJY1NQGNdng=
+		+6AFBqQNGpw8atn5W7xXBiM0ud0=
 		</data>
 		<key>Resources/Main.storyboardc/I0T-s4-qUq-view-Na1-PT-cMx.nib</key>
 		<data>
-		Avf/SgUzJQB5RAWXHOEPy+J0vaY=
+		Pw5J7GEdN6grLyVQjwuCFWhyQIs=
 		</data>
 		<key>Resources/Main.storyboardc/Info.plist</key>
 		<data>
-		SmIdx1AEqBACZbMZh7EdggD4Bns=
+		Zyl9hNqJHtTM4LpfeyN9gxBCaF4=
 		</data>
 		<key>Resources/Main.storyboardc/Isx-t4-DDu-view-p8X-aa-f9l.nib</key>
 		<data>
-		mGoozClvko2p6XDndlzcaHjiDc8=
+		uN9xdSt3GDdBw3kvp3mF9LOGVD0=
 		</data>
 		<key>Resources/Main.storyboardc/MainMenu.nib</key>
 		<data>
-		y7EVE92SgmFaTUvb7ExcDPWSrvQ=
+		ivaNtKz6VttUAhhNu5SbFkHyaIo=
 		</data>
 		<key>Resources/Main.storyboardc/NSWindowController-M7p-fm-YUd.nib</key>
 		<data>
-		6cIfQB2BPcR6UbSPtUxVKEImrCo=
+		KkSZWZ/s/1iWry55yWNIOKeLRks=
 		</data>
 		<key>Resources/Main.storyboardc/NSWindowController-RbV-IH-fiS.nib</key>
 		<data>
-		inmVXWCKjTBlXPO17H+eQXPyr58=
+		LNQzV87G0CQWN4DoCtbX+R9vJ1o=
 		</data>
 		<key>Resources/Main.storyboardc/NSWindowController-gme-BT-sGl.nib</key>
 		<data>
-		XXherwqWM7WB5M7o91COAsMTIt8=
+		fq9vwWC9H4ANnmCjenwHkWUZ2TE=
 		</data>
 		<key>Resources/Main.storyboardc/NSWindowController-ylS-Le-OWr.nib</key>
 		<data>
-		ECjLh5XjDzxyG28NSQ7acGyyWi4=
+		ybx3LIeDXR1MlzjTak+YVH55U5Q=
 		</data>
 		<key>Resources/SwiftPhotosAppIcon.icns</key>
 		<data>

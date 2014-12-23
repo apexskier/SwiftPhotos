@@ -449,7 +449,23 @@ class MainViewController: NSViewController {
         }
         filterOperation = FilterOperation({
             self.progressIndicator.startAnimation(self)
-            
+            // TODO: disable selection
+
+            /*if self.dupsCheck.state == 1 {
+                let request = NSFetchRequest(entityName: "Photo")
+                let predicate = NSPredicate(format: "duplicates.@count != 0",
+                    argumentArray: [])
+                request.predicate = predicate
+
+                var error: NSError?
+                if let results = self.managedObjectContext.executeFetchRequest(request, error: &error) {
+                    self.images = results as [Photo]
+                    return
+                } else {
+                    fatalError("Failed to query: \(error)")
+                }
+            }*/
+
             var photos: [Photo]
             if let filter = self.imagesFilter {
                 photos = self.photos.filter(filter)
@@ -458,6 +474,7 @@ class MainViewController: NSViewController {
             }
             photos = sorted(photos.filter({ (photo: Photo) -> Bool in
                 if self.dupsCheck.state == 1 {
+                    let d = photo.duplicates
                     if photo.duplicates.count == 0 {
                         return false
                     }

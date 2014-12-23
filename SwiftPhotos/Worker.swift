@@ -114,6 +114,8 @@ class HashWorker: Worker {
     }
 
     override func task(photo: Photo) {
+        photo.readData()
+        photo.stateEnum = .Known
         photo.genFhash()
         // photo.genPhash()
         photo.genAhash()

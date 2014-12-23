@@ -80,7 +80,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     var observers: [AnyObject] = []
 
-    let discoveryWorker = DiscoveryWorker()
+    //let discoveryWorker = DiscoveryWorker()
     var hashWorker: HashWorker?
     
     func applicationDidFinishLaunching(aNotification: NSNotification?) {
@@ -110,7 +110,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         for observer in observers {
             NSNotificationCenter.defaultCenter().removeObserver(observer)
         }
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+        //NSNotificationCenter.defaultCenter().removeObserver(self)
         var error: NSError?
         if !self.managedObjectContext.save(&error) {
             fatalError("Error saving: \(error)")

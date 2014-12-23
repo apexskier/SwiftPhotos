@@ -25,15 +25,46 @@ extension NSImage {
     }
 }
 
-func calcAvghash(image: NSImage) -> UInt64 {
+func createCGImage(imageURL: NSURL) -> CGImage? {
+    var imageSource = CGImageSourceCreateWithURL(imageURL, nil)
+    if imageSource == nil {
+        return nil
+    }
+    var image = CGImageSourceCreateImageAtIndex(imageSource, 0, nil)
+    if image == nil {
+        return nil
+    }
+    // so I don't need to relase the imageSource?
+
+    return image!
+}
+
+func calcAvghash(imageURL: NSURL) -> UInt64 {
+    let image = createCGImage(imageURL)
+
     // 1. Reduce size to 8x8.
     // 2. Reduce to grayscale.
-    var workingImage = imageToGreyImage(image, CGSize(width: 8, height: 8))
-    
+
+    // Begin resizeing
+    // http://nshipster.com/image-resizing/
+    let bitsPerComponent: UInt = 8
+    let bytesPerRow: UInt = 0
+    // bonus: cast to grayscale
+    let colorSpace = CGColorSpaceCreateDeviceGray()
+    let bitmapInfo = CGBitmapInfo(CGImageAlphaInfo.None.rawValue)
+
+    let context = CGBitmapContextCreate(nil, 8, 8, bitsPerComponent, bytesPerRow, colorSpace, bitmapInfo)
+    CGContextSetInterpolationQuality(context, kCGInterpolationHigh)
+
+    CGContextDrawImage(context, CGRect(origin: CGPointZero, size: CGSize(width: CGFloat(8), height: CGFloat(8))), image)
+
+    let scaledImage = CGBitmapContextCreateImage(context)
+    // End resizing
+
     var imageColors = [[Double]](count: 8, repeatedValue: [Double](count: 8, repeatedValue: 0.0))
     
     // Get array of pixel data of working image
-    var pixelData = CGDataProviderCopyData(CGImageGetDataProvider(workingImage.CGImage))
+    var pixelData = CGDataProviderCopyData(CGImageGetDataProvider(scaledImage))
     var data: UnsafePointer<UInt8> = CFDataGetBytePtr(pixelData)
     
     // 3. Average the colors
@@ -408,7 +439,7 @@ class MD5 {
         
         var intArrDigest: [UInt32] = [a0, b0, c0, d0]
         // var digest: [char][16]
-        var dataDigest = NSMutableData(bytes: &intArrDigest, length: 16)
+        var dataDigest = NSData(bytes: &intArrDigest, length: 16)
         /*var charDigest: [Character] = [Character](count: 16, repeatedValue: "\0")
         dataDigest.getBytes(&charDigest, length: 16)
         for char in charDigest {
@@ -428,18 +459,15 @@ class MD5 {
 
 
 
-func CRCHash(data: NSMutableData) -> UInt64 {
+func CRCHash(data: NSData) -> UInt64 {
     // Variation of CRC32
     let poly: UInt64 = 0x67452301
     var shiftReg: UInt64 = 0
+    var chunk: UInt8 = 0
     for i in 1...(data.length - 1) {
-        var chunk = data.subdataWithRange(NSRange(location: i, length: 1))
-        
-        // break chunk into sixteen 32-bit words
-        var c: UInt8 = 0
-        chunk.getBytes(&c, length: sizeof(UInt8))
-        
-        if (c & 8) != 0 {
+        data.getBytes(&chunk, range: NSRange(location: i, length: 1))
+
+        if (chunk & 8) != 0 {
             shiftReg = (shiftReg << 1) ^ 0x67452301
         } else {
             shiftReg = (shiftReg << 1)

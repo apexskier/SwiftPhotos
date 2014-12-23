@@ -82,6 +82,9 @@ class PhotoBKTree {
     }
 
     private func compare(id1: NSManagedObjectID, id2: NSManagedObjectID, moc: NSManagedObjectContext) -> Int {
+        if id1 == id2 {
+            return 0
+        }
         if let p1 = moc.objectWithID(id1) as? Photo {
             if let p2 = moc.objectWithID(id2) as? Photo {
                 if p1.ahash != nil && p2.ahash != nil {
@@ -105,6 +108,9 @@ class PhotoBKTree {
 
     private func _insert(node: NSManagedObjectID, _ root: NSManagedObjectID, moc: NSManagedObjectContext) {
         let d = compare(node, id2: root, moc: moc)
+        if root == node {
+            return
+        }
         if let children = edges[root] {
             for (child, d2) in children {
                 if d2 == d {

@@ -82,7 +82,7 @@ class Photo: NSManagedObject/*, IKImageBrowserItem*/ {
         if ahash != nil {
             return
         }
-        ahash = NSNumber(unsignedLongLong: calcAvghash(self.getImage()))
+        ahash = NSNumber(unsignedLongLong: calcAvghash(self.fileURL))
     }
     
     func genFhash() {

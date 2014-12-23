@@ -79,6 +79,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     var observers: [AnyObject] = []
+
+    let discoveryWorker = DiscoveryWorker()
+    var hashWorker: HashWorker?
     
     func applicationDidFinishLaunching(aNotification: NSNotification?) {
         // Insert code here to initialize your application
@@ -93,14 +96,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 startProcessingFolder(folder.path)
             }
         }*/
-        var error: NSError?
-        let request = NSFetchRequest(entityName: "Photo")
+        hashWorker = HashWorker(delegate: self)
 
-        if let results = self.managedObjectContext.executeFetchRequest(request, error: &error) {
-            for photo in results as [Photo] {
-                TaskManager.sharedManager.discoverPhoto(photo)
-            }
-        }
+        //discoveryWorker.start()
+        hashWorker!.start()
 
         // start the filesystem monitor
         FileSystemMonitor.sharedManager.start()
@@ -131,9 +130,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     func startProcessingFolder(pathStr: String) {
-        TaskManager.sharedManager.pendingDiscoveries.queue.suspended = true
-        TaskManager.sharedManager.pendingHashes.queue.suspended = true
-        TaskManager.sharedManager.pendingQuality.queue.suspended = true
         if let path = NSURL(string: pathStr) {
             if let dirEnumerator: NSDirectoryEnumerator = fileManager.enumeratorAtURL(
                 path,
@@ -182,15 +178,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         } else {
             println("Couldn't create URL for \(pathStr)")
         }
-        TaskManager.sharedManager.pendingDiscoveries.queue.suspended = false
-        TaskManager.sharedManager.pendingHashes.queue.suspended = false
-        TaskManager.sharedManager.pendingQuality.queue.suspended = false
     }
     
     func photoFromURL(url: NSURL) -> Photo? {
         var error: NSError?
-        let request = NSFetchRequest(entityName: "Photo")
         if let path = url.absoluteString {
+            let request = NSFetchRequest(entityName: "Photo")
             let predicate = NSPredicate(format: "filepath == %@",
                 argumentArray: [path])
             request.predicate = predicate
@@ -219,13 +212,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 if !self.managedObjectContext.save(&error) {
                     fatalError("Error saving: \(error)")
                 }
-            }
-        }
 
-        if photo != nil {
-            TaskManager.sharedManager.discoverPhoto(photo!)
-        } else {
-            fatalError("No photo for url: \(url)")
+                // TODO: start up discover worker
+            }
         }
     }
     
@@ -237,7 +226,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             if let photo = photoFromURL(url) {
                 photo.stateEnum = .Broken
                 var error: NSError?
-                deletePhoto(photo, error: &error)
+                AppDelegate.deletePhoto(photo.objectID, error: &error)
                 if error != nil {
                     println("Error deleting photo: \(error)")
                 }
@@ -251,7 +240,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         NSNotificationCenter.defaultCenter().postNotificationName("newPhotos", object: nil)
     }
     
-    func deletePhoto(photo: Photo, error: NSErrorPointer) {
+    class func deletePhoto(photoID: NSManagedObjectID, error: NSErrorPointer) {
+        let moc = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
+        moc.persistentStoreCoordinator = CoreDataStackManager.sharedManager.persistentStoreCoordinator
+
+        let photo = moc.objectWithID(photoID) as Photo
+
         var fileURL = photo.fileURL
         var filePath = photo.filepath
         
@@ -259,15 +253,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             var removed = NSFileManager.defaultManager().removeItemAtURL(fileURL, error: error)
             if !removed {
                 println("Didn't remove file: \(fileURL.relativePath?)")
+                return
             }
         }
 
-        TaskManager.sharedManager.cancelPhoto(filePath)
+        for dup in photo.duplicates {
+            dup.mutableSetValueForKey("duplicates").removeObject(photo)
+        }
         
-        managedObjectContext.deleteObject(photo)
-        var err: NSError?
-        if !self.managedObjectContext.save(&err) {
-            fatalError("Error saving: \(err)")
+        moc.deleteObject(photo)
+        if !moc.save(error) {
+            fatalError("Error saving: \(error)")
         }
     }
 

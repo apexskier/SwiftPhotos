@@ -181,7 +181,7 @@ class MainViewController: NSViewController {
                 for var i = (location + length - 1); i >= location; i-- {
                     if i != -1 {
                         var photo = self.images[i]
-                        self.appDelegate.deletePhoto(photo, error: &error)
+                        AppDelegate.deletePhoto(photo.objectID, error: &error)
                         if error != nil {
                             println("Failed to remove file: \(error)")
                             stop.initialize(true)

@@ -28,34 +28,31 @@ class TaskManager {
     var pendingHashes =  OperationQueue("hashQueue", qualityOfService: .Background)
     var pendingQuality =  OperationQueue("qualityQueue", qualityOfService: .Background)
 
-    func cancelPhoto(path: String) {
-        if let task = pendingDiscoveries.inProgress.removeValueForKey(path) {
+    func cancelPhoto(id: NSManagedObjectID) {
+        if let task = pendingDiscoveries.inProgress.removeValueForKey(id) {
             task.cancel()
         }
-        if let task = pendingHashes.inProgress.removeValueForKey(path) {
+        if let task = pendingHashes.inProgress.removeValueForKey(id) {
             task.cancel()
         }
-        if let task = pendingQuality.inProgress.removeValueForKey(path) {
+        if let task = pendingQuality.inProgress.removeValueForKey(id) {
             task.cancel()
         }
     }
 
-    func photoTask(photo: Photo, queue: OperationQueue, optype: String, then: () -> ()) {
-        let path = photo.filepath
-        let id = photo.objectID
-
-        if let currentOperation = queue.inProgress[path] {
+    func photoTask(photoID: NSManagedObjectID, queue: OperationQueue, optype: String, then: () -> ()) {
+        if let currentOperation = queue.inProgress[photoID] {
             return
         }
 
         var op: NSOperation
         switch optype {
         case "PhotoDiscoverer":
-            op = PhotoDiscoverer(photoID: id, qos: .Utility)
+            op = PhotoDiscoverer(photoID: photoID, qos: .Utility)
         case "PhotoHasher":
-            op = PhotoHasher(photoID: id, qos: .Background)
+            op = PhotoHasher(photoID: photoID, qos: .Background)
         case "PhotoQualityGenerator":
-            op = PhotoQualityGenerator(photoID: id, qos: .Background)
+            op = PhotoQualityGenerator(photoID: photoID, qos: .Background)
         default:
             fatalError("Unknown operation type: \(optype)")
         }
@@ -65,34 +62,29 @@ class TaskManager {
             }
             dispatch_async(dispatch_get_main_queue(), {
                 NSNotificationCenter.defaultCenter().postNotificationName("completedTask", object: nil)
-                queue.inProgress.removeValueForKey(photo.filepath)
+                queue.inProgress.removeValueForKey(photoID)
                 then()
                 return
             })
         }
 
-        queue.inProgress[path] = op
+        queue.inProgress[photoID] = op
         queue.queue.addOperation(op)
     }
 
-    func discoverPhoto(photo: Photo) {
-        photoTask(photo, queue: pendingDiscoveries, optype: "PhotoDiscoverer") {
-            if photo.stateEnum == .Broken {
-                return
-            }
-            self.hashPhoto(photo)
+    func discoverPhoto(photoID: NSManagedObjectID) {
+        photoTask(photoID, queue: pendingDiscoveries, optype: "PhotoDiscoverer") {
+            self.hashPhoto(photoID)
             //self.qualityPhoto(photo)
         }
     }
 
-    func hashPhoto(photo: Photo) {
-        if photo.stateEnum == .New {
-            photoTask(photo, queue: pendingHashes, optype: "PhotoHasher") {}
-        }
+    func hashPhoto(photoID: NSManagedObjectID) {
+        photoTask(photoID, queue: pendingHashes, optype: "PhotoHasher") {}
     }
 
-    func qualityPhoto(photo: Photo) {
-        photoTask(photo, queue: pendingQuality, optype: "PhotoQualityGenerator") {}
+    func qualityPhoto(photoID: NSManagedObjectID) {
+        photoTask(photoID, queue: pendingQuality, optype: "PhotoQualityGenerator") {}
     }
 }
 
@@ -100,7 +92,7 @@ class TaskManager {
 class OperationQueue {
     var name: String
     var qualityOfService: NSQualityOfService
-    lazy var inProgress = [String:NSOperation]()
+    lazy var inProgress = [NSManagedObjectID:NSOperation]()
     lazy var queue: NSOperationQueue = {
         var q = NSOperationQueue()
         q.name = self.name
@@ -137,6 +129,9 @@ class PhotoHasher: PhotoOperation {
             var error: NSError?
 
             if let photo = moc.objectWithID(self.photoID) as? Photo {
+                if photo.stateEnum == .Broken {
+                    return
+                }
                 photo.genFhash()
                 // photo.genPhash()
                 photo.genAhash()
@@ -177,9 +172,13 @@ class PhotoDiscoverer: PhotoOperation {
             var error: NSError?
 
             if let photo = moc.objectWithID(self.photoID) as? Photo {
-                photo.readData()
-                if !moc.save(&error) {
-                    println("Coudn't save moc: \(error)")
+                if photo.stateEnum == .Broken || photo.created != nil {
+                    return
+                } else {
+                    photo.readData()
+                    if !moc.save(&error) {
+                        println("Coudn't save moc: \(error)")
+                    }
                 }
             } else {
                 println("missing photo \(self.photoID)")

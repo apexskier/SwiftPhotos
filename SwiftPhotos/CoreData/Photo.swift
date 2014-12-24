@@ -274,6 +274,9 @@ class Photo: NSManagedObject/*, IKImageBrowserItem*/ {
         if stateEnum == .Broken {
             return
         }
+        if created != nil {
+            return
+        }
         let imageSource = CGImageSourceCreateWithURL(fileURL, nil)
         
         var index: UInt = 0

@@ -18,9 +18,7 @@ import CoreFoundation
 extension NSImage {
     var CGImage: CGImageRef {
         get {
-            let imageData = self.TIFFRepresentation
-            var source = CGImageSourceCreateWithData(imageData, nil)
-            return CGImageSourceCreateImageAtIndex(source, UInt(0), nil)
+            fatalError("NSImage.CGImage no longer supported")
         }
     }
 }

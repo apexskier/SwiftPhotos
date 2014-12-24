@@ -79,9 +79,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     var observers: [AnyObject] = []
-
-    //let discoveryWorker = DiscoveryWorker()
-    var hashWorker: HashWorker?
     
     func applicationDidFinishLaunching(aNotification: NSNotification?) {
         // Insert code here to initialize your application
@@ -96,10 +93,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 startProcessingFolder(folder.path)
             }
         }*/
-        hashWorker = HashWorker(delegate: self)
+        var error: NSError?
+        let request = NSFetchRequest(entityName: "Photo")
 
-        //discoveryWorker.start()
-        hashWorker!.start()
+        if let results = self.managedObjectContext.executeFetchRequest(request, error: &error) {
+            for photo in results as [Photo] {
+                println(photo.filepath)
+                TaskManager.sharedManager.discoverPhoto(photo.objectID)
+            }
+        }
 
         // start the filesystem monitor
         FileSystemMonitor.sharedManager.start()
@@ -130,10 +132,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     func startProcessingFolder(pathStr: String) {
+        TaskManager.sharedManager.pendingDiscoveries.queue.suspended = true
+        TaskManager.sharedManager.pendingHashes.queue.suspended = true
+        TaskManager.sharedManager.pendingQuality.queue.suspended = true
         if let path = NSURL(string: pathStr) {
             if let dirEnumerator: NSDirectoryEnumerator = fileManager.enumeratorAtURL(
                 path,
-                includingPropertiesForKeys: [NSURLPathKey, NSURLNameKey, NSURLIsDirectoryKey],
+                includingPropertiesForKeys: [NSURLPathKey, NSURLIsDirectoryKey],
                 options: NSDirectoryEnumerationOptions.SkipsHiddenFiles,
                 errorHandler: { (url: NSURL!, error: NSError!) -> Bool in
                     if let u = url {
@@ -178,6 +183,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         } else {
             println("Couldn't create URL for \(pathStr)")
         }
+        TaskManager.sharedManager.pendingDiscoveries.queue.suspended = false
+        TaskManager.sharedManager.pendingHashes.queue.suspended = false
+        TaskManager.sharedManager.pendingQuality.queue.suspended = false
     }
     
     func photoFromURL(url: NSURL) -> Photo? {
@@ -212,9 +220,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 if !self.managedObjectContext.save(&error) {
                     fatalError("Error saving: \(error)")
                 }
-
-                // TODO: start up discover worker
             }
+        }
+
+        if photo != nil {
+            TaskManager.sharedManager.discoverPhoto(photo!.objectID)
+        } else {
+            fatalError("No photo for url: \(url)")
         }
     }
     
@@ -247,20 +259,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let photo = moc.objectWithID(photoID) as Photo
 
         var fileURL = photo.fileURL
-        var filePath = photo.filepath
-        
+
         if photo.stateEnum != .Broken {
             var removed = NSFileManager.defaultManager().removeItemAtURL(fileURL, error: error)
             if !removed {
                 println("Didn't remove file: \(fileURL.relativePath?)")
-                return
             }
         }
 
-        for dup in photo.duplicates {
-            dup.mutableSetValueForKey("duplicates").removeObject(photo)
-        }
-        
+        TaskManager.sharedManager.cancelPhoto(photo.objectID)
+
+        // TODO: Remove object from BKTree
+
         moc.deleteObject(photo)
         if !moc.save(error) {
             fatalError("Error saving: \(error)")

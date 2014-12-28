@@ -12,18 +12,18 @@
     </entity>
     <entity name="Photo" representedClassName="SwiftPhotos.Photo" syncable="YES">
         <attribute name="ahash" optional="YES" attributeType="Integer 64" syncable="YES"/>
-        <attribute name="color" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
-        <attribute name="colorBlue" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
-        <attribute name="colorGreen" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
-        <attribute name="colorRed" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="color" optional="YES" attributeType="Integer 64" syncable="YES"/>
+        <attribute name="colorBlue" optional="YES" attributeType="Integer 64" syncable="YES"/>
+        <attribute name="colorGreen" optional="YES" attributeType="Integer 64" syncable="YES"/>
+        <attribute name="colorRed" optional="YES" attributeType="Integer 64" syncable="YES"/>
         <attribute name="created" optional="YES" attributeType="Date" syncable="YES"/>
-        <attribute name="exposure" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="exposure" optional="YES" attributeType="Integer 64" syncable="YES"/>
         <attribute name="fhash" optional="YES" attributeType="Integer 64" syncable="YES"/>
         <attribute name="filepath" attributeType="String" syncable="YES"/>
-        <attribute name="height" optional="YES" attributeType="Integer 64" defaultValueString="-1" syncable="YES"/>
+        <attribute name="height" optional="YES" attributeType="Integer 64" minValueString="0" syncable="YES"/>
         <attribute name="phash" optional="YES" attributeType="Integer 64" syncable="YES"/>
-        <attribute name="state" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="width" optional="YES" attributeType="Integer 64" defaultValueString="-1" syncable="YES"/>
+        <attribute name="state" attributeType="Integer 16" syncable="YES"/>
+        <attribute name="width" optional="YES" attributeType="Integer 64" minValueString="0" syncable="YES"/>
         <relationship name="duplicates" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Photo" inverseName="duplicates" inverseEntity="Photo" syncable="YES"/>
         <relationship name="library" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Library" inverseName="photos" inverseEntity="Library" syncable="YES"/>
     </entity>

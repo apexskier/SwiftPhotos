@@ -77,6 +77,15 @@ class PhotoBKTree {
         }
     }
     
+    func remove(photoID id: NSManagedObjectID, managedObjectContext moc: NSManagedObjectContext) -> Bool {
+        if let root = _root {
+            if root.photoID == id {
+                return false
+            }
+        }
+        return false
+    }
+    
     func search(photoID id: NSManagedObjectID, distance d: Int, managedObjectContext moc: NSManagedObjectContext) -> [NSManagedObjectID] {
         var ret = [NSManagedObjectID]()
         _search(_root, ret: &ret, photoID: id, distance: d, managedObjectContext: moc)

@@ -133,7 +133,7 @@ class TaskManager {
         })
 
         hashPhoto(photoID)
-        // qualityPhoto(photoID)
+        qualityPhoto(photoID)
     }
 
     func hashPhoto(photoID: NSManagedObjectID) {

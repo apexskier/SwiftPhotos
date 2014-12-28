@@ -48,22 +48,21 @@ class FileSystemMonitor {
                 
                 if filename[filename.startIndex] != "." {
                     let	flagsRaw = event.flag.rawValue
-                    var action = false
                     for i:UInt32 in 0..<16 {
                         let	flag = 0b01 << i
                         let	ok = (flag & flagsRaw) > 0
                         if ok {
                             // this flag was found
                             let	s = "\(StringFromEventFlag(flag)) \(path)"
+                            println(s)
                             switch Int(flag) {
                             case kFSEventStreamEventFlagUnmount:
-                                println(s)
+                                break
                             case kFSEventStreamEventFlagItemCreated:
-                                self.appDelegate.changeFound(pathURL, change: .Added)
-                                action = true
+                                //self.appDelegate.changeFound(pathURL, change: .Added)
+                                break
                             case kFSEventStreamEventFlagItemRemoved:
                                 self.appDelegate.changeFound(pathURL, change: .Removed)
-                                action = true
                             case kFSEventStreamEventFlagItemInodeMetaMod:
                                 break
                             case kFSEventStreamEventFlagItemRenamed:
@@ -89,7 +88,6 @@ class FileSystemMonitor {
                                     // file missing
                                     self.appDelegate.changeFound(pathURL, change: .Removed)
                                 }
-                                action = true
                             case kFSEventStreamEventFlagItemModified:
                                 // Moved, moved to trash, restored from trash
                                 let fm = NSFileManager.defaultManager()
@@ -100,21 +98,20 @@ class FileSystemMonitor {
                                     // file missing
                                     self.appDelegate.changeFound(pathURL, change: .Removed)
                                 }
-                                action = true
                             case kFSEventStreamEventFlagItemFinderInfoMod:
-                                println(s)
+                                break
                             case kFSEventStreamEventFlagItemChangeOwner:
-                                println(s)
+                                break
                             case kFSEventStreamEventFlagItemXattrMod:
-                                println(s)
+                                break
                             case kFSEventStreamEventFlagItemIsFile:
-                                println(s)
+                                break
                             case kFSEventStreamEventFlagItemIsDir:
-                                println(s)
+                                break
                             case kFSEventStreamEventFlagItemIsSymlink:
-                                println(s)
+                                break
                             default:
-                                println(s)
+                                break
                             }
 
                         }

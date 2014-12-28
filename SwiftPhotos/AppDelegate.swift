@@ -63,23 +63,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // TODO
     }
 
-    func managedObjectSaved(notification: NSNotification) {
-        let sender = notification.object as NSManagedObjectContext
-        if sender !== self.managedObjectContext {
-            NSLog("******** Saved context in other thread")
-            managedObjectContext.performBlock {
-                self.managedObjectContext.mergeChangesFromContextDidSaveNotification(notification)
-            }
-        } else {
-            println("******** Saved context in main thread")
-        }
-    }
-
     private var observers: [AnyObject] = []
     
     func applicationDidFinishLaunching(aNotification: NSNotification?) {
         // Insert code here to initialize your application
-        //NSNotificationCenter.defaultCenter().addObserver(self, selector: "managedObjectSaved", name: NSManagedObjectContextDidSaveNotification, object: nil)
+
         NSNotificationCenter.defaultCenter().addObserverForName(NSManagedObjectContextDidSaveNotification, object: nil, queue: nil, usingBlock: { (notification: NSNotification!) in
             if notification.object as NSManagedObjectContext != self.managedObjectContext {
                 self.managedObjectContext.performBlock({

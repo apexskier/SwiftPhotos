@@ -82,19 +82,61 @@ class Photo: NSManagedObject/*, IKImageBrowserItem*/ {
         if ahash != nil {
             return
         }
-        ahash = NSNumber(unsignedLongLong: calcAvghash(self.fileURL))
+        
+        if let image = createCGImage(fileURL) {
+            // 1. Reduce size to 8x8.
+            // 2. Reduce to grayscale.
+            let scaledImage = resizeImageToGray(image, 8, 8)
+            
+            var imageColors = [[Double]](count: 8, repeatedValue: [Double](count: 8, repeatedValue: 0.0))
+            
+            // Get array of pixel data of working image
+            var pixelData = CGDataProviderCopyData(CGImageGetDataProvider(scaledImage))
+            var data: UnsafePointer<UInt8> = CFDataGetBytePtr(pixelData)
+            var bytesPerRow = Int(CGImageGetBytesPerRow(scaledImage))
+            var bytesPerPixel = Int(CGImageGetBitsPerPixel(scaledImage)) / 8
+            
+            // 3. Average the colors
+            var avg = 0.0
+            for i in 0...7 {
+                for j in 0...7 {
+                    var pixelPos: Int = (bytesPerRow * i) + j * bytesPerPixel
+                    var color = Double(data[pixelPos]) / 255.0
+                    imageColors[i][j] = color
+                    avg += color
+                }
+            }
+            avg /= 64
+            
+            
+            // 4. Compute the bits
+            // 5. Construct the hash
+            var hash: UInt64 = 0
+            for i in 0...7 {
+                for j in 0...7 {
+                    if imageColors[i][j] < avg {
+                        hash |= 1
+                    }
+                    if !(j == 7 && i == 7) {
+                        hash <<= 1
+                    }
+                }
+            }
+            
+            ahash = NSNumber(unsignedLongLong: hash)
+        }
     }
     
     func genFhash() {
-        var url = fileURL
         if stateEnum == .Broken {
             return
         }
+        
         if let path = fileURL.relativePath {
             if let data: NSMutableData = NSMutableData(contentsOfFile: path) {
                 var md5: MD5 = MD5()
                 var hash = NSNumber(unsignedLongLong: CRCHash(data))
-                if fhash != nil && hash != fhash {
+                if fhash != nil && Int(hash) != Int(fhash!) {
                     reset()
 
                     // TODO: This may not be safe.
@@ -123,8 +165,9 @@ class Photo: NSManagedObject/*, IKImageBrowserItem*/ {
             return
         }
         genExposure()
-        genColorRange()
+        // genColorRange()
     }
+    
     func genExposure() {
         if stateEnum == .Broken {
             return
@@ -132,48 +175,51 @@ class Photo: NSManagedObject/*, IKImageBrowserItem*/ {
         if exposure != nil {
             return
         }
-        let sampleSize = 128
-        
-        let scaledImage = scaleImage(getImage(), CGSize(width: sampleSize, height: sampleSize))
-        
-        //http://stackoverflow.com/questions/25146557/how-do-i-get-the-color-of-a-pixel-in-a-uiimage-with-swift
-        
-        var pixelData = CGDataProviderCopyData(CGImageGetDataProvider(scaledImage.CGImage))
-        var data: UnsafePointer<UInt8> = CFDataGetBytePtr(pixelData)
-        
-        var exposureHistogram: [Double] = [Double](count: 256, repeatedValue: 0.0)
+        if let image = createCGImage(fileURL) {
+            let sampleSize = 32
+            let scaledImage = resizeImageToGray(image, sampleSize, sampleSize)
             
-        for x in 0...(sampleSize - 1) {
-            for y in 0...(sampleSize - 1) {
-                var pixelInfo: Int = ((128 * x) + y) * 4
-                
-                var r: Double = Double(data[pixelInfo])
-                var g: Double = Double(data[pixelInfo+1])
-                var b: Double = Double(data[pixelInfo+2])
-                var intensity = Int(floor((r + g + b) / 3.0))
-                
-                exposureHistogram[intensity]++
+            // Get array of pixel data of working image
+            var pixelData = CGDataProviderCopyData(CGImageGetDataProvider(scaledImage))
+            var data: UnsafePointer<UInt8> = CFDataGetBytePtr(pixelData)
+            var bytesPerRow = Int(CGImageGetBytesPerRow(scaledImage))
+            var bytesPerPixel = Int(CGImageGetBitsPerPixel(scaledImage)) / 8
+            
+            var exposureHistogram: [Double] = [Double](count: 256, repeatedValue: 0.0)
+            
+            for x in 0...(sampleSize - 1) {
+                for y in 0...(sampleSize - 1) {
+                    var pixelInfo: Int = ((128 * x) + y) * 4
+                    
+                    var r: Double = Double(data[pixelInfo])
+                    var g: Double = Double(data[pixelInfo+1])
+                    var b: Double = Double(data[pixelInfo+2])
+                    var intensity = Int(floor((r + g + b) / 3.0))
+                    
+                    exposureHistogram[intensity]++
+                }
             }
-        }
-        
-        var max: Double = 0
-        var min: Double = 128 * 128
-        for i in 7...247 { // trim high and low 8 to reduce frequency
-            if exposureHistogram[i] < min {
-                min = exposureHistogram[i]
-            } else if exposureHistogram[i] > max {
-                max = exposureHistogram[i]
+            
+            var max: Double = 0
+            var min: Double = 128 * 128
+            for i in 7...247 { // trim high and low 8 to reduce frequency
+                if exposureHistogram[i] < min {
+                    min = exposureHistogram[i]
+                } else if exposureHistogram[i] > max {
+                    max = exposureHistogram[i]
+                }
             }
+            
+            // sampleSize^2 points distributed over 256 slots
+            // exactly even would be 64 in each slot
+            var offset: Double = 0
+            for i in 0...255 {
+                offset += abs(exposureHistogram[i] - 64)
+            }
+            exposure = offset
         }
-        
-        // sampleSize^2 points distributed over 256 slots
-        // exactly even would be 64 in each slot
-        var offset: Double = 0
-        for i in 0...255 {
-            offset += abs(exposureHistogram[i] - 64)
-        }
-        exposure = offset
     }
+    
     func genColorRange() {
         if stateEnum == .Broken {
             return

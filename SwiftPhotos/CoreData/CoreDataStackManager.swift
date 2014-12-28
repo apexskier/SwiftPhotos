@@ -18,9 +18,7 @@ class CoreDataStackManager {
         static let mainStoreFileName = "SwiftPhotos.datastore"
         static let errorDomain = "CoreDataStackManager"
     }
-    
-    // MARK: Properties
-    
+
     class var sharedManager: CoreDataStackManager {
         struct Singleton {
             static let coreDataStackManager = CoreDataStackManager()

@@ -29,7 +29,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         return moc
     }()
     
-    var fileManager = NSFileManager()
+    private var fileManager = NSFileManager()
     
     var settings: Settings {
         get {
@@ -78,28 +78,26 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
 
-    var observers: [AnyObject] = []
+    private var observers: [AnyObject] = []
     
     func applicationDidFinishLaunching(aNotification: NSNotification?) {
         // Insert code here to initialize your application
         //NSNotificationCenter.defaultCenter().addObserver(self, selector: "managedObjectSaved", name: NSManagedObjectContextDidSaveNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserverForName(NSManagedObjectContextDidSaveNotification, object: nil, queue: nil, usingBlock: { (notification: NSNotification!) in
+            if notification.object as NSManagedObjectContext != self.managedObjectContext {
+                self.managedObjectContext.performBlock({
+                    self.managedObjectContext.mergeChangesFromContextDidSaveNotification(notification)
+                })
+            }
+        })
 
-        /*if let output = settings.output {
+        if let output = settings.output {
             startProcessingFolder(output.path)
         }
         if settings.imports.count > 0 {
             let folders: [Folder] = settings.imports.objectEnumerator().allObjects.reverse() as [Folder]
             for folder in folders {
                 startProcessingFolder(folder.path)
-            }
-        }*/
-        var error: NSError?
-        let request = NSFetchRequest(entityName: "Photo")
-
-        if let results = self.managedObjectContext.executeFetchRequest(request, error: &error) {
-            for photo in results as [Photo] {
-                println(photo.filepath)
-                TaskManager.sharedManager.discoverPhoto(photo.objectID)
             }
         }
 
@@ -132,9 +130,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     func startProcessingFolder(pathStr: String) {
-        TaskManager.sharedManager.pendingDiscoveries.queue.suspended = true
-        TaskManager.sharedManager.pendingHashes.queue.suspended = true
-        TaskManager.sharedManager.pendingQuality.queue.suspended = true
+        TaskManager.sharedManager.pause()
         if let path = NSURL(string: pathStr) {
             if let dirEnumerator: NSDirectoryEnumerator = fileManager.enumeratorAtURL(
                 path,
@@ -183,9 +179,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         } else {
             println("Couldn't create URL for \(pathStr)")
         }
-        TaskManager.sharedManager.pendingDiscoveries.queue.suspended = false
-        TaskManager.sharedManager.pendingHashes.queue.suspended = false
-        TaskManager.sharedManager.pendingQuality.queue.suspended = false
+        TaskManager.sharedManager.resume()
     }
     
     func photoFromURL(url: NSURL) -> Photo? {
@@ -212,18 +206,20 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         photo = photoFromURL(url)
         if photo == nil {
-            if let photo = NSEntityDescription.insertNewObjectForEntityForName("Photo", inManagedObjectContext: self.managedObjectContext) as? Photo {
-
-                photo.filepath = url.absoluteString!
-                photo.stateEnum = .New
-
-                if !self.managedObjectContext.save(&error) {
-                    fatalError("Error saving: \(error)")
-                }
+            photo = NSEntityDescription.insertNewObjectForEntityForName("Photo", inManagedObjectContext: self.managedObjectContext) as? Photo
+            if photo == nil {
+                fatalError("Didn't create new photo")
             }
+
+            photo!.filepath = url.absoluteString!
         }
 
         if photo != nil {
+            photo!.stateEnum = .New
+            if !self.managedObjectContext.save(&error) {
+                fatalError("Error saving: \(error)")
+            }
+            
             TaskManager.sharedManager.discoverPhoto(photo!.objectID)
         } else {
             fatalError("No photo for url: \(url)")

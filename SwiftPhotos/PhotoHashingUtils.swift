@@ -37,13 +37,7 @@ func createCGImage(imageURL: NSURL) -> CGImage? {
     return image!
 }
 
-func calcAvghash(imageURL: NSURL) -> UInt64 {
-    let image = createCGImage(imageURL)
-
-    // 1. Reduce size to 8x8.
-    // 2. Reduce to grayscale.
-
-    // Begin resizeing
+func resizeImageToGray(original: CGImage, width: Int, height: Int) -> CGImage {
     // http://nshipster.com/image-resizing/
     let bitsPerComponent: UInt = 8
     let bytesPerRow: UInt = 0
@@ -51,47 +45,60 @@ func calcAvghash(imageURL: NSURL) -> UInt64 {
     let colorSpace = CGColorSpaceCreateDeviceGray()
     let bitmapInfo = CGBitmapInfo(CGImageAlphaInfo.None.rawValue)
 
-    let context = CGBitmapContextCreate(nil, 8, 8, bitsPerComponent, bytesPerRow, colorSpace, bitmapInfo)
+    let context = CGBitmapContextCreate(nil, UInt(width), UInt(height), bitsPerComponent, bytesPerRow, colorSpace, bitmapInfo)
     CGContextSetInterpolationQuality(context, kCGInterpolationHigh)
 
-    CGContextDrawImage(context, CGRect(origin: CGPointZero, size: CGSize(width: CGFloat(8), height: CGFloat(8))), image)
+    CGContextDrawImage(context, CGRect(origin: CGPointZero, size: CGSize(width: CGFloat(width), height: CGFloat(height))), original)
 
-    let scaledImage = CGBitmapContextCreateImage(context)
-    // End resizing
+    return CGBitmapContextCreateImage(context)
+}
 
-    var imageColors = [[Double]](count: 8, repeatedValue: [Double](count: 8, repeatedValue: 0.0))
-    
-    // Get array of pixel data of working image
-    var pixelData = CGDataProviderCopyData(CGImageGetDataProvider(scaledImage))
-    var data: UnsafePointer<UInt8> = CFDataGetBytePtr(pixelData)
-    
-    // 3. Average the colors
-    var avg = 0.0
-    for i in 0...7 {
-        for j in 0...7 {
-            var pixelPos: Int = (8 * i + j) * 4
-            var color = Double(data[pixelPos]) / 255.0
-            imageColors[i][j] = color
-            avg += color
-        }
-    }
-    avg /= 64
-    
-    // 4. Compute the bits
-    // 5. Construct the hash
-    var hash: UInt64 = 0
-    for i in 0...7 {
-        for j in 0...7 {
-            if imageColors[i][j] < avg {
-                hash |= 1
-            }
-            if !(j == 7 && i == 7) {
-                hash <<= 1
+func calcAvghash(imageURL: NSURL) -> UInt64 {
+    if let image = createCGImage(imageURL) {
+
+        // 1. Reduce size to 8x8.
+        // 2. Reduce to grayscale.
+        let scaledImage = resizeImageToGray(image, 8, 8)
+
+        var imageColors = [[Double]](count: 8, repeatedValue: [Double](count: 8, repeatedValue: 0.0))
+
+        // Get array of pixel data of working image
+        var pixelData = CGDataProviderCopyData(CGImageGetDataProvider(scaledImage))
+        var data: UnsafePointer<UInt8> = CFDataGetBytePtr(pixelData)
+        var bytesPerRow = Int(CGImageGetBytesPerRow(scaledImage))
+        var bytesPerPixel = Int(CGImageGetBitsPerPixel(scaledImage)) / 8
+
+        // 3. Average the colors
+        var avg = 0.0
+        for i in 0...7 {
+            for j in 0...7 {
+                var pixelPos: Int = (bytesPerRow * i) + j * bytesPerPixel
+                var color = Double(data[pixelPos]) / 255.0
+                imageColors[i][j] = color
+                avg += color
             }
         }
+        avg /= 64
+
+
+        // 4. Compute the bits
+        // 5. Construct the hash
+        var hash: UInt64 = 0
+        for i in 0...7 {
+            for j in 0...7 {
+                if imageColors[i][j] < avg {
+                    hash |= 1
+                }
+                if !(j == 7 && i == 7) {
+                    hash <<= 1
+                }
+            }
+        }
+        
+        return hash
+    } else {
+        fatalError("Average hash failed to get image")
     }
-    
-    return hash
 }
 
 func calcPhash(image: NSImage) -> UInt64 {

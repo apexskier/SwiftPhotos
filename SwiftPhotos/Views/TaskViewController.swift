@@ -34,34 +34,18 @@ class TaskViewController: NSViewController {
     
     override func viewWillAppear() {
         observers.append(NSNotificationCenter.defaultCenter().addObserverForName("completedTask", object: nil, queue: nil, usingBlock: { (notification: NSNotification!) in
-            var d = Double(TaskManager.sharedManager.pendingDiscoveries.queue.operationCount)
-            var h = Double(TaskManager.sharedManager.pendingHashes.queue.operationCount)
-            var q = Double(TaskManager.sharedManager.pendingQuality.queue.operationCount)
+            var d = Double(TaskManager.sharedManager.queue.operationCount)
             
             if d > self.discoveryProgress.maxValue {
                 self.discoveryProgress.maxValue = d
             }
-            if h > self.hashProgress.maxValue {
-                self.hashProgress.maxValue = h
-            }
-            if q > self.qualityProgress.maxValue {
-                self.qualityProgress.maxValue = q
-            }
             self.reloadView()
         }))
         
-        var d = TaskManager.sharedManager.pendingDiscoveries.queue.operationCount
-        var h = TaskManager.sharedManager.pendingHashes.queue.operationCount
-        var q = TaskManager.sharedManager.pendingQuality.queue.operationCount
+        var d = TaskManager.sharedManager.queue.operationCount
         
         if d > 0 {
             discoveryProgress.maxValue = Double(d)
-        }
-        if h > 0 {
-            hashProgress.maxValue = Double(h)
-        }
-        if q > 0 {
-            qualityProgress.maxValue = Double(q)
         }
         
         reloadView()
@@ -69,17 +53,14 @@ class TaskViewController: NSViewController {
     }
     
     func reloadView() {
-        var d = TaskManager.sharedManager.pendingDiscoveries.queue.operationCount
-        var h = TaskManager.sharedManager.pendingHashes.queue.operationCount
-        var q = TaskManager.sharedManager.pendingQuality.queue.operationCount
-            
-        discoveryText.stringValue = "Discoveries: \(d)"
-        hashText.stringValue = "Hashes: \(h)"
-        qualityText.stringValue = "Quality Generations: \(q)"
+        var d = TaskManager.sharedManager.queue.operationCount
+
+        if d < 10 {
+            println("Getting close")
+        }
+        discoveryText.stringValue = "Tasks: \(d)"
         
         discoveryProgress.doubleValue = Double(d)
-        hashProgress.doubleValue = Double(h)
-        qualityProgress.doubleValue = Double(q)
     }
 
 }

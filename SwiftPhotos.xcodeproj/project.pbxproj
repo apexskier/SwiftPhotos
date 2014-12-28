@@ -24,7 +24,6 @@
 		C595EE201A24E46900875B82 /* Folder.swift in Sources */ = {isa = PBXBuildFile; fileRef = C595EE1F1A24E46900875B82 /* Folder.swift */; };
 		C5A1E87D1A215C6F00BA0A3C /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A1E87C1A215C6F00BA0A3C /* main.swift */; };
 		C5A1E87F1A215F2400BA0A3C /* PhotoHashingUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A1E87E1A215F2400BA0A3C /* PhotoHashingUtils.swift */; };
-		C5B29BC61A48A098004D5DF1 /* Worker.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5B29BC51A48A098004D5DF1 /* Worker.swift */; };
 		C5EB25971A390B27006C7019 /* Tasks.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5EB25961A390B27006C7019 /* Tasks.swift */; };
 		C5F0D4F51A4517A2008868F4 /* EonilFileSystemEvents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5F0D4EC1A45166C008868F4 /* EonilFileSystemEvents.framework */; };
 		C5F0D4F61A4517A2008868F4 /* EonilFileSystemEvents.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C5F0D4EC1A45166C008868F4 /* EonilFileSystemEvents.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -120,7 +119,6 @@
 		C595EE1F1A24E46900875B82 /* Folder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Folder.swift; path = CoreData/Folder.swift; sourceTree = "<group>"; };
 		C5A1E87C1A215C6F00BA0A3C /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		C5A1E87E1A215F2400BA0A3C /* PhotoHashingUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoHashingUtils.swift; sourceTree = "<group>"; };
-		C5B29BC51A48A098004D5DF1 /* Worker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Worker.swift; sourceTree = "<group>"; };
 		C5EB25961A390B27006C7019 /* Tasks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tasks.swift; sourceTree = "<group>"; };
 		C5F36B4A1A3D309E002D1789 /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MainViewController.swift; path = Views/MainViewController.swift; sourceTree = "<group>"; };
 		C5F36B4C1A3D32BA002D1789 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -221,7 +219,6 @@
 				C54215841A3E5652009852EA /* WaitSheet.xib */,
 				C54215861A3E56BF009852EA /* WaitSheet.swift */,
 				C5EB25961A390B27006C7019 /* Tasks.swift */,
-				C5B29BC51A48A098004D5DF1 /* Worker.swift */,
 				C5C04C7E1A3EA50B00970614 /* Views */,
 				C51697151A32AFAB00026B77 /* Main.storyboard */,
 				C542153C1A3E0D51009852EA /* FileSystemEvents */,
@@ -409,7 +406,6 @@
 				C595EE1E1A24E46900875B82 /* Photo.swift in Sources */,
 				C5EB25971A390B27006C7019 /* Tasks.swift in Sources */,
 				C573A6011A22684000FABE7F /* Library.xcdatamodeld in Sources */,
-				C5B29BC61A48A098004D5DF1 /* Worker.swift in Sources */,
 				C595EE1A1A24E46900875B82 /* Library.swift in Sources */,
 				C54215231A3E08B0009852EA /* FileSystemMonitor.swift in Sources */,
 			);

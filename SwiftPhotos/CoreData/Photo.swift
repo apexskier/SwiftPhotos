@@ -94,17 +94,30 @@ class Photo: NSManagedObject/*, IKImageBrowserItem*/ {
             if let data: NSMutableData = NSMutableData(contentsOfFile: path) {
                 var md5: MD5 = MD5()
                 var hash = NSNumber(unsignedLongLong: CRCHash(data))
-                if hash != fhash {
-                    stateEnum = .New
-                    phash = nil
-                    color = nil
-                    exposure = nil
+                if fhash != nil && hash != fhash {
+                    reset()
+
+                    // TODO: This may not be safe.
+                    TaskManager.sharedManager.discoverPhoto(objectID)
                 }
                 fhash = hash
             }
         }
     }
-    
+
+    func reset() {
+        stateEnum = .New
+
+        phash = nil
+        ahash = nil
+        fhash = nil
+        color = nil
+        exposure = nil
+        created = nil
+        height = nil
+        width = nil
+    }
+
     func genQualityMeasures() {
         if stateEnum == .Broken {
             return
@@ -280,9 +293,8 @@ class Photo: NSManagedObject/*, IKImageBrowserItem*/ {
         let imageSource = CGImageSourceCreateWithURL(fileURL, nil)
         
         var index: UInt = 0
-        let imageProperties = CGImageSourceCopyPropertiesAtIndex(imageSource, index, NSDictionary())
-        
-        if imageProperties != nil {
+
+        if let imageProperties = CGImageSourceCopyPropertiesAtIndex(imageSource, index, NSDictionary()) {
             var dictionary = imageProperties as NSDictionary
             
             if let h: AnyObject = dictionary.objectForKey("PixelHeight") {

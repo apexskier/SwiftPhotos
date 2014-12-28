@@ -460,9 +460,6 @@
                                     <constraint firstAttribute="height" constant="17" id="fZI-Q4-2TR"/>
                                 </constraints>
                                 <sliderCell key="cell" state="on" alignment="left" maxValue="30" doubleValue="15" tickMarkPosition="above" sliderType="linear" id="jR9-T3-mEw"/>
-                                <connections>
-                                    <action selector="similarSliderChange:" target="0vp-VM-WNX" id="ZVb-hQ-VUW"/>
-                                </connections>
                             </slider>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="h93-OR-6Ma">
                                 <rect key="frame" x="578" y="339" width="133" height="32"/>
@@ -484,9 +481,6 @@
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
-                                <connections>
-                                    <action selector="getInfoButtonPressed:" target="0vp-VM-WNX" id="dSB-DB-l7F"/>
-                                </connections>
                             </button>
                             <button translatesAutoresizingMaskIntoConstraints="NO" id="0ql-5B-Rfv">
                                 <rect key="frame" x="582" y="474" width="133" height="18"/>
@@ -511,9 +505,6 @@
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
-                                <connections>
-                                    <action selector="showSimilarF:" target="0vp-VM-WNX" id="dYm-Dl-Fde"/>
-                                </connections>
                             </button>
                             <button translatesAutoresizingMaskIntoConstraints="NO" id="h5j-LR-c8b">
                                 <rect key="frame" x="582" y="454" width="143" height="18"/>
@@ -521,9 +512,6 @@
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
-                                <connections>
-                                    <action selector="showSimilarP:" target="0vp-VM-WNX" id="FEu-0H-N4P"/>
-                                </connections>
                             </button>
                             <button translatesAutoresizingMaskIntoConstraints="NO" id="Imz-EL-3Ho">
                                 <rect key="frame" x="582" y="434" width="116" height="18"/>
@@ -531,9 +519,6 @@
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
-                                <connections>
-                                    <action selector="showSimilarA:" target="0vp-VM-WNX" id="c6r-gi-KFu"/>
-                                </connections>
                             </button>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="AJd-Uc-i35">
                                 <rect key="frame" x="578" y="306" width="91" height="32"/>
@@ -686,18 +671,25 @@
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
+                            <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="64c-76-rsl">
+                                <rect key="frame" x="123" y="223" width="48" height="48"/>
+                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="Wm3-A5-IAq"/>
+                            </imageView>
                         </subviews>
                         <constraints>
                             <constraint firstItem="7Ku-KN-kCn" firstAttribute="top" secondItem="7cZ-4v-1CE" secondAttribute="bottom" constant="8" id="3XC-3V-OPm"/>
                             <constraint firstAttribute="trailing" secondItem="7cZ-4v-1CE" secondAttribute="trailing" constant="20" id="8l5-Bx-aY0"/>
+                            <constraint firstItem="64c-76-rsl" firstAttribute="top" secondItem="yC5-ja-SFS" secondAttribute="top" constant="20" id="PVJ-RH-hU6"/>
                             <constraint firstItem="7cZ-4v-1CE" firstAttribute="top" secondItem="yC5-ja-SFS" secondAttribute="top" constant="20" id="chL-EW-Yar"/>
                             <constraint firstAttribute="trailing" secondItem="7Ku-KN-kCn" secondAttribute="trailing" constant="20" id="f7B-Rx-IAv"/>
                             <constraint firstItem="7cZ-4v-1CE" firstAttribute="leading" secondItem="yC5-ja-SFS" secondAttribute="leading" constant="20" id="knc-aA-rVg"/>
+                            <constraint firstAttribute="trailing" secondItem="64c-76-rsl" secondAttribute="trailing" constant="20" id="p5M-N3-h4a"/>
                             <constraint firstItem="7Ku-KN-kCn" firstAttribute="leading" secondItem="yC5-ja-SFS" secondAttribute="leading" constant="20" id="qju-7D-sF6"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="imageTitle" destination="7cZ-4v-1CE" id="0hM-LF-ezW"/>
+                        <outlet property="previewImage" destination="64c-76-rsl" id="ujZ-lM-kRX"/>
                         <outlet property="textArea" destination="7Ku-KN-kCn" id="fqK-PP-umJ"/>
                     </connections>
                 </viewController>

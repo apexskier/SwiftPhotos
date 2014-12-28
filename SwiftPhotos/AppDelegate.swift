@@ -42,7 +42,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                     var folder = NSEntityDescription.insertNewObjectForEntityForName("Folder", inManagedObjectContext: self.managedObjectContext) as Folder
                     folder.path = ""
                     settings.output = folder
-                    settings.imports = NSMutableOrderedSet(array: [])
+                    settings.inputs = NSMutableOrderedSet(array: [])
                     
                     if !self.managedObjectContext.save(&anyError) {
                         fatalError("Error saving: \(anyError)")
@@ -91,8 +91,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         if let output = settings.output {
             startProcessingFolder(output.path)
         }
-        if settings.imports.count > 0 {
-            let folders: [Folder] = settings.imports.objectEnumerator().allObjects.reverse() as [Folder]
+        if settings.inputs.count > 0 {
+            let folders: [Folder] = settings.inputs.objectEnumerator().allObjects.reverse() as [Folder]
             for folder in folders {
                 startProcessingFolder(folder.path)
             }

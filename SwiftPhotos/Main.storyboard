@@ -231,7 +231,7 @@
                                     <font key="font" metaFont="smallSystem"/>
                                 </buttonCell>
                                 <connections>
-                                    <action selector="addImportSourceClick:" target="Isx-t4-DDu" id="xkg-U7-AF1"/>
+                                    <action selector="addInputSourceClick:" target="Isx-t4-DDu" id="xkg-U7-AF1"/>
                                 </connections>
                             </button>
                             <scrollView focusRingType="none" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lQU-dZ-hxB" userLabel="Import Source Table View">
@@ -321,7 +321,7 @@
                                     <font key="font" metaFont="smallSystem"/>
                                 </buttonCell>
                                 <connections>
-                                    <action selector="removeImportSourceClick:" target="Isx-t4-DDu" id="xSH-0w-nQ5"/>
+                                    <action selector="removeInputSourceClick:" target="Isx-t4-DDu" id="xSH-0w-nQ5"/>
                                 </connections>
                             </button>
                         </subviews>

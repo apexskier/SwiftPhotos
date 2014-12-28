@@ -152,7 +152,7 @@ class TaskManager {
             }
 
             let appDelegate = NSApplication.sharedApplication().delegate as AppDelegate
-            let dups = appDelegate.bkTree.find(photo.objectID, n: 0, moc: managedObjectContext)
+            let dups = appDelegate.bkTree.search(photoID: photo.objectID, distance: 0, managedObjectContext: managedObjectContext)
             if dups.count > 0 {
                 for p in dups {
                     let ph = managedObjectContext.objectWithID(p) as Photo
@@ -162,7 +162,7 @@ class TaskManager {
                     }
                 }
             }
-            appDelegate.bkTree.insert(photoID, moc: managedObjectContext)
+            appDelegate.bkTree.insert(photoID: photoID, managedObjectContext: managedObjectContext)
 
             photo.stateEnum = .Known
 

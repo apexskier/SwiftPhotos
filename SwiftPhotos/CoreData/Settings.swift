@@ -12,7 +12,7 @@ import CoreData
 class Settings: NSManagedObject {
 
     @NSManaged var zoom: Float
-    @NSManaged var imports: NSMutableOrderedSet
+    @NSManaged var inputs: NSMutableOrderedSet
     @NSManaged var output: Folder?
     @NSManaged var library: Library?
 
@@ -20,7 +20,7 @@ class Settings: NSManagedObject {
 
 extension Settings {
     func appendImport(folder: Folder) {
-        var imports = self.mutableOrderedSetValueForKey("imports")
-        imports.addObject(folder)
+        var inputs = self.mutableOrderedSetValueForKey("inputs")
+        inputs.addObject(folder)
     }
 }

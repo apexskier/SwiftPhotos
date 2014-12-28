@@ -63,7 +63,7 @@ class PreferencesViewController: NSViewController, NSTableViewDataSource, NSTabl
         }
     }
     
-    @IBAction func addImportSourceClick(sender: AnyObject) {
+    @IBAction func addInputSourceClick(sender: AnyObject) {
         var filePicker = NSOpenPanel()
         filePicker.canChooseDirectories = true
         filePicker.canChooseFiles = false
@@ -93,7 +93,7 @@ class PreferencesViewController: NSViewController, NSTableViewDataSource, NSTabl
         }
     }
     
-    @IBAction func removeImportSourceClick(sender: AnyObject) {
+    @IBAction func removeInputSourceClick(sender: AnyObject) {
         var idxs = tableView.selectedRowIndexes
         
         idxs.enumerateRangesWithOptions(NSEnumerationOptions.Reverse, { (range: NSRange, stop: UnsafeMutablePointer<ObjCBool>) in
@@ -101,7 +101,7 @@ class PreferencesViewController: NSViewController, NSTableViewDataSource, NSTabl
             let length = range.length
             for var i = (location + length - 1); i >= location; i-- {
                 if i != -1 {
-                    self.managedObjectContext.deleteObject(self.settings.imports.objectAtIndex(i) as NSManagedObject)
+                    self.managedObjectContext.deleteObject(self.settings.inputs.objectAtIndex(i) as NSManagedObject)
                 }
             }
         })
@@ -120,7 +120,7 @@ class PreferencesViewController: NSViewController, NSTableViewDataSource, NSTabl
             var delete = Character(UnicodeScalar(NSDeleteCharacter))
             var key: Character = Array(keys)[0]
             if key == Character(UnicodeScalar(NSDeleteCharacter)) {
-                self.removeImportSourceClick(self)
+                self.removeInputSourceClick(self)
             }
         }
     }
@@ -151,18 +151,18 @@ class PreferencesViewController: NSViewController, NSTableViewDataSource, NSTabl
     // MARK: NSTableViewDataSource
     
     func numberOfRowsInTableView(tableView: NSTableView) -> Int {
-        if settings.imports.count <= 0 {
+        if settings.inputs.count <= 0 {
             removeImportButton.enabled = false
         } else {
             removeImportButton.enabled = true
         }
-        return settings.imports.count
+        return settings.inputs.count
     }
     
     // MARK: NSTableViewDelegate
     
     func tableView(tableView: NSTableView, objectValueForTableColumn tableColumn: NSTableColumn?, row: Int) -> AnyObject? {
-        let relativePath = NSURL(string: settings.imports[row].path)?.relativePath
+        let relativePath = NSURL(string: settings.inputs[row].path)?.relativePath
         return NSString(string: relativePath!).stringByReplacingPercentEscapesUsingEncoding(NSUTF8StringEncoding)
     }
 }

@@ -17,16 +17,16 @@
 		C54215871A3E56BF009852EA /* WaitSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54215861A3E56BF009852EA /* WaitSheet.swift */; };
 		C54814B31A376B3E0030D931 /* InfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54814B21A376B3E0030D931 /* InfoViewController.swift */; };
 		C56FD08D1A4603E3008BAEB5 /* BKTree.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56FD08C1A4603E3008BAEB5 /* BKTree.swift */; };
-		C573A6011A22684000FABE7F /* Library.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C573A5FF1A22684000FABE7F /* Library.xcdatamodeld */; };
 		C595EE1A1A24E46900875B82 /* Library.swift in Sources */ = {isa = PBXBuildFile; fileRef = C595EE191A24E46900875B82 /* Library.swift */; };
 		C595EE1C1A24E46900875B82 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = C595EE1B1A24E46900875B82 /* Settings.swift */; };
 		C595EE1E1A24E46900875B82 /* Photo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C595EE1D1A24E46900875B82 /* Photo.swift */; };
 		C595EE201A24E46900875B82 /* Folder.swift in Sources */ = {isa = PBXBuildFile; fileRef = C595EE1F1A24E46900875B82 /* Folder.swift */; };
 		C5A1E87D1A215C6F00BA0A3C /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A1E87C1A215C6F00BA0A3C /* main.swift */; };
 		C5A1E87F1A215F2400BA0A3C /* PhotoHashingUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A1E87E1A215F2400BA0A3C /* PhotoHashingUtils.swift */; };
+		C5BBD9F11A509ACE0082F20C /* EonilFileSystemEvents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5F0D4EC1A45166C008868F4 /* EonilFileSystemEvents.framework */; };
+		C5BBD9F31A509AD70082F20C /* EonilFileSystemEvents.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C5F0D4EC1A45166C008868F4 /* EonilFileSystemEvents.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C5BBD9F91A509DC30082F20C /* Library.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C573A5FF1A22684000FABE7F /* Library.xcdatamodeld */; };
 		C5EB25971A390B27006C7019 /* Tasks.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5EB25961A390B27006C7019 /* Tasks.swift */; };
-		C5F0D4F51A4517A2008868F4 /* EonilFileSystemEvents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5F0D4EC1A45166C008868F4 /* EonilFileSystemEvents.framework */; };
-		C5F0D4F61A4517A2008868F4 /* EonilFileSystemEvents.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C5F0D4EC1A45166C008868F4 /* EonilFileSystemEvents.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C5F36B4B1A3D309E002D1789 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5F36B4A1A3D309E002D1789 /* MainViewController.swift */; };
 		C5F36B4D1A3D32BA002D1789 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5F36B4C1A3D32BA002D1789 /* AppDelegate.swift */; };
 		FE5DDB1D193EC4F800D083E0 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FE5DDB1C193EC4F800D083E0 /* Images.xcassets */; };
@@ -45,6 +45,13 @@
 /* End PBXBuildRule section */
 
 /* Begin PBXContainerItemProxy section */
+		C5BBD9F41A509AD70082F20C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C54215771A3E29B5009852EA /* EonilFileSystemEvents.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 45D970A51A1569090037649F;
+			remoteInfo = EonilFileSystemEvents;
+		};
 		C5F0D4EB1A45166C008868F4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C54215771A3E29B5009852EA /* EonilFileSystemEvents.xcodeproj */;
@@ -66,13 +73,6 @@
 			remoteGlobalIDString = 45BF99C51A131E3A004E4E2E;
 			remoteInfo = TestdriveApp;
 		};
-		C5F0D4F71A4517A2008868F4 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = C54215771A3E29B5009852EA /* EonilFileSystemEvents.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 45D970A51A1569090037649F;
-			remoteInfo = EonilFileSystemEvents;
-		};
 		FE5DDB26193EC4F800D083E0 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = FE5DDB0B193EC4F800D083E0 /* Project object */;
@@ -83,13 +83,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		C5F0D4F91A4517A3008868F4 /* Embed Frameworks */ = {
+		C5BBD9F61A509AD70082F20C /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				C5F0D4F61A4517A2008868F4 /* EonilFileSystemEvents.framework in Embed Frameworks */,
+				C5BBD9F31A509AD70082F20C /* EonilFileSystemEvents.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -119,6 +119,7 @@
 		C595EE1F1A24E46900875B82 /* Folder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Folder.swift; path = CoreData/Folder.swift; sourceTree = "<group>"; };
 		C5A1E87C1A215C6F00BA0A3C /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		C5A1E87E1A215F2400BA0A3C /* PhotoHashingUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoHashingUtils.swift; sourceTree = "<group>"; };
+		C5BBD9F71A509B840082F20C /* Library 5.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Library 5.xcdatamodel"; sourceTree = "<group>"; };
 		C5EB25961A390B27006C7019 /* Tasks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tasks.swift; sourceTree = "<group>"; };
 		C5F36B4A1A3D309E002D1789 /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MainViewController.swift; path = Views/MainViewController.swift; sourceTree = "<group>"; };
 		C5F36B4C1A3D32BA002D1789 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -135,7 +136,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C5F0D4F51A4517A2008868F4 /* EonilFileSystemEvents.framework in Frameworks */,
+				C5BBD9F11A509ACE0082F20C /* EonilFileSystemEvents.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -187,7 +188,7 @@
 			isa = PBXGroup;
 			children = (
 				C5F0D4EC1A45166C008868F4 /* EonilFileSystemEvents.framework */,
-				C5F0D4EE1A45166C008868F4 /* InternalTester */,
+				C5F0D4EE1A45166C008868F4 /* Tester2 */,
 				C5F0D4F01A45166C008868F4 /* TestdriveApp.app */,
 			);
 			name = Products;
@@ -267,13 +268,13 @@
 				FE5DDB0F193EC4F800D083E0 /* Sources */,
 				FE5DDB10193EC4F800D083E0 /* Frameworks */,
 				FE5DDB11193EC4F800D083E0 /* Resources */,
-				C5F0D4F91A4517A3008868F4 /* Embed Frameworks */,
+				C5BBD9F61A509AD70082F20C /* Embed Frameworks */,
 			);
 			buildRules = (
 				C50A935B1A219338003B692A /* PBXBuildRule */,
 			);
 			dependencies = (
-				C5F0D4F81A4517A2008868F4 /* PBXTargetDependency */,
+				C5BBD9F51A509AD70082F20C /* PBXTargetDependency */,
 			);
 			name = SwiftPhotos;
 			productName = SwiftPhotos;
@@ -349,9 +350,10 @@
 			remoteRef = C5F0D4EB1A45166C008868F4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		C5F0D4EE1A45166C008868F4 /* InternalTester */ = {
+		C5F0D4EE1A45166C008868F4 /* Tester2 */ = {
 			isa = PBXReferenceProxy;
 			fileType = "compiled.mach-o.executable";
+			name = Tester2;
 			path = InternalTester;
 			remoteRef = C5F0D4ED1A45166C008868F4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
@@ -405,9 +407,9 @@
 				C56FD08D1A4603E3008BAEB5 /* BKTree.swift in Sources */,
 				C595EE1E1A24E46900875B82 /* Photo.swift in Sources */,
 				C5EB25971A390B27006C7019 /* Tasks.swift in Sources */,
-				C573A6011A22684000FABE7F /* Library.xcdatamodeld in Sources */,
 				C595EE1A1A24E46900875B82 /* Library.swift in Sources */,
 				C54215231A3E08B0009852EA /* FileSystemMonitor.swift in Sources */,
+				C5BBD9F91A509DC30082F20C /* Library.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -422,10 +424,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		C5F0D4F81A4517A2008868F4 /* PBXTargetDependency */ = {
+		C5BBD9F51A509AD70082F20C /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = EonilFileSystemEvents;
-			targetProxy = C5F0D4F71A4517A2008868F4 /* PBXContainerItemProxy */;
+			targetProxy = C5BBD9F41A509AD70082F20C /* PBXContainerItemProxy */;
 		};
 		FE5DDB27193EC4F800D083E0 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -617,10 +619,11 @@
 			children = (
 				C5801A891A472D97008AF5B7 /* Library 3.xcdatamodel */,
 				C50481E41A480EA900DF4801 /* Library 4.xcdatamodel */,
+				C5BBD9F71A509B840082F20C /* Library 5.xcdatamodel */,
 				C54215211A3E0176009852EA /* Library 2.xcdatamodel */,
 				C573A6001A22684000FABE7F /* Library.xcdatamodel */,
 			);
-			currentVersion = C50481E41A480EA900DF4801 /* Library 4.xcdatamodel */;
+			currentVersion = C5BBD9F71A509B840082F20C /* Library 5.xcdatamodel */;
 			path = Library.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

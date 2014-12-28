@@ -29,8 +29,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         return moc
     }()
     
-    private var fileManager = NSFileManager()
-    
     var settings: Settings {
         get {
             var settings: Settings
@@ -53,8 +51,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                     settings = sources[0] as Settings
                 }
             } else {
-                println("Error fetching: \(anyError)")
-                fatalError("Fetch failed.")
+                fatalError("Error fetching settings: \(anyError)")
             }
             return settings
         }
@@ -132,7 +129,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func startProcessingFolder(pathStr: String) {
         TaskManager.sharedManager.pause()
         if let path = NSURL(string: pathStr) {
-            if let dirEnumerator: NSDirectoryEnumerator = fileManager.enumeratorAtURL(
+            if let dirEnumerator: NSDirectoryEnumerator = NSFileManager.defaultManager().enumeratorAtURL(
                 path,
                 includingPropertiesForKeys: [NSURLPathKey, NSURLIsDirectoryKey],
                 options: NSDirectoryEnumerationOptions.SkipsHiddenFiles,

@@ -111,6 +111,7 @@ class TaskManager {
                 }
             })
         })
+        // http://nshipster.com/nsoperation/
         operation.queuePriority = priority
         operation.qualityOfService = qualityOfService
         startTask(photoID, type: type, operation: operation)
@@ -185,6 +186,7 @@ class TaskManager {
 
 // http://www.raywenderlich.com/76341/use-nsoperation-nsoperationqueue-swift
 private func createPrivateMOC() -> NSManagedObjectContext {
+    // http://www.objc.io/issue-2/common-background-practices.html
     let moc =  NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
     moc.persistentStoreCoordinator = CoreDataStackManager.sharedManager.persistentStoreCoordinator
     moc.undoManager = nil

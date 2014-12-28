@@ -14,44 +14,23 @@ class MainViewController: NSViewController {
     
     private var appDelegate = NSApplication.sharedApplication().delegate as AppDelegate
     
-    /// Managed object context for the view controller (which is bound to the persistent store coordinator for the application).
-    lazy var managedObjectContext: NSManagedObjectContext = {
-        let moc = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
-        moc.persistentStoreCoordinator = CoreDataStackManager.sharedManager.persistentStoreCoordinator
-        return moc
-    }()
-    
-    var fileManager = NSFileManager()
-    
-    var settings: Settings {
+    // Managed object context for the view controller (which is bound to the persistent store coordinator for the application).
+    // TODO: Check the following statement for truth
+    // Referencing the AppDelegate is okay because this runs in the same thread.
+    var managedObjectContext: NSManagedObjectContext {
         get {
-            var settings: Settings
-            var anyError: NSError?
-            
-            let request = NSFetchRequest(entityName: "Settings")
-            let fetchedSources = self.managedObjectContext.executeFetchRequest(request, error: &anyError)
-            if let sources = fetchedSources {
-                if sources.count == 0 {
-                    settings = NSEntityDescription.insertNewObjectForEntityForName("Settings", inManagedObjectContext: self.managedObjectContext) as Settings
-                    var folder = NSEntityDescription.insertNewObjectForEntityForName("Folder", inManagedObjectContext: self.managedObjectContext) as Folder
-                    folder.path = ""
-                    settings.output = folder
-                    settings.imports = NSMutableOrderedSet(array: [])
-                    
-                    if !self.managedObjectContext.save(&anyError) {
-                        fatalError("Error saving: \(anyError)")
-                    }
-                } else {
-                    settings = sources[0] as Settings
-                }
-            } else {
-                println("Error fetching: \(anyError)")
-                fatalError("Fetch failed.")
-            }
-            return settings
+            return appDelegate.managedObjectContext
         }
     }
-    
+
+    var settings: Settings {
+        get {
+            return appDelegate.settings
+        }
+    }
+
+    var fileManager = NSFileManager()
+
     private var photos: [Photo] {
         get {
             var error: NSError?
@@ -93,9 +72,9 @@ class MainViewController: NSViewController {
         
         settings.zoom = sender.floatValue
         
-        var anyError: NSError?
-        if !managedObjectContext.save(&anyError) {
-            fatalError("Error saving: \(anyError)")
+        var error: NSError?
+        if !managedObjectContext.save(&error) {
+            fatalError("Error saving: \(error)")
         }
     }
     
@@ -196,7 +175,6 @@ class MainViewController: NSViewController {
         }
     }
     @IBAction func dupsCheckChanged(sender: AnyObject) {
-
         updateImages()
     }
     
@@ -451,21 +429,6 @@ class MainViewController: NSViewController {
             self.progressIndicator.startAnimation(self)
             // TODO: disable selection
 
-            /*if self.dupsCheck.state == 1 {
-                let request = NSFetchRequest(entityName: "Photo")
-                let predicate = NSPredicate(format: "duplicates.@count != 0",
-                    argumentArray: [])
-                request.predicate = predicate
-
-                var error: NSError?
-                if let results = self.managedObjectContext.executeFetchRequest(request, error: &error) {
-                    self.images = results as [Photo]
-                    return
-                } else {
-                    fatalError("Failed to query: \(error)")
-                }
-            }*/
-
             var photos: [Photo]
             if let filter = self.imagesFilter {
                 photos = self.photos.filter(filter)
@@ -475,6 +438,14 @@ class MainViewController: NSViewController {
             photos = sorted(photos.filter({ (photo: Photo) -> Bool in
                 if self.dupsCheck.state == 1 {
                     let d = photo.duplicates
+                    if d.count > 0 {
+                        println("found duplicates for \n-> \(photo.filepath)")
+                        let test = photo.mutableSetValueForKey("duplicates")
+                        for t in test {
+                            var tp = t as Photo
+                            println(tp.filepath)
+                        }
+                    }
                     if photo.duplicates.count == 0 {
                         return false
                     }

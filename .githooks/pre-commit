@@ -1,0 +1,7 @@
+#!/bin/bash
+
+GITTOP="./$(git rev-parse --show-cdup)"
+
+(cd ${GITTOP} && \
+    git submodule foreach 'git reset --hard e655d4fb2021d9f1c42373d7acf74da451e4cdff >/dev/null && \
+                           git checkout e655d4fb2021d9f1c42373d7acf74da451e4cdff >/dev/null 2>/dev/null' >/dev/null)

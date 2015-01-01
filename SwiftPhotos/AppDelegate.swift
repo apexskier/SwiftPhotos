@@ -56,6 +56,37 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             return settings
         }
     }
+    
+    private lazy var _outputSet: Bool = {
+        if self.settings.output != nil && self.settings.output!.path != "" {
+            return true
+        }
+        return false
+    }()
+    var outputSet: Bool {
+        get {
+            return _outputSet
+        }
+        set(val) {
+            // start moving files if output wasn't already set
+            if !_outputSet && val {
+                var error: NSError?
+                outputURL = self.settings.output!.url!
+                let request = NSFetchRequest(entityName: "Photo")
+                let fetchedPhotos = self.managedObjectContext.executeFetchRequest(request, error: &error)
+                if let photos = fetchedPhotos as? [Photo] {
+                    for photo in photos {
+                        TaskManager.sharedManager.movePhoto(photo.objectID, outputURL: outputURL!)
+                    }
+                }
+            }
+            _outputSet = val
+        }
+    }
+    
+    lazy var outputURL: NSURL? = {
+        return self.settings.output?.url
+    }()
 
     var bkTree = PhotoBKTree()
     
@@ -157,7 +188,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                     }
                 }
                 
-                NSNotificationCenter.defaultCenter().postNotificationName("newPhotos", object: nil)
+                NSNotificationCenter.defaultCenter().postNotificationName("photoAdded", object: nil)
             } else {
                 println("Couldn't initialize NSDirectoryEnumerator for \(path)")
             }
@@ -184,6 +215,20 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         return nil
     }
+
+    func changeFound(url: NSURL) {
+        let fm = NSFileManager.defaultManager()
+        if fm.fileExistsAtPath(url.relativePath!) {
+            addFile(url)
+            NSNotificationCenter.defaultCenter().postNotificationName("photoAdded", object: nil)
+        } else {
+            if let photo = photoFromURL(url) {
+                photo.stateEnum = .Broken
+                TaskManager.sharedManager.deletePhoto(photo.objectID)
+            }
+            NSNotificationCenter.defaultCenter().postNotificationName("photoRemoved", object: nil)
+        }
+    }
     
     func addFile(url: NSURL) {
         var error: NSError?
@@ -197,70 +242,25 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             }
 
             photo!.filepath = url.absoluteString!
-        }
-
-        if photo != nil {
-            photo!.stateEnum = .New
             if !self.managedObjectContext.save(&error) {
                 fatalError("Error saving: \(error)")
             }
-            
-            TaskManager.sharedManager.discoverPhoto(photo!.objectID)
+        }
+
+        if let photo = photo {
+            println(photo.filepath)
+            if photo.stateEnum != .New {
+                photo.stateEnum = .New
+                if !self.managedObjectContext.save(&error) {
+                    fatalError("Error saving: \(error)")
+                }
+            }
+            TaskManager.sharedManager.discoverPhoto(photo.objectID)
+            if outputSet {
+                //TODO TaskManager.sharedManager.movePhoto(photo.objectID, outputURL: outputURL!)
+            }
         } else {
             fatalError("No photo for url: \(url)")
         }
-    }
-    
-    var secondary_queue = dispatch_queue_create("camlittle.SwiftPhotos.secondary_queue", nil)
-    
-    func changeFound(url: NSURL, change: FileChange) {
-        switch change {
-        case .Removed:
-            if let photo = photoFromURL(url) {
-                photo.stateEnum = .Broken
-                var error: NSError?
-                AppDelegate.deletePhoto(photo.objectID, error: &error)
-                if error != nil {
-                    println("Error deleting photo: \(error)")
-                }
-            }
-        case .Changed:
-            fallthrough
-        case .Added:
-            addFile(url)
-        }
-        
-        NSNotificationCenter.defaultCenter().postNotificationName("newPhotos", object: nil)
-    }
-    
-    class func deletePhoto(photoID: NSManagedObjectID, error: NSErrorPointer) {
-        let moc = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
-        moc.persistentStoreCoordinator = CoreDataStackManager.sharedManager.persistentStoreCoordinator
-
-        let photo = moc.objectWithID(photoID) as Photo
-
-        var fileURL = photo.fileURL
-
-        if photo.stateEnum != .Broken {
-            var removed = NSFileManager.defaultManager().removeItemAtURL(fileURL, error: error)
-            if !removed {
-                println("Didn't remove file: \(fileURL.relativePath?)")
-            }
-        }
-
-        TaskManager.sharedManager.cancelPhoto(photo.objectID)
-
-        // TODO: Remove object from BKTree
-
-        moc.deleteObject(photo)
-        if !moc.save(error) {
-            fatalError("Error saving: \(error)")
-        }
-    }
-
-    func findDuplicates() {
-        /*for photo in photos {
-
-        }*/
     }
 }

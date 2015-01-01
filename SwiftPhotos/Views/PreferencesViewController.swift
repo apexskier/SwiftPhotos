@@ -54,6 +54,9 @@ class PreferencesViewController: NSViewController, NSTableViewDataSource, NSTabl
                 fatalError("Error saving: \(anyError)")
             }
             
+            if folder.path != "" {
+                appDelegate.outputSet = true
+            }
             appDelegate.startProcessingFolder(outputPath.absoluteString!)
             
             reloadTableView(self)

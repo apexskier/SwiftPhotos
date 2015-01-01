@@ -12,5 +12,16 @@ import CoreData
 class Folder: NSManagedObject {
 
     @NSManaged var path: String
+    
+    var url: NSURL? {
+        get {
+            return NSURL(string: path)
+        }
+        set(newURL) {
+            if let url = newURL {
+                path = url.absoluteString!
+            }
+        }
+    }
 
 }

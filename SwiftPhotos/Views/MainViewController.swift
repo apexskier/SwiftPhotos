@@ -107,7 +107,11 @@ class MainViewController: NSViewController {
     override func viewDidAppear() {
         imageBrowser.setCanControlQuickLookPanel(true)
         
-        observers.append(NSNotificationCenter.defaultCenter().addObserverForName("newPhotos", object: nil, queue: nil, usingBlock: { (notification: NSNotification!) in
+        observers.append(NSNotificationCenter.defaultCenter().addObserverForName("photoAdded", object: nil, queue: nil, usingBlock: { (notification: NSNotification!) in
+            self.updateImages()
+            self.imageBrowserSelectionDidChange(nil)
+        }))
+        observers.append(NSNotificationCenter.defaultCenter().addObserverForName("photoRemoved", object: nil, queue: nil, usingBlock: { (notification: NSNotification!) in
             self.updateImages()
             self.imageBrowserSelectionDidChange(nil)
         }))
@@ -160,7 +164,7 @@ class MainViewController: NSViewController {
                 for var i = (location + length - 1); i >= location; i-- {
                     if i != -1 {
                         var photo = self.images[i]
-                        AppDelegate.deletePhoto(photo.objectID, error: &error)
+                        TaskManager.sharedManager.deletePhoto(photo.objectID)
                         if error != nil {
                             println("Failed to remove file: \(error)")
                             stop.initialize(true)
@@ -474,6 +478,9 @@ class MainViewController: NSViewController {
     }
     
     override func imageBrowser(aBrowser: IKImageBrowserView!, itemAtIndex index: Int) -> AnyObject! {
+        if images.count == 0 {
+            return nil
+        }
         return images[index]
     }
     

@@ -56,14 +56,18 @@ class Photo: NSManagedObject/*, IKImageBrowserItem*/ {
         }
     }
     
-    lazy var fileURL: NSURL = {
-        if let url = NSURL(string: self.filepath) {
-            return url
+    var fileURL: NSURL {
+        get {
+            if let url = NSURL(string: self.filepath) {
+                return url
+            }
+            self.stateEnum = .Broken
+            return NSURL()
         }
-        // Handle this
-        self.stateEnum = .Broken
-        return NSURL()
-    }()
+        set(newURL) {
+            self.filepath = newURL.absoluteString!
+        }
+    }
     
     func genPhash() {
         if stateEnum == .Broken {
@@ -365,6 +369,8 @@ class Photo: NSManagedObject/*, IKImageBrowserItem*/ {
             stateEnum = .Broken
         }
     }
+    
+    /// KImageBrowserItem
     
     override func imageRepresentationType() -> String {
         return IKImageBrowserNSURLRepresentationType

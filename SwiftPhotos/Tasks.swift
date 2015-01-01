@@ -69,7 +69,13 @@ class TaskManager {
         // cancel task if already started
         if let currentOperationContainer = operationsInProgress[id] {
             if let currentOperation = currentOperationContainer[type] {
-                currentOperation.cancel()
+                if currentOperation.executing {
+                    currentOperation.cancel()
+                } else if currentOperation.finished || currentOperation.cancelled {
+                    // add operation as normal
+                } else {
+                    return
+                }
             }
         }
 
@@ -92,7 +98,19 @@ class TaskManager {
     }
 
     private func startPhotoTask(photoID: NSManagedObjectID, type: String, priority: NSOperationQueuePriority, qualityOfService: NSQualityOfService, task: (photo: Photo, managedObjectContext: NSManagedObjectContext) -> Void) {
-        let operation = NSBlockOperation(block: { () in
+        if let currentOperationContainer = self.operationsInProgress[photoID] {
+            if let currentOperation = currentOperationContainer[type] {
+                if currentOperation.executing {
+                    // currentOperation.cancel()
+                } else if currentOperation.finished || currentOperation.cancelled {
+                    // add operation as normal
+                } else {
+                    return
+                }
+            }
+        }
+        
+        let operation = NSBlockOperation(block: {
             let moc = createPrivateMOC()
 
             NSNotificationCenter.defaultCenter().addObserverForName(NSManagedObjectContextDidSaveNotification, object: nil, queue: nil, usingBlock: { (notification: NSNotification!) in
@@ -116,15 +134,39 @@ class TaskManager {
         operation.qualityOfService = qualityOfService
         startTask(photoID, type: type, operation: operation)
     }
+    
+    func deletePhoto(photoID: NSManagedObjectID) {
+        self.cancelPhoto(photoID)
+        
+        startPhotoTask(photoID, type: "deletion", priority: .VeryHigh, qualityOfService: .UserInitiated, task: { (photo: Photo, managedObjectContext: NSManagedObjectContext) in
+            var error: NSError?
+            var fileURL = photo.fileURL
+            
+            if photo.stateEnum != .Broken {
+                var removed = NSFileManager.defaultManager().removeItemAtURL(fileURL, error: &error)
+                if !removed {
+                    println("Didn't remove file: \(fileURL.relativePath?)")
+                }
+                let appDelegate = NSApplication.sharedApplication().delegate as AppDelegate
+                appDelegate.bkTree.remove(photoID: photoID, managedObjectContext: managedObjectContext)
+            }
+            
+            self.cancelPhoto(photoID)
+            
+            managedObjectContext.deleteObject(photo)
+            if !managedObjectContext.save(&error) {
+                fatalError("Error saving: \(error)")
+            }
+        })
+    }
 
     func discoverPhoto(photoID: NSManagedObjectID) {
-        startPhotoTask(photoID, type: "discovery", priority: .High, qualityOfService: .Utility, task: { (photo: Photo, managedObjectContext: NSManagedObjectContext) in
-            var error: NSError?
-
+        startPhotoTask(photoID, type: "discovery", priority: .VeryHigh, qualityOfService: .Utility, task: { (photo: Photo, managedObjectContext: NSManagedObjectContext) in
             if photo.stateEnum == .Broken {
                 return
             }
             if photo.created == nil {
+                var error: NSError?
                 photo.readData()
                 if !managedObjectContext.save(&error) {
                     println("Coudn't save managedObjectContext: \(error)")
@@ -171,9 +213,60 @@ class TaskManager {
             }
         })
     }
+    
+    func movePhoto(photoID: NSManagedObjectID, outputURL: NSURL) {
+        startPhotoTask(photoID, type: "move", priority: .High, qualityOfService: .Background, task: { (photo: Photo, managedObjectContext: NSManagedObjectContext) in
+            var error: NSError?
+            let photo = managedObjectContext.objectWithID(photoID) as Photo
+            
+            var fileURL = photo.fileURL
+            
+            if photo.stateEnum == .Broken {
+                return
+            }
+            
+            let date = photo.created
+            let filename = photo.fileURL.lastPathComponent
+            if date == nil || filename == nil {
+                photo.stateEnum == .Broken
+                if !managedObjectContext.save(&error) {
+                    fatalError("Error saving: \(error)")
+                }
+                return
+            }
+            
+            let df = NSDateFormatter()
+            df.dateFormat = "yyyy"
+            let year = df.stringFromDate(date!)
+            df.dateFormat = "MM-MMMM"
+            let month = df.stringFromDate(date!)
+            
+            let newURL = outputURL.URLByAppendingPathComponent(year).URLByAppendingPathComponent(month).URLByAppendingPathComponent(filename!)
+            
+            let fm = NSFileManager.defaultManager()
+            
+            if let dir = newURL.URLByDeletingLastPathComponent {
+                // create new location if it doesn't exist
+                if !fm.createDirectoryAtURL(dir, withIntermediateDirectories: true, attributes: nil, error: &error) {
+                    fatalError("Couldn't verify directory \(dir): \(error)")
+                }
+                // move photo to new location
+                if !fm.moveItemAtURL(fileURL, toURL: newURL, error: &error) {
+                    fatalError("Couldn't move photo to \(newURL): \(error)")
+                }
+                // update photo information
+                photo.fileURL = newURL
+                if !managedObjectContext.save(&error) {
+                    fatalError("Error saving: \(error)")
+                }
+            } else {
+                fatalError("Couldn't get new dir.")
+            }
+        })
+    }
 
     func qualityPhoto(photoID: NSManagedObjectID) {
-        startPhotoTask(photoID, type: "quality", priority: .Normal, qualityOfService: .Background, task: { (photo: Photo, managedObjectContext: NSManagedObjectContext) in
+        startPhotoTask(photoID, type: "quality", priority: .Low, qualityOfService: .Background, task: { (photo: Photo, managedObjectContext: NSManagedObjectContext) in
             var error: NSError?
 
             photo.genQualityMeasures()

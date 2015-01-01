@@ -248,7 +248,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
 
         if let photo = photo {
-            println(photo.filepath)
             if photo.stateEnum != .New {
                 photo.stateEnum = .New
                 if !self.managedObjectContext.save(&error) {
@@ -257,7 +256,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             }
             TaskManager.sharedManager.discoverPhoto(photo.objectID)
             if outputSet {
-                //TODO TaskManager.sharedManager.movePhoto(photo.objectID, outputURL: outputURL!)
+                TaskManager.sharedManager.movePhoto(photo.objectID, outputURL: outputURL!)
             }
         } else {
             fatalError("No photo for url: \(url)")

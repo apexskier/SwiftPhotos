@@ -215,7 +215,7 @@ class TaskManager {
     }
     
     func movePhoto(photoID: NSManagedObjectID, outputURL: NSURL) {
-        startPhotoTask(photoID, type: "move", priority: .High, qualityOfService: .Background, task: { (photo: Photo, managedObjectContext: NSManagedObjectContext) in
+        startPhotoTask(photoID, type: "move", priority: .High, qualityOfService: .Utility, task: { (photo: Photo, managedObjectContext: NSManagedObjectContext) in
             var error: NSError?
             let photo = managedObjectContext.objectWithID(photoID) as Photo
             

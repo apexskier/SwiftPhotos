@@ -31,6 +31,7 @@ class MainViewController: NSViewController {
 
     var fileManager = NSFileManager()
 
+    // TODO: Look into using NSFetchedResultsController
     private var photos: [Photo] {
         get {
             var error: NSError?
@@ -169,8 +170,6 @@ class MainViewController: NSViewController {
                             println("Failed to remove file: \(error)")
                             stop.initialize(true)
                         }
-                        
-                        self.images.removeAtIndex(i)
                     }
                 }
             })

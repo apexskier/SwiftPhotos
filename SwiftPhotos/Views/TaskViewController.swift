@@ -54,13 +54,7 @@ class TaskViewController: NSViewController {
     
     func reloadView() {
         var d = TaskManager.sharedManager.queue.operationCount
-
-        if d < 10 {
-            println("Getting close")
-        }
         discoveryText.stringValue = "Tasks: \(d)"
-        
         discoveryProgress.doubleValue = Double(d)
     }
-
 }

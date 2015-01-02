@@ -11,8 +11,15 @@ import CoreData
 import Dispatch
 import Foundation
 
+enum TaskType {
+    case Deletion
+    case Discovery
+    case Hash
+    case Move
+    case Quality
+}
+
 class TaskManager {
-    
     class var sharedManager: TaskManager {
         struct Singleton {
             static let taskManager = TaskManager()
@@ -24,14 +31,28 @@ class TaskManager {
     var queue: NSOperationQueue = {
         var q = NSOperationQueue()
         q.name = "com.camlittle.SwiftPhotos.Tasks"
-        q.qualityOfService = .Utility
         q.maxConcurrentOperationCount = 1
         // q.suspended = true
         return q
     }()
 
-    var operationsInProgress = [NSManagedObjectID: [String: NSBlockOperation]]()
+    var operationsInProgress = [NSManagedObjectID: [TaskType: NSBlockOperation]]()
 
+    var managedObjectContext: NSManagedObjectContext = {
+        // http://www.objc.io/issue-2/common-background-practices.html
+        let moc =  NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
+        moc.persistentStoreCoordinator = CoreDataStackManager.sharedManager.persistentStoreCoordinator
+        moc.undoManager = nil
+        
+        NSNotificationCenter.defaultCenter().addObserverForName(NSManagedObjectContextDidSaveNotification, object: nil, queue: nil, usingBlock: { (notification: NSNotification!) in
+            if notification.object as NSManagedObjectContext != moc {
+                moc.mergeChangesFromContextDidSaveNotification(notification)
+            }
+        })
+        
+        return moc
+    }()
+    
     func cancelPhoto(id: NSManagedObjectID) {
         if let tasks = operationsInProgress.removeValueForKey(id) {
             for (type, task) in tasks {
@@ -40,7 +61,7 @@ class TaskManager {
         }
     }
 
-    func cancelTask(id: NSManagedObjectID, type: String) {
+    func cancelTask(id: NSManagedObjectID, type: TaskType) {
         if operationsInProgress[id] != nil {
             var tasks = operationsInProgress[id]!
             if let task = tasks.removeValueForKey(type) {
@@ -65,7 +86,7 @@ class TaskManager {
     }
 
     // by default this will *restart* tasks
-    func startTask(id: NSManagedObjectID, type: String, operation: NSBlockOperation) {
+    func startTask(id: NSManagedObjectID, type: TaskType, operation: NSBlockOperation) {
         // cancel task if already started
         if let currentOperationContainer = operationsInProgress[id] {
             if let currentOperation = currentOperationContainer[type] {
@@ -83,21 +104,19 @@ class TaskManager {
             if operation.cancelled {
                 return
             }
-            dispatch_async(dispatch_get_main_queue(), {
-                NSNotificationCenter.defaultCenter().postNotificationName("completedTask", object: nil)
-                NSNotificationCenter.defaultCenter().postNotificationName("completedTask.\(type)", object: nil)
-                self.cancelTask(id, type: type)
-            })
+            NSNotificationCenter.defaultCenter().postNotificationName("completedTask", object: nil)
+            NSNotificationCenter.defaultCenter().postNotificationName("completedTask.\(type)", object: nil)
+            self.cancelTask(id, type: type)
         }
 
         if operationsInProgress[id] == nil {
-            operationsInProgress[id] = [String: NSBlockOperation]()
+            operationsInProgress[id] = [TaskType: NSBlockOperation]()
         }
         operationsInProgress[id]![type] = operation
         queue.addOperation(operation)
     }
 
-    private func startPhotoTask(photoID: NSManagedObjectID, type: String, priority: NSOperationQueuePriority, qualityOfService: NSQualityOfService, task: (photo: Photo, managedObjectContext: NSManagedObjectContext) -> Void) {
+    private func startPhotoTask(photoID: NSManagedObjectID, type: TaskType, priority: NSOperationQueuePriority, qualityOfService: NSQualityOfService, task: (photo: Photo) -> Void) {
         if let currentOperationContainer = self.operationsInProgress[photoID] {
             if let currentOperation = currentOperationContainer[type] {
                 if currentOperation.executing {
@@ -111,75 +130,101 @@ class TaskManager {
         }
         
         let operation = NSBlockOperation(block: {
-            let moc = createPrivateMOC()
-
-            NSNotificationCenter.defaultCenter().addObserverForName(NSManagedObjectContextDidSaveNotification, object: nil, queue: nil, usingBlock: { (notification: NSNotification!) in
-                if notification.object as NSManagedObjectContext != moc {
-                    moc.performBlockAndWait({
-                        moc.mergeChangesFromContextDidSaveNotification(notification)
-                    })
-                }
-            })
-
-            moc.performBlockAndWait({ () in
-                if let photo = moc.objectWithID(photoID) as? Photo {
-                    task(photo: photo, managedObjectContext: moc)
+            self.managedObjectContext.performBlockAndWait({
+                if let photo = self.managedObjectContext.objectWithID(photoID) as? Photo {
+                    task(photo: photo)
                 } else {
-                    println("Missing photo \(photoID)")
+                    fatalError("Missing photo \(photoID)")
                 }
             })
         })
         // http://nshipster.com/nsoperation/
         operation.queuePriority = priority
         operation.qualityOfService = qualityOfService
+        
         startTask(photoID, type: type, operation: operation)
     }
     
     func deletePhoto(photoID: NSManagedObjectID) {
         self.cancelPhoto(photoID)
         
-        startPhotoTask(photoID, type: "deletion", priority: .VeryHigh, qualityOfService: .UserInitiated, task: { (photo: Photo, managedObjectContext: NSManagedObjectContext) in
-            var error: NSError?
-            var fileURL = photo.fileURL
-            
-            if photo.stateEnum != .Broken {
-                var removed = NSFileManager.defaultManager().removeItemAtURL(fileURL, error: &error)
-                if !removed {
-                    println("Didn't remove file: \(fileURL.relativePath?)")
+        if let currentOperationContainer = self.operationsInProgress[photoID] {
+            if let _ = currentOperationContainer[.Deletion] {
+                return
+            }
+        }
+        
+        let operation = NSBlockOperation(block: {
+            self.managedObjectContext.performBlockAndWait({
+                if let photo = self.managedObjectContext.objectWithID(photoID) as? Photo {
+                    var error: NSError?
+                    var fileURL = photo.fileURL
+                    
+                    let fm = NSFileManager.defaultManager()
+                    if fm.fileExistsAtPath(fileURL.relativePath!) {
+                        if !fm.removeItemAtURL(fileURL, error: &error) {
+                            println("Didn't remove file: \(fileURL.relativePath?)")
+                        }
+                    }
+                    
+                    let appDelegate = NSApplication.sharedApplication().delegate as AppDelegate
+                    appDelegate.bkTree.remove(photoID: photoID, managedObjectContext: self.managedObjectContext)
+                    
+                    if let tasks = self.operationsInProgress.removeValueForKey(photoID) {
+                        for (type, task) in tasks {
+                            task.cancel()
+                        }
+                    }
+                    
+                    // TODO: figure this out
+                    self.managedObjectContext.deleteObject(photo)
+                    //photo.stateEnum = .Broken
+                    println("Deleted \(photoID)")
+                    if !self.managedObjectContext.save(&error) {
+                        fatalError("Error saving: \(error)")
+                    }
+                } else {
+                    println("Missing photo \(photoID)")
                 }
-                let appDelegate = NSApplication.sharedApplication().delegate as AppDelegate
-                appDelegate.bkTree.remove(photoID: photoID, managedObjectContext: managedObjectContext)
-            }
-            
-            self.cancelPhoto(photoID)
-            
-            managedObjectContext.deleteObject(photo)
-            if !managedObjectContext.save(&error) {
-                fatalError("Error saving: \(error)")
-            }
+            })
         })
+        
+        // cancel all other tasks, then wait for them to finish.
+        // this *should* prevent any other tasks from existing that would access this photoID
+        if let currentOperationContainer = self.operationsInProgress[photoID] {
+            for (type, op) in currentOperationContainer {
+                op.cancel()
+                operation.addDependency(op)
+            }
+        }
+        
+        // http://nshipster.com/nsoperation/
+        operation.queuePriority = .High
+        operation.qualityOfService = .UserInitiated
+        
+        startTask(photoID, type: .Deletion, operation: operation)
     }
 
     func discoverPhoto(photoID: NSManagedObjectID) {
-        startPhotoTask(photoID, type: "discovery", priority: .VeryHigh, qualityOfService: .Utility, task: { (photo: Photo, managedObjectContext: NSManagedObjectContext) in
+        startPhotoTask(photoID, type: .Discovery, priority: .VeryHigh, qualityOfService: .Utility) { (photo: Photo) in
             if photo.stateEnum == .Broken {
                 return
             }
             if photo.created == nil {
                 var error: NSError?
                 photo.readData()
-                if !managedObjectContext.save(&error) {
+                if !self.managedObjectContext.save(&error) {
                     println("Coudn't save managedObjectContext: \(error)")
                 }
             }
-        })
+        }
 
         hashPhoto(photoID)
         qualityPhoto(photoID)
     }
 
     func hashPhoto(photoID: NSManagedObjectID) {
-        startPhotoTask(photoID, type: "hash", priority: .Normal, qualityOfService: .Background, task: { (photo: Photo, managedObjectContext: NSManagedObjectContext) in
+        startPhotoTask(photoID, type: .Hash, priority: .Normal, qualityOfService: .Background) { (photo: Photo) in
             var error: NSError?
 
             if photo.stateEnum == .Broken {
@@ -189,35 +234,35 @@ class TaskManager {
             photo.genAhash()
 
             photo.mutableSetValueForKey("duplicates").removeAllObjects()
-            if !managedObjectContext.save(&error) {
+            if !self.managedObjectContext.save(&error) {
                 println("Coudn't save managedObjectContext: \(error)")
             }
 
             let appDelegate = NSApplication.sharedApplication().delegate as AppDelegate
-            let dups = appDelegate.bkTree.search(photoID: photo.objectID, distance: 0, managedObjectContext: managedObjectContext)
+            let dups = appDelegate.bkTree.search(photoID: photo.objectID, distance: 0, managedObjectContext: self.managedObjectContext)
             if dups.count > 0 {
                 for p in dups {
-                    let ph = managedObjectContext.objectWithID(p) as Photo
+                    let ph = self.managedObjectContext.objectWithID(p) as Photo
                     let duplicates = photo.mutableSetValueForKey("duplicates")
                     if !duplicates.containsObject(ph) {
                         duplicates.addObject(ph)
                     }
                 }
             }
-            appDelegate.bkTree.insert(photoID: photoID, managedObjectContext: managedObjectContext)
+            appDelegate.bkTree.insert(photoID: photoID, managedObjectContext: self.managedObjectContext)
 
             photo.stateEnum = .Known
 
-            if !managedObjectContext.save(&error) {
+            if !self.managedObjectContext.save(&error) {
                 println("Coudn't save managedObjectContext: \(error)")
             }
-        })
+        }
     }
     
     func movePhoto(photoID: NSManagedObjectID, outputURL: NSURL) {
-        startPhotoTask(photoID, type: "move", priority: .High, qualityOfService: .Utility, task: { (photo: Photo, managedObjectContext: NSManagedObjectContext) in
+        startPhotoTask(photoID, type: .Move, priority: .High, qualityOfService: .Utility) { (photo: Photo) in
             var error: NSError?
-            let photo = managedObjectContext.objectWithID(photoID) as Photo
+            let photo = self.managedObjectContext.objectWithID(photoID) as Photo
             
             var fileURL = photo.fileURL
             
@@ -229,7 +274,7 @@ class TaskManager {
             let filename = photo.fileURL.lastPathComponent
             if date == nil || filename == nil {
                 photo.stateEnum == .Broken
-                if !managedObjectContext.save(&error) {
+                if !self.managedObjectContext.save(&error) {
                     fatalError("Error saving: \(error)")
                 }
                 return
@@ -256,32 +301,23 @@ class TaskManager {
                 }
                 // update photo information
                 photo.fileURL = newURL
-                if !managedObjectContext.save(&error) {
+                if !self.managedObjectContext.save(&error) {
                     fatalError("Error saving: \(error)")
                 }
             } else {
                 fatalError("Couldn't get new dir.")
             }
-        })
+        }
     }
 
     func qualityPhoto(photoID: NSManagedObjectID) {
-        startPhotoTask(photoID, type: "quality", priority: .Low, qualityOfService: .Background, task: { (photo: Photo, managedObjectContext: NSManagedObjectContext) in
+        startPhotoTask(photoID, type: .Quality, priority: .Low, qualityOfService: .Background) { (photo: Photo) in
             var error: NSError?
 
             photo.genQualityMeasures()
-            if !managedObjectContext.save(&error) {
+            if !self.managedObjectContext.save(&error) {
                 println("Coudn't save moc: \(error)")
             }
-        })
+        }
     }
-}
-
-// http://www.raywenderlich.com/76341/use-nsoperation-nsoperationqueue-swift
-private func createPrivateMOC() -> NSManagedObjectContext {
-    // http://www.objc.io/issue-2/common-background-practices.html
-    let moc =  NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
-    moc.persistentStoreCoordinator = CoreDataStackManager.sharedManager.persistentStoreCoordinator
-    moc.undoManager = nil
-    return moc
 }

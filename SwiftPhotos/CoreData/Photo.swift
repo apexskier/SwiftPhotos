@@ -365,6 +365,10 @@ class Photo: NSManagedObject/*, IKImageBrowserItem*/ {
                     created = dateFormatter.dateFromString(date as String) as NSDate!
                 }
             }
+            if created == nil {
+                // TODO: Fallback to file creation date.
+                // perhaps provide an interface to write file creation date to exif?
+            }
         } else {
             stateEnum = .Broken
         }

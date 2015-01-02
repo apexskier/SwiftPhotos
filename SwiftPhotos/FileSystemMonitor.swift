@@ -16,7 +16,6 @@ enum FileChange {
 }
 
 class FileSystemMonitor {
-
     class var sharedManager: FileSystemMonitor {
         struct Singleton {
             static let manager = FileSystemMonitor()
@@ -150,5 +149,4 @@ class FileSystemMonitor {
                 queue: queue)
         }
     }
-
 }

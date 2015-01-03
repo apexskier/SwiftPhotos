@@ -56,6 +56,17 @@ class FileSystemMonitor {
                     }
                 }
 
+                if NSFileManager.defaultManager().fileExistsAtPath(pathURL.relativePath!) {
+                    var isDirectory: AnyObject?
+                    if !pathURL.getResourceValue(&isDirectory, forKey: NSURLIsDirectoryKey, error: &error) {
+                        fatalError("\(error)")
+                    } else {
+                        if isDirectory as NSNumber != 0 {
+                            return
+                        }
+                    }
+                }
+
                 // assume file is in the folders I'm concerned with
                 if filename[filename.startIndex] != "." {
                     let	flagsRaw = event.flag.rawValue

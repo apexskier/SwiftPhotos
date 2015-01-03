@@ -104,7 +104,7 @@
 		C542151F1A3D777E009852EA /* TaskViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TaskViewController.swift; path = Views/TaskViewController.swift; sourceTree = "<group>"; };
 		C54215211A3E0176009852EA /* Library 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Library 2.xcdatamodel"; sourceTree = "<group>"; };
 		C54215221A3E08B0009852EA /* FileSystemMonitor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileSystemMonitor.swift; sourceTree = "<group>"; };
-		C542153D1A3E0D88009852EA /* SwiftPhotos-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SwiftPhotos-Bridging-Header.h"; sourceTree = "<group>"; };
+		C542153D1A3E0D88009852EA /* SwiftPhotos_Bridging_Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SwiftPhotos_Bridging_Header.h"; sourceTree = "<group>"; };
 		C54215451A3E16E9009852EA /* FileSystemEvents.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileSystemEvents.swift; sourceTree = "<group>"; };
 		C54215771A3E29B5009852EA /* EonilFileSystemEvents.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = EonilFileSystemEvents.xcodeproj; path = FileSystemEvents/Project/EonilFileSystemEvents.xcodeproj; sourceTree = "<group>"; };
 		C54215841A3E5652009852EA /* WaitSheet.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WaitSheet.xib; sourceTree = "<group>"; };
@@ -155,7 +155,7 @@
 			children = (
 				C54215451A3E16E9009852EA /* FileSystemEvents.swift */,
 				C54215771A3E29B5009852EA /* EonilFileSystemEvents.xcodeproj */,
-				C542153D1A3E0D88009852EA /* SwiftPhotos-Bridging-Header.h */,
+				C542153D1A3E0D88009852EA /* SwiftPhotos_Bridging_Header.h */,
 			);
 			name = FileSystemEvents;
 			sourceTree = "<group>";
@@ -524,7 +524,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_NAME = SwiftPhotos;
 				SWIFT_INSTALL_OBJC_HEADER = NO;
-				SWIFT_OBJC_BRIDGING_HEADER = "SwiftPhotos/SwiftPhotos-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "SwiftPhotos/SwiftPhotos_Bridging_Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -539,7 +539,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_NAME = SwiftPhotos;
 				SWIFT_INSTALL_OBJC_HEADER = NO;
-				SWIFT_OBJC_BRIDGING_HEADER = "SwiftPhotos/SwiftPhotos-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "SwiftPhotos/SwiftPhotos_Bridging_Header.h";
 			};
 			name = Release;
 		};

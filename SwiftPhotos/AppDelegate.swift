@@ -101,7 +101,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         NSNotificationCenter.defaultCenter().addObserverForName(NSManagedObjectContextDidSaveNotification, object: nil, queue: nil, usingBlock: { (notification: NSNotification!) in
             if notification.object as NSManagedObjectContext != self.managedObjectContext {
-                self.managedObjectContext.performBlock({
+                self.managedObjectContext.performBlockAndWait({
                     self.managedObjectContext.mergeChangesFromContextDidSaveNotification(notification)
                 })
             }

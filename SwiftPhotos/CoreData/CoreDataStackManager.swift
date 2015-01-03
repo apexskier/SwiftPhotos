@@ -71,9 +71,8 @@ class CoreDataStackManager {
         if let properties = applicationSupportDirectory.resourceValuesForKeys([NSURLIsDirectoryKey], error: &error) {
             if let isDirectory = properties[NSURLIsDirectoryKey] as? NSNumber {
                 if !isDirectory.boolValue {
-                    
                     let description = NSLocalizedString("Could not access the application data folder.", comment: "Failed to initialize applicationSupportDirectory")
-                    
+
                     let reason = NSLocalizedString("Found a file in its place.", comment: "Failed to initialize applicationSupportDirectory")
                     
                     let userInfo = [

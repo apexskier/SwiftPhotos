@@ -26,7 +26,9 @@ class TaskManager {
         }
         
         return Singleton.taskManager
-    } 
+    }
+
+    var operationsInProgress = [NSManagedObjectID: [TaskType: NSBlockOperation]]()
 
     var queue: NSOperationQueue = {
         var q = NSOperationQueue()
@@ -35,8 +37,6 @@ class TaskManager {
         // q.suspended = true
         return q
     }()
-
-    var operationsInProgress = [NSManagedObjectID: [TaskType: NSBlockOperation]]()
 
     var managedObjectContext: NSManagedObjectContext = {
         // http://www.objc.io/issue-2/common-background-practices.html
@@ -87,7 +87,7 @@ class TaskManager {
     }
 
     // by default this will *restart* tasks
-    func startTask(id: NSManagedObjectID, type: TaskType, operation: NSBlockOperation) {
+    private func startTask(id: NSManagedObjectID, type: TaskType, operation: NSBlockOperation) {
         // cancel task if already started
         if let currentOperationContainer = operationsInProgress[id] {
             if let currentOperation = currentOperationContainer[type] {
@@ -105,6 +105,12 @@ class TaskManager {
             if operation.cancelled {
                 return
             }
+            self.managedObjectContext.performBlockAndWait({
+                var error: NSError?
+                if !self.managedObjectContext.save(&error) {
+                    fatalError("Didn't save background managedObjectContext: \(error)")
+                }
+            })
             NSNotificationCenter.defaultCenter().postNotificationName("completedTask", object: nil)
             NSNotificationCenter.defaultCenter().postNotificationName("completedTask.\(type)", object: nil)
             self.cancelTask(id, type: type)
@@ -150,9 +156,6 @@ class TaskManager {
                     self.managedObjectContext.deleteObject(photo)
                     //photo.stateEnum = .Broken
                     println("Deleted \(photoID)")
-                    if !self.managedObjectContext.save(&error) {
-                        fatalError("Error saving: \(error)")
-                    }
                 } else {
                     println("Missing photo \(photoID)")
                 }
@@ -183,11 +186,7 @@ class TaskManager {
                         return
                     }
                     if photo.created == nil {
-                        var error: NSError?
                         photo.readData()
-                        if !self.managedObjectContext.save(&error) {
-                            println("Coudn't save managedObjectContext: \(error)")
-                        }
                     }
                 } else {
                     fatalError("Missing photo \(photoID)")
@@ -207,8 +206,6 @@ class TaskManager {
         let operation = NSBlockOperation(block: {
             self.managedObjectContext.performBlockAndWait({
                 if let photo = self.managedObjectContext.objectWithID(photoID) as? Photo {
-                    var error: NSError?
-                    
                     if photo.stateEnum == .Broken {
                         return
                     }
@@ -216,9 +213,6 @@ class TaskManager {
                     photo.genAhash()
                     
                     photo.mutableSetValueForKey("duplicates").removeAllObjects()
-                    if !self.managedObjectContext.save(&error) {
-                        println("Coudn't save managedObjectContext: \(error)")
-                    }
                     
                     let appDelegate = NSApplication.sharedApplication().delegate as AppDelegate
                     let dups = appDelegate.bkTree.search(photoID: photo.objectID, distance: 0, managedObjectContext: self.managedObjectContext)
@@ -234,10 +228,6 @@ class TaskManager {
                     appDelegate.bkTree.insert(photoID: photoID, managedObjectContext: self.managedObjectContext)
                     
                     photo.stateEnum = .Known
-                    
-                    if !self.managedObjectContext.save(&error) {
-                        println("Coudn't save managedObjectContext: \(error)")
-                    }
                 } else {
                     fatalError("Missing photo \(photoID)")
                 }
@@ -254,8 +244,6 @@ class TaskManager {
             self.managedObjectContext.performBlockAndWait({
                 if let photo = self.managedObjectContext.objectWithID(photoID) as? Photo {
                     var error: NSError?
-                    let photo = self.managedObjectContext.objectWithID(photoID) as Photo
-                    
                     var fileURL = photo.fileURL
                     
                     if photo.stateEnum == .Broken {
@@ -266,9 +254,6 @@ class TaskManager {
                     let filename = photo.fileURL.lastPathComponent
                     if date == nil || filename == nil {
                         photo.stateEnum == .Broken
-                        if !self.managedObjectContext.save(&error) {
-                            fatalError("Error saving: \(error)")
-                        }
                         return
                     }
                     
@@ -281,9 +266,13 @@ class TaskManager {
                     let fm = NSFileManager.defaultManager()
 
                     var newURL = outputURL.URLByAppendingPathComponent(year).URLByAppendingPathComponent(month).URLByAppendingPathComponent(filename!)
+                    if fileURL.relativePath! == newURL.relativePath! {
+                        return
+                    }
+
                     var count = 1
                     while (fm.fileExistsAtPath(newURL.relativePath!)) {
-                        let ext = newURL.pathExtension?
+                        let ext = newURL.pathExtension!
                         newURL = newURL.URLByDeletingPathExtension!.URLByAppendingPathExtension("\(count).\(ext)")
                     }
                     
@@ -298,9 +287,6 @@ class TaskManager {
                         }
                         // update photo information
                         photo.fileURL = newURL
-                        if !self.managedObjectContext.save(&error) {
-                            fatalError("Error saving: \(error)")
-                        }
                     } else {
                         fatalError("Couldn't get new dir.")
                     }
@@ -319,12 +305,7 @@ class TaskManager {
         let operation = NSBlockOperation(block: {
             self.managedObjectContext.performBlockAndWait({
                 if let photo = self.managedObjectContext.objectWithID(photoID) as? Photo {
-                    var error: NSError?
-                    
                     photo.genQualityMeasures()
-                    if !self.managedObjectContext.save(&error) {
-                        println("Coudn't save moc: \(error)")
-                    }
                 } else {
                     fatalError("Missing photo \(photoID)")
                 }

@@ -43,6 +43,7 @@ class TaskManager {
         let moc =  NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
         moc.persistentStoreCoordinator = CoreDataStackManager.sharedManager.persistentStoreCoordinator
         moc.undoManager = nil
+        moc.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
         
         NSNotificationCenter.defaultCenter().addObserverForName(NSManagedObjectContextDidSaveNotification, object: nil, queue: nil, usingBlock: { (notification: NSNotification!) in
             if notification.object as NSManagedObjectContext != moc {
@@ -116,38 +117,7 @@ class TaskManager {
         queue.addOperation(operation)
     }
 
-    private func startPhotoTask(photoID: NSManagedObjectID, type: TaskType, priority: NSOperationQueuePriority, qualityOfService: NSQualityOfService, task: (photo: Photo) -> Void) {
-        if let currentOperationContainer = self.operationsInProgress[photoID] {
-            if let currentOperation = currentOperationContainer[type] {
-                if currentOperation.executing {
-                    // currentOperation.cancel()
-                } else if currentOperation.finished || currentOperation.cancelled {
-                    // add operation as normal
-                } else {
-                    return
-                }
-            }
-        }
-        
-        let operation = NSBlockOperation(block: {
-            self.managedObjectContext.performBlockAndWait({
-                if let photo = self.managedObjectContext.objectWithID(photoID) as? Photo {
-                    task(photo: photo)
-                } else {
-                    fatalError("Missing photo \(photoID)")
-                }
-            })
-        })
-        // http://nshipster.com/nsoperation/
-        operation.queuePriority = priority
-        operation.qualityOfService = qualityOfService
-        
-        startTask(photoID, type: type, operation: operation)
-    }
-    
     func deletePhoto(photoID: NSManagedObjectID) {
-        self.cancelPhoto(photoID)
-        
         if let currentOperationContainer = self.operationsInProgress[photoID] {
             if let _ = currentOperationContainer[.Deletion] {
                 return
@@ -199,125 +169,170 @@ class TaskManager {
         }
         
         // http://nshipster.com/nsoperation/
-        operation.queuePriority = .High
+        operation.queuePriority = .VeryHigh
         operation.qualityOfService = .UserInitiated
         
         startTask(photoID, type: .Deletion, operation: operation)
     }
 
     func discoverPhoto(photoID: NSManagedObjectID) {
-        startPhotoTask(photoID, type: .Discovery, priority: .VeryHigh, qualityOfService: .Utility) { (photo: Photo) in
-            if photo.stateEnum == .Broken {
-                return
-            }
-            if photo.created == nil {
-                var error: NSError?
-                photo.readData()
-                if !self.managedObjectContext.save(&error) {
-                    println("Coudn't save managedObjectContext: \(error)")
+        let operation = NSBlockOperation(block: {
+            self.managedObjectContext.performBlockAndWait({
+                if let photo = self.managedObjectContext.objectWithID(photoID) as? Photo {
+                    if photo.stateEnum == .Broken {
+                        return
+                    }
+                    if photo.created == nil {
+                        var error: NSError?
+                        photo.readData()
+                        if !self.managedObjectContext.save(&error) {
+                            println("Coudn't save managedObjectContext: \(error)")
+                        }
+                    }
+                } else {
+                    fatalError("Missing photo \(photoID)")
                 }
-            }
-        }
+            })
+        })
+        operation.queuePriority = .VeryHigh
+        operation.qualityOfService = .UserInitiated
+        
+        startTask(photoID, type: .Discovery, operation: operation)
 
         hashPhoto(photoID)
         qualityPhoto(photoID)
     }
 
     func hashPhoto(photoID: NSManagedObjectID) {
-        startPhotoTask(photoID, type: .Hash, priority: .Normal, qualityOfService: .Background) { (photo: Photo) in
-            var error: NSError?
-
-            if photo.stateEnum == .Broken {
-                return
-            }
-            photo.genFhash()
-            photo.genAhash()
-
-            photo.mutableSetValueForKey("duplicates").removeAllObjects()
-            if !self.managedObjectContext.save(&error) {
-                println("Coudn't save managedObjectContext: \(error)")
-            }
-
-            let appDelegate = NSApplication.sharedApplication().delegate as AppDelegate
-            let dups = appDelegate.bkTree.search(photoID: photo.objectID, distance: 0, managedObjectContext: self.managedObjectContext)
-            if dups.count > 0 {
-                for p in dups {
-                    let ph = self.managedObjectContext.objectWithID(p) as Photo
-                    let duplicates = photo.mutableSetValueForKey("duplicates")
-                    if !duplicates.containsObject(ph) {
-                        duplicates.addObject(ph)
+        let operation = NSBlockOperation(block: {
+            self.managedObjectContext.performBlockAndWait({
+                if let photo = self.managedObjectContext.objectWithID(photoID) as? Photo {
+                    var error: NSError?
+                    
+                    if photo.stateEnum == .Broken {
+                        return
                     }
+                    photo.genFhash()
+                    photo.genAhash()
+                    
+                    photo.mutableSetValueForKey("duplicates").removeAllObjects()
+                    if !self.managedObjectContext.save(&error) {
+                        println("Coudn't save managedObjectContext: \(error)")
+                    }
+                    
+                    let appDelegate = NSApplication.sharedApplication().delegate as AppDelegate
+                    let dups = appDelegate.bkTree.search(photoID: photo.objectID, distance: 0, managedObjectContext: self.managedObjectContext)
+                    if dups.count > 0 {
+                        for p in dups {
+                            let ph = self.managedObjectContext.objectWithID(p) as Photo
+                            let duplicates = photo.mutableSetValueForKey("duplicates")
+                            if !duplicates.containsObject(ph) {
+                                duplicates.addObject(ph)
+                            }
+                        }
+                    }
+                    appDelegate.bkTree.insert(photoID: photoID, managedObjectContext: self.managedObjectContext)
+                    
+                    photo.stateEnum = .Known
+                    
+                    if !self.managedObjectContext.save(&error) {
+                        println("Coudn't save managedObjectContext: \(error)")
+                    }
+                } else {
+                    fatalError("Missing photo \(photoID)")
                 }
-            }
-            appDelegate.bkTree.insert(photoID: photoID, managedObjectContext: self.managedObjectContext)
-
-            photo.stateEnum = .Known
-
-            if !self.managedObjectContext.save(&error) {
-                println("Coudn't save managedObjectContext: \(error)")
-            }
-        }
+            })
+        })
+        operation.queuePriority = .Normal
+        operation.qualityOfService = .Background
+        
+        startTask(photoID, type: .Hash, operation: operation)
     }
     
     func movePhoto(photoID: NSManagedObjectID, outputURL: NSURL) {
-        startPhotoTask(photoID, type: .Move, priority: .High, qualityOfService: .Utility) { (photo: Photo) in
-            var error: NSError?
-            let photo = self.managedObjectContext.objectWithID(photoID) as Photo
-            
-            var fileURL = photo.fileURL
-            
-            if photo.stateEnum == .Broken {
-                return
-            }
-            
-            let date = photo.created
-            let filename = photo.fileURL.lastPathComponent
-            if date == nil || filename == nil {
-                photo.stateEnum == .Broken
-                if !self.managedObjectContext.save(&error) {
-                    fatalError("Error saving: \(error)")
+        let operation = NSBlockOperation(block: {
+            self.managedObjectContext.performBlockAndWait({
+                if let photo = self.managedObjectContext.objectWithID(photoID) as? Photo {
+                    var error: NSError?
+                    let photo = self.managedObjectContext.objectWithID(photoID) as Photo
+                    
+                    var fileURL = photo.fileURL
+                    
+                    if photo.stateEnum == .Broken {
+                        return
+                    }
+                    
+                    let date = photo.created
+                    let filename = photo.fileURL.lastPathComponent
+                    if date == nil || filename == nil {
+                        photo.stateEnum == .Broken
+                        if !self.managedObjectContext.save(&error) {
+                            fatalError("Error saving: \(error)")
+                        }
+                        return
+                    }
+                    
+                    let df = NSDateFormatter()
+                    df.dateFormat = "yyyy"
+                    let year = df.stringFromDate(date!)
+                    df.dateFormat = "MM-MMMM"
+                    let month = df.stringFromDate(date!)
+                    
+                    let fm = NSFileManager.defaultManager()
+
+                    var newURL = outputURL.URLByAppendingPathComponent(year).URLByAppendingPathComponent(month).URLByAppendingPathComponent(filename!)
+                    var count = 1
+                    while (fm.fileExistsAtPath(newURL.relativePath!)) {
+                        let ext = newURL.pathExtension?
+                        newURL = newURL.URLByDeletingPathExtension!.URLByAppendingPathExtension("\(count).\(ext)")
+                    }
+                    
+                    if let dir = newURL.URLByDeletingLastPathComponent {
+                        // create new location if it doesn't exist
+                        if !fm.createDirectoryAtURL(dir, withIntermediateDirectories: true, attributes: nil, error: &error) {
+                            fatalError("Couldn't verify directory \(dir): \(error)")
+                        }
+                        // move photo to new location
+                        if !fm.moveItemAtURL(fileURL, toURL: newURL, error: &error) {
+                            println("Couldn't move photo to \(newURL): \(error)")
+                        }
+                        // update photo information
+                        photo.fileURL = newURL
+                        if !self.managedObjectContext.save(&error) {
+                            fatalError("Error saving: \(error)")
+                        }
+                    } else {
+                        fatalError("Couldn't get new dir.")
+                    }
+                } else {
+                    fatalError("Missing photo \(photoID)")
                 }
-                return
-            }
-            
-            let df = NSDateFormatter()
-            df.dateFormat = "yyyy"
-            let year = df.stringFromDate(date!)
-            df.dateFormat = "MM-MMMM"
-            let month = df.stringFromDate(date!)
-            
-            let newURL = outputURL.URLByAppendingPathComponent(year).URLByAppendingPathComponent(month).URLByAppendingPathComponent(filename!)
-            
-            let fm = NSFileManager.defaultManager()
-            
-            if let dir = newURL.URLByDeletingLastPathComponent {
-                // create new location if it doesn't exist
-                if !fm.createDirectoryAtURL(dir, withIntermediateDirectories: true, attributes: nil, error: &error) {
-                    fatalError("Couldn't verify directory \(dir): \(error)")
-                }
-                // move photo to new location
-                if !fm.moveItemAtURL(fileURL, toURL: newURL, error: &error) {
-                    fatalError("Couldn't move photo to \(newURL): \(error)")
-                }
-                // update photo information
-                photo.fileURL = newURL
-                if !self.managedObjectContext.save(&error) {
-                    fatalError("Error saving: \(error)")
-                }
-            } else {
-                fatalError("Couldn't get new dir.")
-            }
-        }
+            })
+        })
+        operation.queuePriority = .High
+        operation.qualityOfService = .Utility
+        
+        startTask(photoID, type: .Move, operation: operation)
     }
 
     func qualityPhoto(photoID: NSManagedObjectID) {
-        startPhotoTask(photoID, type: .Quality, priority: .Low, qualityOfService: .Background) { (photo: Photo) in
-            var error: NSError?
-
-            photo.genQualityMeasures()
-            if !self.managedObjectContext.save(&error) {
-                println("Coudn't save moc: \(error)")
-            }
-        }
+        let operation = NSBlockOperation(block: {
+            self.managedObjectContext.performBlockAndWait({
+                if let photo = self.managedObjectContext.objectWithID(photoID) as? Photo {
+                    var error: NSError?
+                    
+                    photo.genQualityMeasures()
+                    if !self.managedObjectContext.save(&error) {
+                        println("Coudn't save moc: \(error)")
+                    }
+                } else {
+                    fatalError("Missing photo \(photoID)")
+                }
+            })
+        })
+        operation.queuePriority = .Low
+        operation.qualityOfService = .Background
+        
+        startTask(photoID, type: .Quality, operation: operation)
     }
 }

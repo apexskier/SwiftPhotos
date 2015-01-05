@@ -89,10 +89,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }()
 
     var bkTree = PhotoBKTree()
-    
-    func showInfoHUD() {()
-        // TODO
-    }
 
     private var observers: [AnyObject] = []
     
@@ -126,7 +122,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         for observer in observers {
             NSNotificationCenter.defaultCenter().removeObserver(observer)
         }
-        //NSNotificationCenter.defaultCenter().removeObserver(self)
+
         var error: NSError?
         if !self.managedObjectContext.save(&error) {
             fatalError("Error saving: \(error)")
@@ -263,5 +259,44 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         } else {
             fatalError("No photo for url: \(url)")
         }
+    }
+
+    @IBAction func removeAllDuplicates(sender: AnyObject) {
+        TaskManager.sharedManager.pause()
+        var error: NSError?
+
+        let request = NSFetchRequest(entityName: "Photo")
+        let dupsOnly = NSPredicate(format: "duplicates.@count >= 0")
+        request.predicate = dupsOnly
+        let sortDescriptor = NSSortDescriptor(key: "ahash", ascending: true)
+        request.sortDescriptors = NSArray(array: [sortDescriptor])
+
+        let fetchedPhotos = managedObjectContext.executeFetchRequest(request, error: &error)
+        if var photos = fetchedPhotos as? [Photo] {
+            photos = photos.filter({ (photo: Photo) in
+                let d = photo.duplicates
+                return d.count != 0
+            })
+            while photos.count > 0 {
+                var aphoto = photos[0]
+                var dups = aphoto.mutableSetValueForKey("duplicates").allObjects as [Photo]
+                for dup in dups {
+                    TaskManager.sharedManager.deletePhoto(dup.objectID)
+                    var size = photos.count
+                    photos = photos.filter({ (photo: Photo) in
+                        return photo.objectID != dup.objectID
+                    })
+                    /*if size - photos.count == 0 {
+                        fatalError("Testing")
+                    }*/
+                }
+                photos = photos.filter({ (photo: Photo) in
+                    return photo.objectID != aphoto.objectID
+                })
+            }
+        }
+
+        NSNotificationCenter.defaultCenter().postNotificationName("photoRemoved", object: nil)
+        TaskManager.sharedManager.resume()
     }
 }

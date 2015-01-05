@@ -144,6 +144,7 @@ class MainViewController: NSViewController {
         if selections.count == 0 {
             return
         }
+        imageBrowser.setSelectionIndexes(NSIndexSet(), byExtendingSelection: false)
         
         var areYouSure: NSAlert = NSAlert()
         areYouSure.addButtonWithTitle("OK")
@@ -276,7 +277,7 @@ class MainViewController: NSViewController {
     }
     @IBAction func getInfoButtonPressed(sender: AnyObject) {
         NSNotificationCenter.defaultCenter().postNotificationName("getInfo", object: selectedPhoto)
-        appDelegate.showInfoHUD()
+        //appDelegate.showInfoHUD()
     }
 
 

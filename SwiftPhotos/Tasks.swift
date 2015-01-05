@@ -77,6 +77,9 @@ class TaskManager {
     func pause() -> Bool {
         let prev = self.queue.suspended
         self.queue.suspended = true
+
+        // Should wait until nothing's running
+        //self.queue.waitUntilAllOperationsAreFinished()
         return prev
     }
 
@@ -147,10 +150,15 @@ class TaskManager {
                             task.cancel()
                         }
                     }
+
+                    // make sure reference to this photo are gone.
+                    let duplicates = photo.mutableSetValueForKey("duplicates")
+                    for dup in duplicates {
+                        let duplicates2 = dup.mutableSetValueForKey("duplicates")
+                        duplicates2.removeObject(photo)
+                    }
                     
-                    // TODO: figure this out
                     self.managedObjectContext.deleteObject(photo)
-                    //photo.stateEnum = .Broken
 
                     if !self.managedObjectContext.save(&error) {
                         fatalError("Didn't save background managedObjectContext: \(error)")
@@ -203,7 +211,7 @@ class TaskManager {
         startTask(photoID, type: .Discovery, operation: operation)
 
         hashPhoto(photoID)
-        qualityPhoto(photoID)
+        //qualityPhoto(photoID)
     }
 
     func hashPhoto(photoID: NSManagedObjectID) {

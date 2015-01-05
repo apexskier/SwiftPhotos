@@ -97,9 +97,9 @@
                                     </items>
                                 </menu>
                             </menuItem>
-                            <menuItem title="View" id="AUU-JK-3mn">
+                            <menuItem title="Tools" id="AUU-JK-3mn">
                                 <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="View" id="xDj-Lt-D9y">
+                                <menu key="submenu" title="Tools" id="xDj-Lt-D9y">
                                     <items>
                                         <menuItem title="Show Toolbar" keyEquivalent="t" id="nyv-go-7uE">
                                             <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
@@ -107,16 +107,17 @@
                                                 <action selector="toggleToolbarShown:" target="E1T-Tr-OgV" id="2xO-zg-2BX"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Show Main Window" id="fHG-Bq-uD5">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <segue destination="ylS-Le-OWr" kind="show" id="3hx-Iq-xni"/>
-                                            </connections>
-                                        </menuItem>
                                         <menuItem title="Customize Toolbar…" id="OJa-dQ-35u">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="runToolbarCustomizationPalette:" target="E1T-Tr-OgV" id="RMa-00-WGX"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="5aC-Gb-dt2"/>
+                                        <menuItem title="Remove All Duplicates" id="iRz-Wo-bwC">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="removeAllDuplicates:" target="6xF-0o-AEK" id="tUX-Vd-aJZ"/>
                                             </connections>
                                         </menuItem>
                                     </items>
@@ -141,6 +142,11 @@
                                         <menuItem title="Tasks Status" keyEquivalent="T" id="Q3E-kZ-ld1">
                                             <connections>
                                                 <segue destination="M7p-fm-YUd" kind="show" id="5gu-qu-5Kj"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Main Window" keyEquivalent="1" id="GiV-bm-aVz">
+                                            <connections>
+                                                <segue destination="ylS-Le-OWr" kind="show" id="nq0-Zo-dJQ"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="JLm-dG-Hwy"/>

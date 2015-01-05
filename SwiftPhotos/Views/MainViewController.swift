@@ -89,7 +89,7 @@ class MainViewController: NSViewController {
     
     var images: [Photo] = []
     
-    var filterOperation: FilterOperation?
+    var filterOperation: NSBlockOperation?
     
     var observers: [AnyObject] = []
     
@@ -428,9 +428,15 @@ class MainViewController: NSViewController {
         if let filterOp = filterOperation {
             filterOp.cancel()
         }
-        filterOperation = FilterOperation({
+        filterOperation = NSBlockOperation()
+        filterOperation!.addExecutionBlock({
             self.progressIndicator.startAnimation(self)
             // TODO: disable selection
+
+            if self.filterOperation == nil || self.filterOperation!.cancelled {
+                // bail
+                return
+            }
 
             var photos: [Photo]
             if let filter = self.imagesFilter {
@@ -438,17 +444,19 @@ class MainViewController: NSViewController {
             } else {
                 photos = self.photos
             }
+
+            if self.filterOperation == nil || self.filterOperation!.cancelled {
+                // bail
+                return
+            }
+
             photos = sorted(photos.filter({ (photo: Photo) -> Bool in
+                if self.filterOperation == nil || self.filterOperation!.cancelled {
+                    // bail
+                    return false
+                }
                 if self.dupsCheck.state == 1 {
                     let d = photo.duplicates
-                    if d.count > 0 {
-                        println("found duplicates for \n-> \(photo.filepath)")
-                        let test = photo.mutableSetValueForKey("duplicates")
-                        for t in test {
-                            var tp = t as Photo
-                            println(tp.filepath)
-                        }
-                    }
                     if photo.duplicates.count == 0 {
                         return false
                     }
@@ -464,9 +472,19 @@ class MainViewController: NSViewController {
                 }
                 return true
             }), self.order)
+
+            if self.filterOperation == nil || self.filterOperation!.cancelled {
+                // bail
+                return
+            }
+            
             self.images = photos
         })
         filterOperation!.completionBlock = {
+            if self.filterOperation == nil || self.filterOperation!.cancelled {
+                // bail
+                return
+            }
             NSNotificationCenter.defaultCenter().postNotificationName("updatePhotos", object: nil)
         }
         filterOperation!.start()
@@ -511,21 +529,5 @@ class MainViewController: NSViewController {
             showSimilarF(fsimCheck)
         }
         NSNotificationCenter.defaultCenter().postNotificationName("selectionChanged", object: nil)
-    }
-}
-
-class FilterOperation: NSOperation {
-    let op: (() -> ())
-    
-    init(op: (() -> ())) {
-        self.op = op
-    }
-    override func main() {
-        autoreleasepool {
-            if self.cancelled {
-                return
-            }
-            self.op()
-        }
     }
 }

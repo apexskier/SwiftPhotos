@@ -105,12 +105,6 @@ class TaskManager {
             if operation.cancelled {
                 return
             }
-            self.managedObjectContext.performBlockAndWait({
-                var error: NSError?
-                if !self.managedObjectContext.save(&error) {
-                    fatalError("Didn't save background managedObjectContext: \(error)")
-                }
-            })
             NSNotificationCenter.defaultCenter().postNotificationName("completedTask", object: nil)
             NSNotificationCenter.defaultCenter().postNotificationName("completedTask.\(type)", object: nil)
             self.cancelTask(id, type: type)
@@ -142,6 +136,8 @@ class TaskManager {
                             println("Didn't remove file: \(fileURL.relativePath?)")
                         }
                     }
+
+                    removeEmptyDirs(fileURL)
                     
                     let appDelegate = NSApplication.sharedApplication().delegate as AppDelegate
                     appDelegate.bkTree.remove(photoID: photoID, managedObjectContext: self.managedObjectContext)
@@ -155,6 +151,10 @@ class TaskManager {
                     // TODO: figure this out
                     self.managedObjectContext.deleteObject(photo)
                     //photo.stateEnum = .Broken
+
+                    if !self.managedObjectContext.save(&error) {
+                        fatalError("Didn't save background managedObjectContext: \(error)")
+                    }
                     println("Deleted \(photoID)")
                 } else {
                     println("Missing photo \(photoID)")
@@ -187,6 +187,10 @@ class TaskManager {
                     }
                     if photo.created == nil {
                         photo.readData()
+                        var error: NSError?
+                        if !self.managedObjectContext.save(&error) {
+                            fatalError("Didn't save background managedObjectContext: \(error)")
+                        }
                     }
                 } else {
                     fatalError("Missing photo \(photoID)")
@@ -228,6 +232,11 @@ class TaskManager {
                     appDelegate.bkTree.insert(photoID: photoID, managedObjectContext: self.managedObjectContext)
                     
                     photo.stateEnum = .Known
+
+                    var error: NSError?
+                    if !self.managedObjectContext.save(&error) {
+                        fatalError("Didn't save background managedObjectContext: \(error)")
+                    }
                 } else {
                     fatalError("Missing photo \(photoID)")
                 }
@@ -249,27 +258,35 @@ class TaskManager {
                     if photo.stateEnum == .Broken {
                         return
                     }
-                    
-                    let date = photo.created
+
                     let filename = photo.fileURL.lastPathComponent
-                    if date == nil || filename == nil {
-                        photo.stateEnum == .Broken
+                    if filename == nil {
+                        photo.stateEnum = .Broken
                         return
                     }
-                    
-                    let df = NSDateFormatter()
-                    df.dateFormat = "yyyy"
-                    let year = df.stringFromDate(date!)
-                    df.dateFormat = "MM-MMMM"
-                    let month = df.stringFromDate(date!)
-                    
+
+                    var newURL: NSURL = {
+                        if let date = photo.created {
+                            let df = NSDateFormatter()
+                            df.dateFormat = "yyyy"
+                            let year = df.stringFromDate(date)
+                            df.dateFormat = "MM-MMMM"
+                            let month = df.stringFromDate(date)
+
+                            return outputURL.URLByAppendingPathComponent(year).URLByAppendingPathComponent(month).URLByAppendingPathComponent(filename!)
+                        } else {
+                            return outputURL.URLByAppendingPathComponent("undated").URLByAppendingPathComponent(filename!)
+                        }
+                    }()
+
+                    if fileURL.relativePath! == newURL.relativePath! {
+                        // already in the correct location
+                        return
+                    }
+
                     let fm = NSFileManager.defaultManager()
 
-                    var newURL = outputURL.URLByAppendingPathComponent(year).URLByAppendingPathComponent(month).URLByAppendingPathComponent(filename!)
-                    if fileURL.relativePath! == newURL.relativePath! {
-                        return
-                    }
-
+                    // make the new filepath unique
                     var count = 1
                     while (fm.fileExistsAtPath(newURL.relativePath!)) {
                         let ext = newURL.pathExtension!
@@ -277,6 +294,13 @@ class TaskManager {
                     }
                     
                     if let dir = newURL.URLByDeletingLastPathComponent {
+                        // update photo information and save before moving (avoids filemonitor issues)
+                        // TODO: This could be avoided if my filemonitor didn't see my changes
+                        photo.fileURL = newURL
+                        if !self.managedObjectContext.save(&error) {
+                            fatalError("Didn't save background managedObjectContext: \(error)")
+                        }
+
                         // create new location if it doesn't exist
                         if !fm.createDirectoryAtURL(dir, withIntermediateDirectories: true, attributes: nil, error: &error) {
                             fatalError("Couldn't verify directory \(dir): \(error)")
@@ -285,8 +309,9 @@ class TaskManager {
                         if !fm.moveItemAtURL(fileURL, toURL: newURL, error: &error) {
                             println("Couldn't move photo to \(newURL): \(error)")
                         }
-                        // update photo information
-                        photo.fileURL = newURL
+
+                        // clean up after ourselves
+                        removeEmptyDirs(fileURL)
                     } else {
                         fatalError("Couldn't get new dir.")
                     }
@@ -306,6 +331,11 @@ class TaskManager {
             self.managedObjectContext.performBlockAndWait({
                 if let photo = self.managedObjectContext.objectWithID(photoID) as? Photo {
                     photo.genQualityMeasures()
+
+                    var error: NSError?
+                    if !self.managedObjectContext.save(&error) {
+                        fatalError("Didn't save background managedObjectContext: \(error)")
+                    }
                 } else {
                     fatalError("Missing photo \(photoID)")
                 }
@@ -315,5 +345,26 @@ class TaskManager {
         operation.qualityOfService = .Background
         
         startTask(photoID, type: .Quality, operation: operation)
+    }
+}
+
+func removeEmptyDirs(start: NSURL) {
+    var fm = NSFileManager.defaultManager()
+    var error: NSError?
+
+    var dir = start.URLByDeletingLastPathComponent!
+    var contents = fm.contentsOfDirectoryAtURL(dir, includingPropertiesForKeys: nil, options: NSDirectoryEnumerationOptions.SkipsHiddenFiles, error: &error)
+    if contents == nil {
+        println("ERROR")
+    }
+    while contents!.count == 0 {
+        if !fm.removeItemAtURL(dir, error: &error) {
+            println("Didn't remove file: \(dir.relativePath?)")
+        }
+        dir = dir.URLByDeletingLastPathComponent!
+        contents = fm.contentsOfDirectoryAtURL(dir, includingPropertiesForKeys: nil, options: NSDirectoryEnumerationOptions.SkipsHiddenFiles, error: &error)
+        if contents == nil {
+            println("ERROR")
+        }
     }
 }

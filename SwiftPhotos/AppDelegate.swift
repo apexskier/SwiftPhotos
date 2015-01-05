@@ -220,7 +220,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let fm = NSFileManager.defaultManager()
         if fm.fileExistsAtPath(url.relativePath!) {
             addFile(url)
-            NSNotificationCenter.defaultCenter().postNotificationName("photoAdded", object: nil)
+            if TaskManager.sharedManager.queue.operationCount == 0 {
+                NSNotificationCenter.defaultCenter().postNotificationName("photoAdded", object: nil)
+            }
         } else {
             if let photo = photoFromURL(url) {
                 photo.stateEnum = .Broken

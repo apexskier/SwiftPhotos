@@ -110,11 +110,9 @@ class MainViewController: NSViewController {
         
         observers.append(NSNotificationCenter.defaultCenter().addObserverForName("photoAdded", object: nil, queue: nil, usingBlock: { (notification: NSNotification!) in
             self.updateImages()
-            self.imageBrowserSelectionDidChange(nil)
         }))
         observers.append(NSNotificationCenter.defaultCenter().addObserverForName("photoRemoved", object: nil, queue: nil, usingBlock: { (notification: NSNotification!) in
             self.updateImages()
-            self.imageBrowserSelectionDidChange(nil)
         }))
         observers.append(NSNotificationCenter.defaultCenter().addObserverForName("completedTask", object: nil, queue: nil, usingBlock: { (notification: NSNotification!) in
             self.updateProgress()
@@ -144,8 +142,7 @@ class MainViewController: NSViewController {
         if selections.count == 0 {
             return
         }
-        imageBrowser.setSelectionIndexes(NSIndexSet(), byExtendingSelection: false)
-        
+
         var areYouSure: NSAlert = NSAlert()
         areYouSure.addButtonWithTitle("OK")
         areYouSure.addButtonWithTitle("Cancel")
@@ -174,7 +171,8 @@ class MainViewController: NSViewController {
                     }
                 }
             })
-            
+
+            self.imageBrowser.setSelectionIndexes(NSIndexSet(), byExtendingSelection: false)
             updateImages()
         }
     }

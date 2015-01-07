@@ -156,14 +156,20 @@ class TaskManager {
                     for dup in duplicates {
                         let duplicates2 = dup.mutableSetValueForKey("duplicates")
                         duplicates2.removeObject(photo)
+                        duplicates.removeObject(dup)
                     }
-                    
+                    if let library = photo.library {
+                        library.mutableSetValueForKey("photos").removeObject(photo)
+                    }
+
+                    println("Deleting \(photo.objectID)")
                     self.managedObjectContext.deleteObject(photo)
 
                     if !self.managedObjectContext.save(&error) {
                         fatalError("Didn't save background managedObjectContext: \(error)")
                     }
-                    println("Deleted \(photoID)")
+
+                    NSNotificationCenter.defaultCenter().postNotificationName("photoRemoved", object: nil)
                 } else {
                     println("Missing photo \(photoID)")
                 }

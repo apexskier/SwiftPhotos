@@ -277,6 +277,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 let d = photo.duplicates
                 return d.count != 0
             })
+            // try to save ones with shorter filenames
+            photos = sorted(photos, { (a: Photo, b: Photo) -> Bool in
+                return countElements(a.filepath) < countElements(b.filepath)
+            })
             while photos.count > 0 {
                 var aphoto = photos[0]
                 var dups = aphoto.mutableSetValueForKey("duplicates").allObjects as [Photo]
